@@ -18,8 +18,9 @@ export function Today({ progress, dueCount, onStart, onShort, onExport, onImport
     <div className="screen">
       <div style={{ paddingTop: 48 }}>
         <h1 lang="ko">한국어</h1>
+        {/* Day-streak lives on the Daily Learning home now (platform owns it); showing it
+            here too would compete with a different number. Keep the local totals. */}
         <p className="small" style={{ marginTop: 8 }}>
-          {progress.streak > 0 ? `Streak ${progress.streak} · ` : ''}
           {progress.minutes_logged_total} min total
           {dueCount > 0 ? ` · ${dueCount} due` : ''}
         </p>
