@@ -33,7 +33,7 @@ function SubjectView({ module, onHome, refresh }: { module: LearningModule; onHo
   }, [module, onHome, refresh]);
 
   return (
-    <div className="subject-view" data-theme={module.prefersTheme}>
+    <div className="subject-view" data-theme={module.prefersTheme} data-fullbleed={module.fullBleed ? '' : undefined}>
       <div className="subject-view__host" ref={hostRef} />
     </div>
   );

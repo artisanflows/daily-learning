@@ -1,46 +1,51 @@
 /* ============================================================================
-   Daily Learning — shared design system.
-   Share the SYSTEM (spacing, type scale, shapes, motion), not the SKIN.
-   The platform shell uses a calm pastel-blue palette. Each module overrides
-   --accent (and, if dark, the surface/text tokens) inside its own subtree.
+   Daily Learning — shared design system ("atelier").
+   The standard is Chess Atelier's look: warm paper base, editorial panels,
+   a masked-SVG icon set, generous layout. Share the SYSTEM everywhere; each
+   subject swaps ONE thing — --accent. Nothing else needs to change per module.
    ============================================================================ */
 
 :root {
-  /* --- Platform palette: pastel blue, light (the neutral "hallway") --- */
-  --plat-bg: #eef3f8;
-  --plat-surface: #ffffff;
-  --plat-surface-2: #f5f9fd;
-  --plat-line: #dce7f1;
-  --plat-line-strong: #c6d7e6;
-  --plat-text: #1f2c38;
-  --plat-muted: #5f7183;
-  --plat-accent: #5b8fc7;
-  --plat-accent-strong: #3f77b3;
-  --plat-accent-soft: #dce9f6;
+  /* --- Warm atelier base (shared by every subject) --- */
+  --plat-bg: #f4eee2;          /* warm ivory page */
+  --plat-surface: #fffdf7;     /* panel / card */
+  --plat-surface-2: #f1e8d7;   /* inset / secondary fill */
+  --plat-line: #e6dbc5;        /* hairline */
+  --plat-line-strong: #d6c8ab; /* stronger border / hover */
+  --plat-text: #3b2f24;        /* warm ink */
+  --plat-muted: #8a7864;       /* muted warm gray */
+
+  /* Platform (the "hallway" / home) accent = pastel blue. */
+  --plat-accent: #4f83bf;
+  --plat-accent-strong: #3a6ba3;
+  --plat-accent-soft: #e0ecf7;
   --plat-on-accent: #ffffff;
 
   /* --- Semantic (shared) --- */
-  --ok: #4e9a7c;
+  --ok: #6f8455;
   --warn: #c8873e;
-  --danger: #b0503a;
+  --danger: #a8402f;
 
   /* --- Spacing scale --- */
   --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px; --sp-7: 48px;
 
   /* --- Radius --- */
-  --radius: 12px; --radius-sm: 8px; --radius-lg: 16px; --radius-pill: 999px;
+  --radius: 10px; --radius-sm: 8px; --radius-lg: 16px; --radius-pill: 999px;
 
-  /* --- Type scale --- */
+  /* --- Type scale (editorial, roomy) --- */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --fs-cap: 13px; --fs-body: 16px; --fs-h3: 18px; --fs-h2: 22px; --fs-h1: 28px;
-  --lh-body: 1.55;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --fs-cap: 13px; --fs-body: 16px; --fs-h3: 19px; --fs-h2: 24px; --fs-h1: 34px;
+  --lh-body: 1.6;
 
   /* --- Elevation & motion --- */
-  --shadow-card: 0 1px 3px rgba(40, 60, 90, 0.08), 0 6px 18px rgba(40, 60, 90, 0.06);
+  --shadow-card: 0 1px 2px rgba(90, 70, 40, 0.06), 0 4px 16px rgba(90, 70, 40, 0.07);
+  --shadow-lift: 0 4px 10px rgba(90, 70, 40, 0.10), 0 14px 34px rgba(90, 70, 40, 0.10);
   --dur: 180ms; --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
 
-  /* Modules read --accent for their own tint; defaults to the platform accent. */
+  /* Every module reads --accent for its tint; defaults to the platform accent. */
   --accent: var(--plat-accent);
+  --accent-strong: var(--plat-accent-strong);
   --accent-soft: var(--plat-accent-soft);
   --on-accent: var(--plat-on-accent);
 }
@@ -54,9 +59,10 @@ body {
   font-size: var(--fs-body);
   line-height: var(--lh-body);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* ---- Shared component primitives (used by shell; modules may reuse) ---- */
+/* ---- Shared component primitives (used by shell + every module) ---- */
 .dl-card {
   background: var(--plat-surface);
   border: 1px solid var(--plat-line);
@@ -66,22 +72,47 @@ body {
 }
 .dl-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
-  font: inherit; font-weight: 600; cursor: pointer;
-  padding: 10px 18px; border-radius: var(--radius); border: 1px solid var(--plat-line-strong);
+  font: inherit; font-weight: 600; cursor: pointer; line-height: 1.2;
+  padding: 11px 20px; border-radius: var(--radius); border: 1px solid var(--plat-line-strong);
   background: var(--plat-surface); color: var(--plat-text);
-  transition: background var(--dur) var(--ease), transform var(--dur) var(--ease);
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
-.dl-btn:hover { background: var(--plat-surface-2); }
-.dl-btn:active { transform: scale(0.98); }
+.dl-btn:hover { background: var(--plat-surface-2); border-color: var(--plat-line-strong); }
+.dl-btn:active { transform: scale(0.985); }
 .dl-btn--accent { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-.dl-btn--accent:hover { background: var(--plat-accent-strong); }
+.dl-btn--accent:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+.dl-btn--lg { padding: 15px 24px; font-size: var(--fs-h3); border-radius: var(--radius); }
+.dl-btn--block { width: 100%; }
 .dl-pill {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: var(--fs-cap); font-weight: 600;
-  padding: 3px 10px; border-radius: var(--radius-pill);
-  background: var(--accent-soft); color: var(--plat-accent-strong);
+  padding: 4px 11px; border-radius: var(--radius-pill);
+  background: var(--accent-soft); color: var(--accent-strong);
 }
 .dl-muted { color: var(--plat-muted); }
+.dl-serif { font-family: var(--font-serif); }
+
+/* ---- Icon set — masked SVG, inherits currentColor (the "nicer emojis") ---- */
+.ic {
+  display: inline-block; width: 16px; height: 16px; background-color: currentColor;
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+  vertical-align: -2px; flex: none;
+}
+.ic.big { width: 20px; height: 20px; vertical-align: -4px; }
+.ic-flame  { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C13 6 8 8 8 13a4 4 0 0 0 8 0c0-2-1-3-1-3s3 1 3 5a6 6 0 0 1-12 0C6 9 11 7 12 2z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C13 6 8 8 8 13a4 4 0 0 0 8 0c0-2-1-3-1-3s3 1 3 5a6 6 0 0 1-12 0C6 9 11 7 12 2z"/></svg>'); }
+.ic-book   { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4zM20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h6a2 2 0 0 1 2 2v14a2 2 0 0 0-2-2H4zM20 4h-6a2 2 0 0 0-2 2v14a2 2 0 0 1 2-2h6z"/></svg>'); }
+.ic-gear   { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.3 2h3.4l.5 2.5 2 .9L18.5 4 21 6.5l-1.4 2.2.9 2 2.5.5v3.4l-2.5.5-.9 2 1.4 2.3-2.5 2.4-2.3-1.4-2 .9-.5 2.5h-3.4l-.5-2.5-2-.9L5.5 20 3 17.5l1.4-2.3-.9-2L1 12.8v-3.4l2.5-.5.9-2L3 4.5 5.5 2l2.3 1.4 2-.9zM12 8.5A3.5 3.5 0 1 0 12 15.5 3.5 3.5 0 0 0 12 8.5z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.3 2h3.4l.5 2.5 2 .9L18.5 4 21 6.5l-1.4 2.2.9 2 2.5.5v3.4l-2.5.5-.9 2 1.4 2.3-2.5 2.4-2.3-1.4-2 .9-.5 2.5h-3.4l-.5-2.5-2-.9L5.5 20 3 17.5l1.4-2.3-.9-2L1 12.8v-3.4l2.5-.5.9-2L3 4.5 5.5 2l2.3 1.4 2-.9zM12 8.5A3.5 3.5 0 1 0 12 15.5 3.5 3.5 0 0 0 12 8.5z"/></svg>'); }
+.ic-chart  { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 20V10h4v10zM10 20V4h4v16zM16 20v-7h4v7z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 20V10h4v10zM10 20V4h4v16zM16 20v-7h4v7z"/></svg>'); }
+.ic-check  { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 12.5l2.5-2.5 4 4L19 5.5 21.5 8l-11 11z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 12.5l2.5-2.5 4 4L19 5.5 21.5 8l-11 11z"/></svg>'); }
+.ic-globe  { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2c1.6 0 3.5 2.6 4.1 7H7.9C8.5 6.6 10.4 4 12 4zM4.3 11h3.6c-.1 1.3-.1 2.7 0 4H4.3a8 8 0 0 1 0-4zm.8 6h3c.4 2.2 1.1 3.7 1.6 4.4A8 8 0 0 1 5.1 17zM12 20c-1.6 0-3.5-2.6-4.1-7h8.2C15.5 17.4 13.6 20 12 20zm2.3 1.4c.5-.7 1.2-2.2 1.6-4.4h3a8 8 0 0 1-4.6 4.4zM16.1 15c.1-1.3.1-2.7 0-4h3.6a8 8 0 0 1 0 4zM16 9c-.4-2.2-1.1-3.7-1.6-4.4A8 8 0 0 1 18.9 9z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2c1.6 0 3.5 2.6 4.1 7H7.9C8.5 6.6 10.4 4 12 4zM4.3 11h3.6c-.1 1.3-.1 2.7 0 4H4.3a8 8 0 0 1 0-4zm.8 6h3c.4 2.2 1.1 3.7 1.6 4.4A8 8 0 0 1 5.1 17zM12 20c-1.6 0-3.5-2.6-4.1-7h8.2C15.5 17.4 13.6 20 12 20zm2.3 1.4c.5-.7 1.2-2.2 1.6-4.4h3a8 8 0 0 1-4.6 4.4zM16.1 15c.1-1.3.1-2.7 0-4h3.6a8 8 0 0 1 0 4zM16 9c-.4-2.2-1.1-3.7-1.6-4.4A8 8 0 0 1 18.9 9z"/></svg>'); }
+.ic-grid   { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>'); }
+.ic-cards  { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 4h13a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM3 7v12a1 1 0 0 0 1 1h12v-2H4V7z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 4h13a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1zM3 7v12a1 1 0 0 0 1 1h12v-2H4V7z"/></svg>'); }
+.ic-speak  { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 8.5a4 4 0 0 1 0 7M18.5 6a7 7 0 0 1 0 12" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16 8.5a4 4 0 0 1 0 7M18.5 6a7 7 0 0 1 0 12" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"/></svg>'); }
+.ic-arrow  { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 5l7 7-7 7v-4H3v-6h11z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 5l7 7-7 7v-4H3v-6h11z"/></svg>'); }
+.ic-back   { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 5L3 12l7 7v-4h11V9H10z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 5L3 12l7 7v-4h11V9H10z"/></svg>'); }
+.ic-clock  { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm-1 3h2v5.6l4 2.3-1 1.7-5-2.9z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm-1 3h2v5.6l4 2.3-1 1.7-5-2.9z"/></svg>'); }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }

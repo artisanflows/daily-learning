@@ -8,11 +8,12 @@ interface Props {
   dueCount: number;
   onStart: () => void;
   onShort: () => void;
+  onLearn: () => void;
   onExport: () => void;
   onImport: (file: File) => void;
 }
 
-export function Today({ progress, dueCount, onStart, onShort, onExport, onImport }: Props): React.JSX.Element {
+export function Today({ progress, dueCount, onStart, onShort, onLearn, onExport, onImport }: Props): React.JSX.Element {
   const fileInput = useRef<HTMLInputElement>(null);
   return (
     <div className="screen">
@@ -32,6 +33,9 @@ export function Today({ progress, dueCount, onStart, onShort, onExport, onImport
         </button>
         <button className="wide" onClick={onShort}>
           Short session
+        </button>
+        <button className="wide" onClick={onLearn}>
+          Learn ▸ browse lessons &amp; grammar
         </button>
         <div className="button-row" style={{ marginTop: 12 }}>
           <button onClick={onExport}>Export</button>

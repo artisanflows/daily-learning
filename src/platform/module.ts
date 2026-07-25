@@ -15,6 +15,7 @@ export interface LearningModule {
   blurb: string;                       // one-line description
   accent: string;                      // per-app accent colour (CSS value)
   prefersTheme: 'light' | 'dark';      // the module's preferred mode; shell honours it while mounted
+  fullBleed?: boolean;                 // fills the screen with no shell padding (chess); shell floats a back control
 
   // Render the module into a container element (NOT the whole page). Called on entry.
   mount(container: HTMLElement, ctx: ModuleContext): void | Promise<void>;

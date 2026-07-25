@@ -77,6 +77,19 @@
 .mod-korean h1 { font-size: 40px; font-weight: 700; }
 .mod-korean h2 { font-size: 22px; font-weight: 600; }
 
+/* ---- Learn (browse) layer ---- */
+.mod-korean .learn-list { display: flex; flex-direction: column; gap: 10px; }
+.mod-korean .learn-list__head { margin-top: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
+.mod-korean .learn-row {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  min-height: 44px; padding: 10px 14px; background: var(--surface); border-radius: 12px;
+}
+.mod-korean .learn-row__mark { flex: none; width: 16px; color: var(--mineral); }
+.mod-korean .learn-row__title { flex: 1; }
+.mod-korean .learn-row__meta { flex: none; }
+.mod-korean .learn-eg { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.mod-korean .learn-eg li { font-size: 17px; line-height: 1.5; }
+
 @media (prefers-reduced-motion: no-preference) {
   .mod-korean .card-enter { animation: koreanRise 180ms ease-out; }
   @keyframes koreanRise {
