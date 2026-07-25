@@ -1,15 +1,16 @@
-/* Korean module styles — the 단청 palette (specs/05 §2), scoped under .mod-korean so
-   its global element selectors can't leak into the shell or other modules. */
+/* Korean module styles — brought into the shared atelier light family (celadon accent)
+   so it reads as one product with chess/wine/art. Scoped under .mod-korean so its
+   global element selectors can't leak into the shell or other modules. */
 
 .mod-korean {
-  --ground: #131a22;
-  --surface: #1c2530;
-  --paper: #ede7da;
-  --mineral: #4e9a7c;
-  --ochre: #c8873e;
-  --muted: #7a8794;
+  --ground: var(--plat-bg);
+  --surface: var(--plat-surface);
+  --paper: var(--plat-text);
+  --mineral: #3f7a6d;         /* celadon green accent */
+  --ochre: #b06a2c;
+  --muted: var(--plat-muted);
 
-  max-width: 460px;
+  max-width: 560px;
   margin: 0 auto;
   min-height: 100dvh;
   display: flex;
@@ -41,13 +42,16 @@
 .mod-korean .register-hon { color: var(--ochre); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
 
 .mod-korean button {
-  font: inherit; border: none; border-radius: 12px; min-height: 48px;
+  font: inherit; border: 1px solid var(--plat-line-strong); border-radius: 12px; min-height: 48px;
   padding: 12px 18px; cursor: pointer; background: var(--surface); color: var(--paper);
+  transition: background var(--dur, 180ms) ease, border-color var(--dur, 180ms) ease;
 }
+.mod-korean button:hover { background: var(--plat-surface-2); }
 .mod-korean button:focus-visible,
 .mod-korean input:focus-visible,
 .mod-korean textarea:focus-visible { outline: 2px solid var(--mineral); outline-offset: 2px; }
-.mod-korean button.primary { background: var(--mineral); color: var(--ground); font-weight: 600; }
+.mod-korean button.primary { background: var(--mineral); border-color: var(--mineral); color: #fff; font-weight: 600; }
+.mod-korean button.primary:hover { background: #35695e; }
 .mod-korean button.wide { width: 100%; }
 .mod-korean button:disabled { opacity: 0.45; cursor: default; }
 
@@ -58,7 +62,7 @@
 }
 .mod-korean textarea { font-size: 18px; }
 
-.mod-korean .card-face { background: var(--surface); border-radius: 16px; padding: 24px 20px; display: flex; flex-direction: column; gap: 12px; }
+.mod-korean .card-face { background: var(--surface); border: 1px solid var(--plat-line); border-radius: 16px; box-shadow: var(--shadow-card); padding: 24px 20px; display: flex; flex-direction: column; gap: 12px; }
 .mod-korean .thumb-zone { margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding-top: 12px; }
 .mod-korean .button-row { display: flex; gap: 10px; }
 .mod-korean .button-row > button { flex: 1; }
@@ -73,6 +77,16 @@
 .mod-korean .progress-line { display: flex; justify-content: space-between; color: var(--muted); font-size: 14px; }
 .mod-korean .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .mod-korean .choice-grid button { font-size: 26px; min-height: 64px; }
+.mod-korean .choice-grid button.is-correct { background: color-mix(in srgb, var(--mineral) 16%, var(--surface)); border-color: var(--mineral); font-weight: 700; }
+.mod-korean .choice-grid button.is-wrong { background: color-mix(in srgb, var(--ochre) 18%, var(--surface)); border-color: var(--ochre); }
+
+/* Vocab drill: options can hold English (smaller) or Korean (larger) */
+.mod-korean .vocab-opts { display: grid; gap: 10px; }
+.mod-korean .vocab-opts button { min-height: 60px; font-size: 18px; text-align: left; }
+.mod-korean .vocab-opts button.ko-opt { font-size: 26px; }
+.mod-korean .seg { display: inline-flex; gap: 0; border: 1px solid var(--plat-line-strong); border-radius: 999px; overflow: hidden; }
+.mod-korean .seg button { min-height: 40px; border: none; border-radius: 0; padding: 8px 16px; font-size: 14px; background: var(--surface); }
+.mod-korean .seg button.on { background: var(--mineral); color: #fff; }
 
 .mod-korean h1 { font-size: 40px; font-weight: 700; }
 .mod-korean h2 { font-size: 22px; font-weight: 600; }

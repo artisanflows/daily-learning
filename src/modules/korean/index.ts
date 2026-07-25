@@ -19,8 +19,8 @@ export function koreanModule(): LearningModule {
     id: 'korean',
     title: '한국어 Korean',
     blurb: 'Daily Korean · ~18 min',
-    accent: '#4e9a7c',
-    prefersTheme: 'dark',
+    accent: '#3f7a6d',
+    prefersTheme: 'light',
 
     async mount(container, ctx) {
       const mine = ++token;
@@ -31,7 +31,7 @@ export function koreanModule(): LearningModule {
       back.className = 'mod-korean__back';
       const backBtn = document.createElement('button');
       backBtn.type = 'button';
-      backBtn.textContent = '← Back';
+      backBtn.textContent = '← Subjects';
       backBtn.onclick = () => ctx.goHome();
       back.appendChild(backBtn);
       const appEl = document.createElement('div');

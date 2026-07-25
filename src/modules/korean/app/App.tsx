@@ -25,6 +25,7 @@ import { NewScreen } from './components/NewScreen';
 import { ProduceScreen, type ProduceResult } from './components/ProduceScreen';
 import { SummaryScreen } from './components/SummaryScreen';
 import { LearnScreen } from './components/LearnScreen';
+import { VocabScreen } from './components/VocabScreen';
 
 const todayStr = (d: Date): string => d.toISOString().slice(0, 10);
 
@@ -48,6 +49,7 @@ export function App({ content, onSessionComplete, onStatus }: { content: Content
   const [produceResult, setProduceResult] = useState<ProduceResult | null>(null);
   const [dueCount, setDueCount] = useState(0);
   const [learning, setLearning] = useState(false);
+  const [vocabbing, setVocabbing] = useState(false);
   const finalized = useRef(false);
   // The curriculum day this session runs — captured at START. Progress advances
   // during finalize, so anything session-scoped must not re-derive from progress.
@@ -218,9 +220,12 @@ export function App({ content, onSessionComplete, onStatus }: { content: Content
 
   if (!progress) return <div className="screen" />;
 
-  // Learn (browse) is available from the Today screen and sits outside the session flow.
+  // Learn (browse) and Vocabulary drill sit outside the session flow, from Today.
   if (learning && session.phase === 'idle') {
     return <LearnScreen content={content} currentDay={progress.curriculum_day} onBack={() => setLearning(false)} />;
+  }
+  if (vocabbing && session.phase === 'idle') {
+    return <VocabScreen content={content} onBack={() => setVocabbing(false)} />;
   }
 
   switch (session.phase) {
@@ -280,6 +285,7 @@ export function App({ content, onSessionComplete, onStatus }: { content: Content
           onStart={() => startSession(false)}
           onShort={() => startSession(true)}
           onLearn={() => setLearning(true)}
+          onVocab={() => setVocabbing(true)}
           onExport={exportState}
           onImport={importState}
         />
