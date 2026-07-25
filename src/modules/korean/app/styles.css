@@ -85,6 +85,19 @@
 .mod-korean .seg button { min-height: 40px; border: none; border-radius: 0; padding: 8px 16px; font-size: 14px; background: var(--surface); }
 .mod-korean .seg button.on { background: var(--mineral); color: #fff; }
 
+/* Vocab topic packs */
+.mod-korean .topic-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.mod-korean .topic-chip { min-height: 36px; padding: 6px 14px; border-radius: 999px; font-size: 13px; color: var(--muted); }
+.mod-korean .topic-chip.on { background: var(--mineral); border-color: var(--mineral); color: #fff; font-weight: 600; }
+
+/* Phrasebook */
+.mod-korean .phrase { display: flex; flex-direction: column; gap: 4px; background: var(--surface); border: 1px solid var(--plat-line); border-radius: 12px; padding: 14px 16px; }
+.mod-korean .phrase__row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.mod-korean .phrase__ko { font-size: 22px; line-height: 1.4; }
+.mod-korean .phrase__row button { min-height: 36px; padding: 6px 12px; font-size: 13px; flex: none; }
+.mod-korean .phrase__en { font-size: 15px; }
+.mod-korean .phrase__note { font-size: 13px; color: var(--muted); }
+
 :where(.mod-korean) :where(h1) { font-size: 40px; font-weight: 700; }
 :where(.mod-korean) :where(h2) { font-size: 22px; font-weight: 600; }
 /* Topbar / tabs / panels / stats come from the shared .dl-* chrome in tokens.css. */

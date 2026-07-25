@@ -2,7 +2,7 @@
 // wine's Learn. All the curriculum prose + grammar the app already has is only seen
 // mid-session; this screen makes the whole thing browsable any time, no session needed.
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { ContentJson, CurriculumDay } from '../content/types';
 import { speakKorean } from '../utils/audio';
 
@@ -13,8 +13,14 @@ interface Props {
 }
 
 export function LearnScreen({ content, currentDay }: Props): React.JSX.Element {
-  const [tab, setTab] = useState<'lessons' | 'grammar'>('lessons');
+  // Phrases first — practical priority: dining/dietary survival lines beat grammar browsing.
+  const [tab, setTab] = useState<'phrases' | 'lessons' | 'grammar'>(content.phrasebook?.length ? 'phrases' : 'lessons');
   const [openId, setOpenId] = useState<string | null>(null);
+
+  // Visiting Learn ticks the Today's-plan "learn" box.
+  useEffect(() => {
+    try { localStorage.setItem('kr-plan-learn', new Date().toISOString().slice(0, 10)); } catch { /* blocked */ }
+  }, []);
 
   const open = openId ? content.curriculum.find((d) => d.id === openId) : undefined;
   if (open) return <DayReader content={content} day={open} onBack={() => setOpenId(null)} />;
@@ -22,12 +28,33 @@ export function LearnScreen({ content, currentDay }: Props): React.JSX.Element {
   return (
     <div className="screen">
       <div className="button-row" style={{ marginBottom: 6 }}>
+        {!!content.phrasebook?.length && (
+          <button className={tab === 'phrases' ? 'primary' : ''} onClick={() => setTab('phrases')}>Phrases</button>
+        )}
         <button className={tab === 'lessons' ? 'primary' : ''} onClick={() => setTab('lessons')}>Lessons</button>
         <button className={tab === 'grammar' ? 'primary' : ''} onClick={() => setTab('grammar')}>Grammar</button>
       </div>
-      {tab === 'lessons'
-        ? <LessonList content={content} currentDay={currentDay} onOpen={setOpenId} />
-        : <GrammarList content={content} />}
+      {tab === 'phrases' && <PhraseList content={content} />}
+      {tab === 'lessons' && <LessonList content={content} currentDay={currentDay} onOpen={setOpenId} />}
+      {tab === 'grammar' && <GrammarList content={content} />}
+    </div>
+  );
+}
+
+function PhraseList({ content }: { content: ContentJson }) {
+  return (
+    <div className="learn-list">
+      <p className="small learn-list__head">Survival phrases · dining &amp; dietary first</p>
+      {(content.phrasebook ?? []).map((p) => (
+        <div className="phrase" key={p.id}>
+          <div className="phrase__row">
+            <span className="phrase__ko" lang="ko">{p.ko}</span>
+            <button onClick={() => speakKorean(p.ko, { rate: 0.8 })}>▶ Listen</button>
+          </div>
+          <span className="phrase__en">{p.en}</span>
+          {p.note && <span className="phrase__note">{p.note}</span>}
+        </div>
+      ))}
     </div>
   );
 }

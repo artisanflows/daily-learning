@@ -1,7 +1,8 @@
-// Vocabulary drill — multiple choice, no typing. Two directions:
+// Vocabulary drill — multiple choice, no typing, organised into practical TOPIC PACKS
+// (things / food / dining / signs / core curriculum). Two directions:
 //   KO → EN  (see 한글, pick the meaning)
-//   EN → KO  (see the meaning, pick the correct Korean spelling)
-// Pure recognition practice over the curriculum's vocab, separate from the SRS session.
+//   EN → KO  (see the meaning, pick the correct Korean — i.e. sign/menu reading)
+// Practical priority (2026-07-25): reading menus and signs beats producing sentences.
 
 import { useMemo, useState } from 'react';
 import type { ContentJson, VocabItem } from '../content/types';
@@ -10,6 +11,10 @@ import { speakKorean } from '../utils/audio';
 type Dir = 'ko2en' | 'en2ko';
 const ROUND = 12;
 
+const TOPIC_LABELS: Record<string, string> = {
+  all: 'All', things: 'Things', food: 'Food', restaurant: 'Dining', signs: 'Signs', core: 'Course',
+};
+
 function shuffle<T>(a: T[]): T[] {
   const r = [...a];
   for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j]!, r[i]!]; }
@@ -17,31 +22,45 @@ function shuffle<T>(a: T[]): T[] {
 }
 
 interface Q { item: VocabItem; options: VocabItem[] }
-function buildDeck(vocab: VocabItem[]): Q[] {
-  const pool = vocab.filter((v) => v.ko && v.en);
+function buildDeck(pool: VocabItem[], all: VocabItem[]): Q[] {
   return shuffle(pool).slice(0, ROUND).map((item) => {
-    const distractors = shuffle(pool.filter((v) => v.id !== item.id)).slice(0, 3);
+    // Distractors from the same topic when possible — harder, more instructive.
+    const near = all.filter((v) => v.id !== item.id && (v.topic ?? 'core') === (item.topic ?? 'core'));
+    const rest = all.filter((v) => v.id !== item.id && (v.topic ?? 'core') !== (item.topic ?? 'core'));
+    const distractors = shuffle(near).slice(0, 3);
+    if (distractors.length < 3) distractors.push(...shuffle(rest).slice(0, 3 - distractors.length));
     return { item, options: shuffle([item, ...distractors]) };
   });
 }
 
 export function VocabScreen({ content, onBack }: { content: ContentJson; onBack: () => void }): React.JSX.Element {
-  const vocab = useMemo(() => Object.values(content.vocab), [content.vocab]);
+  const vocab = useMemo(() => Object.values(content.vocab).filter((v) => v.ko && v.en), [content.vocab]);
+  const topics = useMemo(() => {
+    const t = [...new Set(vocab.map((v) => v.topic ?? 'core'))];
+    const order = ['things', 'food', 'restaurant', 'signs', 'core'];
+    return ['all', ...order.filter((x) => t.includes(x))];
+  }, [vocab]);
+  const [topic, setTopic] = useState('all');
   const [dir, setDir] = useState<Dir>('ko2en');
-  const [deck, setDeck] = useState<Q[]>(() => buildDeck(vocab));
+  const poolFor = (t: string) => (t === 'all' ? vocab : vocab.filter((v) => (v.topic ?? 'core') === t));
+  const [deck, setDeck] = useState<Q[]>(() => buildDeck(vocab, vocab));
   const [i, setI] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
   const [score, setScore] = useState(0);
 
-  const restart = (d: Dir) => { setDir(d); setDeck(buildDeck(vocab)); setI(0); setPicked(null); setScore(0); };
+  const restart = (d: Dir, t: string) => {
+    setDir(d); setTopic(t); setDeck(buildDeck(poolFor(t), vocab)); setI(0); setPicked(null); setScore(0);
+  };
 
   if (i >= deck.length) {
+    // Round complete — tick the Today's-plan box for vocabulary.
+    try { localStorage.setItem('kr-plan-vocab', new Date().toISOString().slice(0, 10)); } catch { /* blocked */ }
     return (
       <div className="screen">
         <h2>{score} / {deck.length}</h2>
-        <p className="small">Recognition builds across sessions — a few minutes a day beats one long cram.</p>
+        <p className="small">Recognition builds across days — a short round daily beats one long cram.</p>
         <div className="thumb-zone">
-          <button className="primary wide" onClick={() => restart(dir)}>Again</button>
+          <button className="primary wide" onClick={() => restart(dir, topic)}>Again · {TOPIC_LABELS[topic]}</button>
           <button className="wide" onClick={onBack}>Done</button>
         </div>
       </div>
@@ -55,11 +74,18 @@ export function VocabScreen({ content, onBack }: { content: ContentJson; onBack:
 
   return (
     <div className="screen">
+      <div className="topic-row">
+        {topics.map((t) => (
+          <button key={t} className={'topic-chip' + (topic === t ? ' on' : '')} onClick={() => restart(dir, t)}>
+            {TOPIC_LABELS[t] ?? t}
+          </button>
+        ))}
+      </div>
       <div className="progress-line">
-        <span>{i + 1} / {deck.length}</span>
+        <span>{i + 1} / {deck.length} · {score} right</span>
         <span className="seg">
-          <button className={dir === 'ko2en' ? 'on' : ''} onClick={() => restart('ko2en')}>한글 → EN</button>
-          <button className={dir === 'en2ko' ? 'on' : ''} onClick={() => restart('en2ko')}>EN → 한글</button>
+          <button className={dir === 'ko2en' ? 'on' : ''} onClick={() => restart('ko2en', topic)}>한글 → EN</button>
+          <button className={dir === 'en2ko' ? 'on' : ''} onClick={() => restart('en2ko', topic)}>EN → 한글</button>
         </span>
       </div>
 

@@ -279,6 +279,8 @@ export function App({ content, onSessionComplete, onStatus }: { content: Content
               dueCount={dueCount}
               onStart={() => startSession(false)}
               onShort={() => startSession(true)}
+              onGoLearn={() => setPanel('learn')}
+              onGoVocab={() => setPanel('vocab')}
               onExport={exportState}
               onImport={importState}
             />

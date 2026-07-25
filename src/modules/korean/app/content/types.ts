@@ -33,6 +33,17 @@ export interface VocabItem {
   pos: string;
   register?: Register;
   first_seen?: string;
+  /** Practical topic pack for the vocab drill: 'things' | 'food' | 'restaurant' | 'signs'.
+      Items without a topic are the original curriculum vocab ("core"). */
+  topic?: string;
+}
+
+/** Survival phrases — dining/dietary first (practical priority, 2026-07-25). */
+export interface Phrase {
+  id: string; // ph001…
+  ko: string;
+  en: string;
+  note?: string;
 }
 
 export interface GrammarItem {
@@ -92,4 +103,6 @@ export interface ContentJson {
   errorPatterns: ErrorPattern[];
   /** In curriculum order — this order IS the new-card introduction order. */
   curriculum: CurriculumDay[];
+  /** Survival phrasebook (optional — added alongside the compiled artifact). */
+  phrasebook?: Phrase[];
 }
