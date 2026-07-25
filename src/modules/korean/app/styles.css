@@ -91,6 +91,35 @@
 .mod-korean h1 { font-size: 40px; font-weight: 700; }
 .mod-korean h2 { font-size: 22px; font-weight: 600; }
 
+/* ---- Chess-style chrome: topbar + menu bar + panels ---- */
+.mod-korean .ktop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 2px 0 14px; }
+.mod-korean .ktop__badge {
+  width: 34px; height: 34px; border-radius: 9px; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700; color: #fff; background: var(--mineral);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--mineral) 40%, transparent);
+}
+.mod-korean .ktop__title { font-size: 22px; font-weight: 700; color: var(--mineral); }
+.mod-korean .ktop__blurb { }
+.mod-korean .ktabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.mod-korean .ktabs button {
+  font: inherit; font-size: 14px; min-height: 40px; cursor: pointer;
+  background: var(--surface); color: var(--muted);
+  border: 1px solid var(--plat-line); padding: 8px 16px; border-radius: 999px;
+}
+.mod-korean .ktabs button:hover:not(.active) { color: var(--paper); border-color: var(--plat-line-strong); }
+.mod-korean .ktabs button.active { background: var(--mineral); color: #fff; border-color: var(--mineral); font-weight: 600; }
+
+.mod-korean .kpanel {
+  background: var(--surface); border: 1px solid var(--plat-line);
+  border-radius: 16px; box-shadow: var(--shadow-card); padding: 20px 22px; margin-bottom: 16px;
+}
+.mod-korean .kpanel > h2 { font-size: 17px; color: var(--mineral); margin-bottom: 14px; }
+.mod-korean .kstatgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; }
+.mod-korean .kstat { background: var(--plat-surface-2); border-radius: 12px; padding: 16px 12px; text-align: center; }
+.mod-korean .kstat b { display: block; font-size: 28px; font-weight: 700; color: var(--mineral); line-height: 1.1; }
+.mod-korean .kstat span { display: block; font-size: 13px; color: var(--muted); margin-top: 4px; }
+
 /* ---- Learn (browse) layer ---- */
 .mod-korean .learn-list { display: flex; flex-direction: column; gap: 10px; }
 .mod-korean .learn-list__head { margin-top: 10px; text-transform: uppercase; letter-spacing: 0.08em; }

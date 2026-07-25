@@ -10,10 +10,9 @@ interface Props {
   content: ContentJson;
   /** How far the learner has progressed (progress.curriculum_day) — marks studied days. */
   currentDay: number;
-  onBack: () => void;
 }
 
-export function LearnScreen({ content, currentDay, onBack }: Props): React.JSX.Element {
+export function LearnScreen({ content, currentDay }: Props): React.JSX.Element {
   const [tab, setTab] = useState<'lessons' | 'grammar'>('lessons');
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -22,19 +21,13 @@ export function LearnScreen({ content, currentDay, onBack }: Props): React.JSX.E
 
   return (
     <div className="screen">
-      <h2>Learn</h2>
-      <div className="button-row">
+      <div className="button-row" style={{ marginBottom: 6 }}>
         <button className={tab === 'lessons' ? 'primary' : ''} onClick={() => setTab('lessons')}>Lessons</button>
         <button className={tab === 'grammar' ? 'primary' : ''} onClick={() => setTab('grammar')}>Grammar</button>
       </div>
-
       {tab === 'lessons'
         ? <LessonList content={content} currentDay={currentDay} onOpen={setOpenId} />
         : <GrammarList content={content} />}
-
-      <div className="thumb-zone">
-        <button className="wide" onClick={onBack}>Back</button>
-      </div>
     </div>
   );
 }
