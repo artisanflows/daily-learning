@@ -79,6 +79,26 @@
 .k-g-again { background: #b0503a; } .k-g-hard { background: #b98a3c; } .k-g-good { background: #4e8578; } .k-g-easy { background: #5b7ea8; }
 .k-g:active { transform: scale(0.97); }
 
+/* ---- Study plan (goal) ---- */
+.k-plan { display: flex; flex-direction: column; gap: 8px; }
+.k-planrow {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  font: inherit; text-align: left; cursor: pointer;
+  background: var(--plat-surface-2); border: 1px solid transparent;
+  border-radius: var(--radius); padding: 10px 14px;
+}
+.k-planrow:hover { border-color: var(--plat-line-strong); }
+.k-planrow__n {
+  width: 26px; height: 26px; flex: none; border-radius: 7px; display: flex; align-items: center; justify-content: center;
+  background: var(--accent-soft); color: var(--accent-strong); font-weight: 700; font-size: 13px;
+}
+.k-planrow__body { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.k-planrow__line { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.k-planrow__title { font-weight: 600; }
+.k-planrow__meta { font-size: var(--fs-cap); flex: none; }
+.k-planbar { display: block; height: 5px; border-radius: 999px; background: var(--plat-line); overflow: hidden; }
+.k-planbar__fill { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+
 /* ---- Learn ---- */
 .k-blocklist { display: flex; flex-direction: column; gap: 12px; }
 .k-blockrow {

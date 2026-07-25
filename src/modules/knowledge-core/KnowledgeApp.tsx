@@ -279,6 +279,36 @@ export function KnowledgeApp({ content, store, onActivity, onStatus }: Props) {
               {nothing ? 'Review all caught up — come back tomorrow' : `Start review · ${dueCards.length + newAvailable} cards`}
             </button>
           </section>
+
+          {content.goal && (
+            <section className="dl-panel">
+              <h2>{content.goal.title}</h2>
+              <p className="dl-muted" style={{ marginBottom: 12 }}>{content.goal.blurb}</p>
+              <div className="k-plan">
+                {content.blocks.map((b, i) => {
+                  const unitCards = content.cards.filter((c) => c.unit === b.id);
+                  const unitLearned = unitCards.filter((c) => states[c.id]).length;
+                  const pct = unitCards.length ? Math.round((unitLearned / unitCards.length) * 100) : 0;
+                  return (
+                    <button key={b.id} className="k-planrow" onClick={() => openBlock(b.id)}>
+                      <span className="k-planrow__n">{i + 1}</span>
+                      <span className="k-planrow__body">
+                        <span className="k-planrow__line">
+                          <span className="k-planrow__title">{b.title}</span>
+                          <span className="k-planrow__meta dl-muted">
+                            {read[b.id] ? 'read ✓' : `${b.lessons.length} lessons`}
+                            {unitCards.length > 0 && ` · ${unitLearned}/${unitCards.length} cards`}
+                          </span>
+                        </span>
+                        <span className="k-planbar"><span className="k-planbar__fill" style={{ width: pct + '%' }} /></span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
           <section className="dl-panel">
             <h2>Keep going</h2>
             <p className="dl-muted" style={{ marginBottom: 12 }}>Read the ideas behind the cards, or wander the collection.</p>

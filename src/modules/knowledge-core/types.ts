@@ -14,6 +14,7 @@ export interface Card {
   source: string;          // provenance (the accuracy gate)
   verified: boolean;       // must be true to enter the queue
   tag?: string;            // e.g. wine region, or psychology replication status
+  unit?: string;           // block id this card drills — ties the card to a study-plan unit
 }
 
 // The TEACHING layer (like chess's Study). A block opens with a primer, then walks
@@ -53,13 +54,21 @@ export interface ExploreSection {
 // in a 360×180 space (x = lon+180, y = 90−lat) so pins land on the shared world outline.
 export interface MapPin { entryId: string; label: string; x: number; y: number }
 
+// An optional study goal turns the blocks into an ordered study plan on the Today tab
+// (like chess's "Today's plan"): each block is a unit, with read + card-mastery tracking.
+export interface Goal {
+  title: string;           // e.g. "Introductory Sommelier — theory"
+  blurb: string;           // one-line framing shown under the title
+}
+
 export interface DomainContent {
   id: string;              // module id, e.g. 'wine'
   title: string;
   blurb: string;
   accent: string;          // this domain's accent colour
   newPerDay: number;       // per-module new-card cap (platform-wide budgeting is a later step)
-  blocks: Block[];         // the Learn layer
+  goal?: Goal;             // optional exam/goal the blocks build toward
+  blocks: Block[];         // the Learn layer — ordered; with a goal set, this IS the study plan
   cards: Card[];           // the Review layer
   explore?: ExploreSection[];  // the Explore layer (optional)
   mapPins?: MapPin[];      // optional map markers (rendered over the shared world outline)
