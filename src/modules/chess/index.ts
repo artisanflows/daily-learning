@@ -23,21 +23,13 @@ export function chessModule(): LearningModule {
       container.innerHTML = '';
       const wrap = document.createElement('div');
       wrap.className = 'mod-chess';
-      // The chess app fills the screen exactly as it did standalone. The only shell
-      // chrome is a compact floating "back to subjects" pill, placed top-right so it
-      // never overlaps the chess topbar (logo/title live top-left).
-      const back = document.createElement('div');
-      back.className = 'mod-chess__back';
-      const backBtn = document.createElement('button');
-      backBtn.type = 'button';
-      backBtn.innerHTML = '<span class="ic ic-back"></span> Subjects';
-      backBtn.onclick = () => ctx.goHome();
-      back.appendChild(backBtn);
+      // The chess app fills the screen exactly as it did standalone; the shell's
+      // shared floating "Subjects" pill provides the way back (same as every module).
       const frame = document.createElement('iframe');
       frame.className = 'mod-chess__frame';
       frame.title = 'Chess Atelier';
       frame.src = './chess/index.html';
-      wrap.append(frame, back);
+      wrap.append(frame);
       container.appendChild(wrap);
 
       listener = (e: MessageEvent) => {

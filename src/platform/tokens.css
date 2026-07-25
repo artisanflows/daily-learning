@@ -114,6 +114,38 @@ body {
 .ic-back   { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 5L3 12l7 7v-4h11V9H10z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 5L3 12l7 7v-4h11V9H10z"/></svg>'); }
 .ic-clock  { -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm-1 3h2v5.6l4 2.3-1 1.7-5-2.9z"/></svg>'); mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm-1 3h2v5.6l4 2.3-1 1.7-5-2.9z"/></svg>'); }
 
+/* ---- Shared module chrome — ONE definition, used by every subject. ----
+   Values are lifted from Chess Atelier's stylesheet so all modules match it exactly:
+   1280px container, 20px accent title, pill tab bar (6px gap), 18px panels. */
+.dl-module { max-width: 1280px; margin: 0 auto; color: var(--plat-text); }
+.dl-topbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 0 14px; }
+.dl-topbar__badge {
+  width: 30px; height: 30px; border-radius: 8px; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-size: 17px; font-weight: 700; color: #fff;
+  background: var(--accent);
+}
+.dl-topbar__title { font-size: 20px; font-weight: 700; color: var(--accent); letter-spacing: 0.3px; }
+.dl-topbar__blurb { font-size: var(--fs-cap); color: var(--plat-muted); margin-left: 4px; }
+.dl-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+.dl-tabs button {
+  font: inherit; font-size: 14px; cursor: pointer;
+  background: var(--plat-surface); color: var(--plat-muted);
+  border: 1px solid var(--plat-line); padding: 8px 16px; border-radius: var(--radius-pill);
+}
+.dl-tabs button.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+.dl-tabs button:hover:not(.active) { color: var(--plat-text); border-color: var(--plat-line-strong); }
+.dl-panel {
+  background: var(--plat-surface); border: 1px solid var(--plat-line);
+  border-radius: var(--radius); box-shadow: 0 1px 3px rgba(90, 70, 40, 0.06);
+  padding: 18px; margin-bottom: 14px;
+}
+.dl-panel > h2 { font-size: 17px; margin-bottom: 10px; color: var(--accent); }
+.dl-statgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+.dl-stat { background: var(--plat-surface-2); border-radius: var(--radius); padding: 16px 12px; text-align: center; }
+.dl-stat b { display: block; font-size: 28px; font-weight: 700; color: var(--accent); line-height: 1.1; }
+.dl-stat span { display: block; font-size: var(--fs-cap); color: var(--plat-muted); margin-top: 4px; }
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }

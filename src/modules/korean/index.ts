@@ -25,18 +25,13 @@ export function koreanModule(): LearningModule {
     async mount(container, ctx) {
       const mine = ++token;
       container.innerHTML = '';
+      // Shared .dl-module = the chess-identical 1280px frame; the shell provides
+      // the floating "Subjects" pill, so no back button here.
       const wrap = document.createElement('div');
-      wrap.className = 'mod-korean';
-      const back = document.createElement('div');
-      back.className = 'mod-korean__back';
-      const backBtn = document.createElement('button');
-      backBtn.type = 'button';
-      backBtn.textContent = '← Subjects';
-      backBtn.onclick = () => ctx.goHome();
-      back.appendChild(backBtn);
+      wrap.className = 'mod-korean dl-module';
       const appEl = document.createElement('div');
       appEl.className = 'mod-korean__app';
-      wrap.append(back, appEl);
+      wrap.append(appEl);
       container.appendChild(wrap);
 
       const appMod = await import('./app/App');  // Korean's app code loads lazily

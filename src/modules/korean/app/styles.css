@@ -2,6 +2,8 @@
    so it reads as one product with chess/wine/art. Scoped under .mod-korean so its
    global element selectors can't leak into the shell or other modules. */
 
+/* Container width/margin/padding come from the shared .dl-module + shell host,
+   so Korean sits in exactly the same 1280px frame as chess and the rest. */
 .mod-korean {
   --ground: var(--plat-bg);
   --surface: var(--plat-surface);
@@ -9,27 +11,20 @@
   --mineral: #3f7a6d;         /* celadon green accent */
   --ochre: #b06a2c;
   --muted: var(--plat-muted);
+  /* Feed the shared chrome (.dl-topbar/.dl-tabs/.dl-panel/.dl-stat) this module's accent. */
+  --accent: var(--mineral);
+  --accent-strong: #35695e;
+  --accent-soft: #dcebe4;
 
-  max-width: 560px;
-  margin: 0 auto;
-  min-height: 100dvh;
+  min-height: calc(100vh - 76px);
   display: flex;
   flex-direction: column;
-  padding: max(env(safe-area-inset-top), 12px) 20px max(env(safe-area-inset-bottom), 16px);
-  background: var(--ground);
   color: var(--paper);
-  font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
-  font-size: 17px;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
   -webkit-font-smoothing: antialiased;
 }
 .mod-korean * { box-sizing: border-box; }
-
-.mod-korean__back { flex: none; margin-bottom: 8px; }
-.mod-korean__back button {
-  font: inherit; background: none; border: none; color: var(--muted);
-  padding: 6px 4px; min-height: 40px; cursor: pointer; font-size: 15px;
-}
-.mod-korean__back button:hover { color: var(--paper); }
 .mod-korean__app { flex: 1; display: flex; flex-direction: column; }
 
 .mod-korean .screen { flex: 1; display: flex; flex-direction: column; gap: 16px; }
@@ -41,12 +36,14 @@
 .mod-korean .small { font-size: 14px; color: var(--muted); }
 .mod-korean .register-hon { color: var(--ochre); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
 
-.mod-korean button {
+/* Base element styles are wrapped in :where() so the shared chrome classes
+   (.dl-tabs button, .dl-panel > h2, …) always win without specificity fights. */
+:where(.mod-korean) :where(button) {
   font: inherit; border: 1px solid var(--plat-line-strong); border-radius: 12px; min-height: 48px;
   padding: 12px 18px; cursor: pointer; background: var(--surface); color: var(--paper);
   transition: background var(--dur, 180ms) ease, border-color var(--dur, 180ms) ease;
 }
-.mod-korean button:hover { background: var(--plat-surface-2); }
+:where(.mod-korean) :where(button:hover) { background: var(--plat-surface-2); }
 .mod-korean button:focus-visible,
 .mod-korean input:focus-visible,
 .mod-korean textarea:focus-visible { outline: 2px solid var(--mineral); outline-offset: 2px; }
@@ -88,37 +85,9 @@
 .mod-korean .seg button { min-height: 40px; border: none; border-radius: 0; padding: 8px 16px; font-size: 14px; background: var(--surface); }
 .mod-korean .seg button.on { background: var(--mineral); color: #fff; }
 
-.mod-korean h1 { font-size: 40px; font-weight: 700; }
-.mod-korean h2 { font-size: 22px; font-weight: 600; }
-
-/* ---- Chess-style chrome: topbar + menu bar + panels ---- */
-.mod-korean .ktop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 2px 0 14px; }
-.mod-korean .ktop__badge {
-  width: 34px; height: 34px; border-radius: 9px; flex: none;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; font-weight: 700; color: #fff; background: var(--mineral);
-  box-shadow: 0 2px 8px color-mix(in srgb, var(--mineral) 40%, transparent);
-}
-.mod-korean .ktop__title { font-size: 22px; font-weight: 700; color: var(--mineral); }
-.mod-korean .ktop__blurb { }
-.mod-korean .ktabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
-.mod-korean .ktabs button {
-  font: inherit; font-size: 14px; min-height: 40px; cursor: pointer;
-  background: var(--surface); color: var(--muted);
-  border: 1px solid var(--plat-line); padding: 8px 16px; border-radius: 999px;
-}
-.mod-korean .ktabs button:hover:not(.active) { color: var(--paper); border-color: var(--plat-line-strong); }
-.mod-korean .ktabs button.active { background: var(--mineral); color: #fff; border-color: var(--mineral); font-weight: 600; }
-
-.mod-korean .kpanel {
-  background: var(--surface); border: 1px solid var(--plat-line);
-  border-radius: 16px; box-shadow: var(--shadow-card); padding: 20px 22px; margin-bottom: 16px;
-}
-.mod-korean .kpanel > h2 { font-size: 17px; color: var(--mineral); margin-bottom: 14px; }
-.mod-korean .kstatgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; }
-.mod-korean .kstat { background: var(--plat-surface-2); border-radius: 12px; padding: 16px 12px; text-align: center; }
-.mod-korean .kstat b { display: block; font-size: 28px; font-weight: 700; color: var(--mineral); line-height: 1.1; }
-.mod-korean .kstat span { display: block; font-size: 13px; color: var(--muted); margin-top: 4px; }
+:where(.mod-korean) :where(h1) { font-size: 40px; font-weight: 700; }
+:where(.mod-korean) :where(h2) { font-size: 22px; font-weight: 600; }
+/* Topbar / tabs / panels / stats come from the shared .dl-* chrome in tokens.css. */
 
 /* ---- Learn (browse) layer ---- */
 .mod-korean .learn-list { display: flex; flex-direction: column; gap: 10px; }

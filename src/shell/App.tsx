@@ -34,6 +34,10 @@ function SubjectView({ module, onHome, refresh }: { module: LearningModule; onHo
 
   return (
     <div className="subject-view" data-theme={module.prefersTheme} data-fullbleed={module.fullBleed ? '' : undefined}>
+      {/* ONE back control, owned by the shell — identical on every subject. */}
+      <div className="subject-back">
+        <button type="button" onClick={onHome}><span className="ic ic-back" /> Subjects</button>
+      </div>
       <div className="subject-view__host" ref={hostRef} />
     </div>
   );

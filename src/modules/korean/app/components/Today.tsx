@@ -17,18 +17,18 @@ export function Today({ progress, dueCount, onStart, onShort, onExport, onImport
   const fileInput = useRef<HTMLInputElement>(null);
   return (
     <div className="screen">
-      <section className="kpanel">
+      <section className="dl-panel">
         <h2>Today</h2>
-        <div className="kstatgrid">
-          <div className="kstat"><b>{dueCount}</b><span>due for review</span></div>
-          <div className="kstat"><b>{progress.curriculum_day}</b><span>days done</span></div>
-          <div className="kstat"><b>{progress.minutes_logged_total}</b><span>min total</span></div>
+        <div className="dl-statgrid">
+          <div className="dl-stat"><b>{dueCount}</b><span>due for review</span></div>
+          <div className="dl-stat"><b>{progress.curriculum_day}</b><span>days done</span></div>
+          <div className="dl-stat"><b>{progress.minutes_logged_total}</b><span>min total</span></div>
         </div>
         <button className="primary wide" style={{ marginTop: 16 }} onClick={onStart}>Start session</button>
         <button className="wide" style={{ marginTop: 10 }} onClick={onShort}>Short session</button>
       </section>
 
-      <section className="kpanel">
+      <section className="dl-panel">
         <h2>Backup</h2>
         <div className="button-row">
           <button onClick={onExport}>Export</button>

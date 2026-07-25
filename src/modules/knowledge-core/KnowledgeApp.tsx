@@ -49,7 +49,7 @@ function buildOptions(cur: Card, all: Card[]): string[] | null {
   return shuffle([correct, ...distractors]);
 }
 
-export function KnowledgeApp({ content, store, onActivity, onStatus, onHome }: Props) {
+export function KnowledgeApp({ content, store, onActivity, onStatus }: Props) {
   const [states, setStates] = useState<Record<string, StoredCard>>(() => store.get('cards', {}));
   const [meta, setMeta] = useState<Meta>(() => store.get<Meta>('meta', { introducedDay: '', introducedCount: 0, doneDay: '' }));
   const [read, setRead] = useState<Record<string, 1>>(() => store.get('read', {}));
@@ -132,7 +132,7 @@ export function KnowledgeApp({ content, store, onActivity, onStatus, onHome }: P
   if (view === 'summary') {
     const t = tally.current;
     return (
-      <div className="mod-knowledge" style={accentStyle}>
+      <div className="mod-knowledge dl-module" style={accentStyle}>
         <div className="mod-knowledge__back"><button type="button" onClick={() => { setTab('today'); setView('tab'); }}><span className="ic ic-back" /> {content.title}</button></div>
         <div className="k-focus k-center">
           <div className="k-hero__badge"><span className="ic ic-check big" /></div>
@@ -147,7 +147,7 @@ export function KnowledgeApp({ content, store, onActivity, onStatus, onHome }: P
   if (view === 'card' && cur) {
     const typed = cur.type !== 'why';
     return (
-      <div className="mod-knowledge" style={accentStyle}>
+      <div className="mod-knowledge dl-module" style={accentStyle}>
         <div className="mod-knowledge__back"><button type="button" onClick={() => { setTab('today'); setView('tab'); }}><span className="ic ic-back" /> End session</button></div>
         <div className="k-focus k-focus--narrow">
           <div className="k-progress dl-muted">{idx + 1} / {queue.length}{isNew ? ' · new' : ''}{cur.tag ? ' · ' + cur.tag : ''}</div>
@@ -202,7 +202,7 @@ export function KnowledgeApp({ content, store, onActivity, onStatus, onHome }: P
     const total = block.lessons.length;
     const atEnd = page >= total - 1;
     return (
-      <div className="mod-knowledge" style={accentStyle}>
+      <div className="mod-knowledge dl-module" style={accentStyle}>
         <div className="mod-knowledge__back"><button type="button" onClick={() => { setTab('learn'); setView('tab'); }}><span className="ic ic-back" /> Lessons</button></div>
         <div className="k-focus k-focus--read">
           <div className="k-progress dl-muted">{block.title} · {onPrimer ? 'overview' : `lesson ${page + 1} / ${total}`}</div>
@@ -232,7 +232,7 @@ export function KnowledgeApp({ content, store, onActivity, onStatus, onHome }: P
 
   if (view === 'entry' && entry) {
     return (
-      <div className="mod-knowledge" style={accentStyle}>
+      <div className="mod-knowledge dl-module" style={accentStyle}>
         <div className="mod-knowledge__back"><button type="button" onClick={() => { setTab('explore'); setView('tab'); }}><span className="ic ic-back" /> Explore</button></div>
         <div className="k-focus k-focus--read">
           {entry.image && <img className="k-entry__img" src={entry.image} alt="" />}
@@ -250,38 +250,36 @@ export function KnowledgeApp({ content, store, onActivity, onStatus, onHome }: P
     );
   }
 
-  /* ================= Tabbed chrome (chess-style) ================= */
+  /* ================= Tabbed chrome (shared, chess-identical) ================= */
   return (
-    <div className="mod-knowledge" style={accentStyle}>
-      <div className="mod-knowledge__back"><button type="button" onClick={onHome}><span className="ic ic-back" /> Subjects</button></div>
-
-      <header className="k-topbar">
-        <span className="k-topbar__badge" aria-hidden="true">{content.title[0]}</span>
-        <h1 className="k-topbar__title">{content.title}</h1>
-        <span className="k-topbar__blurb dl-muted">{content.blurb}</span>
+    <div className="mod-knowledge dl-module" style={accentStyle}>
+      <header className="dl-topbar">
+        <span className="dl-topbar__badge" aria-hidden="true">{content.title[0]}</span>
+        <h1 className="dl-topbar__title">{content.title}</h1>
+        <span className="dl-topbar__blurb">{content.blurb}</span>
       </header>
 
-      <nav className="k-tabs">
-        <button className={tab === 'today' ? 'active' : ''} onClick={() => setTab('today')}><span className="ic ic-cards" /> Today</button>
-        <button className={tab === 'learn' ? 'active' : ''} onClick={() => setTab('learn')}><span className="ic ic-book" /> Learn</button>
-        {hasExplore && <button className={tab === 'explore' ? 'active' : ''} onClick={() => setTab('explore')}><span className="ic ic-globe" /> Explore</button>}
+      <nav className="dl-tabs">
+        <button className={tab === 'today' ? 'active' : ''} onClick={() => setTab('today')}>Today</button>
+        <button className={tab === 'learn' ? 'active' : ''} onClick={() => setTab('learn')}>Learn</button>
+        {hasExplore && <button className={tab === 'explore' ? 'active' : ''} onClick={() => setTab('explore')}>Explore</button>}
       </nav>
 
       {tab === 'today' && (
         <>
-          <section className="k-panel">
+          <section className="dl-panel">
             <h2>Today</h2>
-            <div className="k-statgrid">
-              <div className="k-stat"><b>{dueCards.length}</b><span>due for review</span></div>
-              <div className="k-stat"><b>{newAvailable}</b><span>new available</span></div>
-              <div className="k-stat"><b>{learned}/{content.cards.length}</b><span>cards learned</span></div>
-              <div className="k-stat"><b>{readCount}/{content.blocks.length}</b><span>lessons read</span></div>
+            <div className="dl-statgrid">
+              <div className="dl-stat"><b>{dueCards.length}</b><span>due for review</span></div>
+              <div className="dl-stat"><b>{newAvailable}</b><span>new available</span></div>
+              <div className="dl-stat"><b>{learned}/{content.cards.length}</b><span>cards learned</span></div>
+              <div className="dl-stat"><b>{readCount}/{content.blocks.length}</b><span>lessons read</span></div>
             </div>
             <button className="dl-btn dl-btn--accent dl-btn--lg" disabled={nothing} onClick={start} style={{ marginTop: 16 }}>
               {nothing ? 'Review all caught up — come back tomorrow' : `Start review · ${dueCards.length + newAvailable} cards`}
             </button>
           </section>
-          <section className="k-panel">
+          <section className="dl-panel">
             <h2>Keep going</h2>
             <p className="dl-muted" style={{ marginBottom: 12 }}>Read the ideas behind the cards, or wander the collection.</p>
             <div className="k-navrow">
@@ -293,7 +291,7 @@ export function KnowledgeApp({ content, store, onActivity, onStatus, onHome }: P
       )}
 
       {tab === 'learn' && (
-        <section className="k-panel">
+        <section className="dl-panel">
           <h2>Learn</h2>
           <p className="dl-muted" style={{ marginBottom: 12 }}>Read through the ideas, then the review drills them.</p>
           <div className="k-blocklist">
@@ -314,13 +312,13 @@ export function KnowledgeApp({ content, store, onActivity, onStatus, onHome }: P
       {tab === 'explore' && (
         <>
           {content.mapPins && content.mapPins.length > 0 && (
-            <section className="k-panel">
+            <section className="dl-panel">
               <h2>Map</h2>
               <div className="k-map"><WorldMap pins={content.mapPins} accent={content.accent} onPick={openEntry} /></div>
             </section>
           )}
           {(content.explore ?? []).map((sec) => (
-            <section key={sec.id} className="k-panel">
+            <section key={sec.id} className="dl-panel">
               <h2>{sec.title}</h2>
               {sec.blurb && <p className="dl-muted" style={{ marginBottom: 12 }}>{sec.blurb}</p>}
               <div className={sec.kind === 'list' ? 'k-exlist' : 'k-exgrid'}>
