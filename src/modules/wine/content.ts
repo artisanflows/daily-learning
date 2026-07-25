@@ -628,3 +628,36 @@ export const WINE: DomainContent = {
     },
   ],
 };
+
+// ---- Typicity profiles (0–5) on the Unit-1 tasting axes ---------------------------
+// Attached to every region/grape one-pager so "how does Chianti score on tannin and
+// acidity?" has a visual answer. Whites, rosés and fino Sherry: tannin ≈ 0. Values are
+// deliberate broad strokes — the TYPICAL flagship style, not a law of nature.
+const AXES = ['Acidity', 'Tannin', 'Body', 'Fruit'] as const;
+const PROFILES: Record<string, [number, number, number, number]> = {
+  // regions (flagship style)
+  'r-bordeaux': [3, 4, 4, 4], 'r-burgundy': [4, 2, 3, 3], 'r-champagne': [5, 0, 2, 3],
+  'r-rhone': [3, 3, 4, 4], 'r-loire': [5, 0, 2, 3], 'r-alsace': [4, 0, 3, 3],
+  'r-provence': [4, 0, 2, 3], 'r-piedmont': [5, 5, 4, 3], 'r-veneto': [3, 4, 5, 5],
+  'r-tuscany': [4, 4, 3, 3], 'r-sicily': [3, 3, 4, 4], 'r-rioja': [3, 3, 3, 3],
+  'r-riasbaixas': [5, 0, 2, 4], 'r-ribera': [3, 4, 5, 4], 'r-priorat': [3, 4, 5, 4],
+  'r-jerez': [4, 0, 2, 1], 'r-douro': [3, 4, 5, 4], 'r-mosel': [5, 0, 1, 3],
+  'r-wachau': [4, 0, 3, 3], 'r-tokaj': [5, 0, 4, 5], 'r-napa': [3, 4, 5, 5],
+  'r-sonoma': [4, 2, 3, 4], 'r-willamette': [4, 2, 3, 3], 'r-mendoza': [3, 4, 4, 5],
+  'r-maipo': [3, 4, 4, 4], 'r-barossa': [3, 4, 5, 5], 'r-coonawarra': [3, 4, 4, 4],
+  'r-margaret': [4, 4, 4, 4], 'r-marlborough': [5, 0, 2, 5], 'r-otago': [4, 3, 4, 4],
+  'r-stellenbosch': [3, 4, 4, 4],
+  // grapes
+  'g-cabernet': [3, 5, 5, 4], 'g-merlot': [3, 3, 4, 4], 'g-pinot': [4, 2, 2, 3],
+  'g-chardonnay': [3, 0, 4, 3], 'g-sangiovese': [5, 4, 3, 3], 'g-nebbiolo': [5, 5, 4, 3],
+  'g-syrah': [3, 4, 4, 4], 'g-grenache': [2, 2, 4, 5], 'g-riesling': [5, 0, 2, 4],
+  'g-sauvignon': [5, 0, 2, 4], 'g-tempranillo': [3, 3, 4, 3], 'g-malbec': [3, 4, 4, 5],
+  'g-chenin': [5, 0, 3, 3], 'g-viognier': [2, 0, 4, 4], 'g-gamay': [4, 1, 2, 4],
+  'g-gruner': [4, 0, 3, 3], 'g-albarino': [5, 0, 2, 4], 'g-zinfandel': [3, 3, 5, 5],
+};
+for (const sec of WINE.explore ?? []) {
+  for (const e of sec.entries) {
+    const p = PROFILES[e.id];
+    if (p) e.profile = p.map((value, i) => ({ label: AXES[i]!, value }));
+  }
+}

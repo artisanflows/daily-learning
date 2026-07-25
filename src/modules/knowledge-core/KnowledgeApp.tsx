@@ -15,7 +15,7 @@ interface Props {
 }
 interface Meta { introducedDay: string; introducedCount: number; doneDay: string }
 // The three browse tabs share the chess-style chrome; the rest are focused overlays.
-type View = 'tab' | 'block' | 'entry' | 'card' | 'summary';
+type View = 'tab' | 'block' | 'entry' | 'card' | 'summary' | 'gquiz';
 type Tab = 'today' | 'learn' | 'explore';
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -130,6 +130,19 @@ export function KnowledgeApp({ content, store, onActivity, onStatus }: Props) {
   const allEntries: ExploreEntry[] = useMemo(() => (content.explore ?? []).flatMap((s) => s.entries), [content.explore]);
   const entry = entryId ? allEntries.find((e) => e.id === entryId) ?? null : null;
   const openEntry = (id: string) => { setEntryId(id); setView('entry'); markDay('explore'); };
+
+  /* ---------------- Gallery quiz (endless recognition over image entries) ---------------- */
+  const artistOf = (e: ExploreEntry) => ((e.subtitle ?? '').split('·')[0] ?? '').trim();
+  const quizPool = useMemo(() => allEntries.filter((e) => e.image && e.subtitle && e.subtitle.includes('·')), [allEntries]);
+  const [quiz, setQuiz] = useState<{ entry: ExploreEntry; opts: string[]; streak: number; picked: string | null } | null>(null);
+  const nextQuiz = (streak: number) => {
+    const qe = quizPool[Math.floor(Math.random() * quizPool.length)]!;
+    const correct = artistOf(qe);
+    const others = shuffle([...new Set(quizPool.map(artistOf).filter((a) => a && a !== correct))]).slice(0, 3);
+    setQuiz({ entry: qe, opts: shuffle([correct, ...others]), streak, picked: null });
+    setView('gquiz');
+    markDay('explore');
+  };
   const hasExplore = (content.explore ?? []).length > 0 || (content.mapPins ?? []).length > 0;
   const readCount = content.blocks.filter((b) => read[b.id]).length;
   const nothing = dueCards.length + newAvailable === 0;
@@ -202,6 +215,39 @@ export function KnowledgeApp({ content, store, onActivity, onStatus }: Props) {
     );
   }
 
+  if (view === 'gquiz' && quiz) {
+    const correct = artistOf(quiz.entry);
+    const answered = quiz.picked !== null;
+    const wasRight = quiz.picked === correct;
+    return (
+      <div className="mod-knowledge dl-module" style={accentStyle}>
+        <div className="mod-knowledge__back"><button type="button" onClick={() => { setTab('explore'); setView('tab'); }}><span className="ic ic-back" /> Explore</button></div>
+        <div className="k-focus k-focus--narrow">
+          <div className="k-progress dl-muted">Gallery quiz · streak {quiz.streak}{answered ? (wasRight ? ' +1' : ' — reset') : ''}</div>
+          <div className="k-card">
+            <img className="k-img" src={quiz.entry.image} alt="" />
+            <p className="k-prompt dl-serif">Who made this?</p>
+            <div className="k-options">
+              {quiz.opts.map((opt) => {
+                const state = !answered ? '' : opt === correct ? ' is-correct' : opt === quiz.picked ? ' is-wrong' : '';
+                return <button key={opt} className={'k-option' + state} disabled={answered} onClick={() => setQuiz({ ...quiz, picked: opt })}>{opt}</button>;
+              })}
+            </div>
+            {answered && (
+              <div className="k-reveal">
+                <p className={wasRight ? 'k-ok' : 'k-no'}>{quiz.entry.title}</p>
+                <p className="k-explain dl-muted">{quiz.entry.subtitle}</p>
+              </div>
+            )}
+          </div>
+          <div className="k-thumb">
+            {answered && <button className="dl-btn dl-btn--accent dl-btn--block" onClick={() => nextQuiz(wasRight ? quiz.streak + 1 : 0)}>Next work</button>}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (view === 'block' && block) {
     const onPrimer = page < 0;
     const lesson = onPrimer ? null : block.lessons[page];
@@ -249,6 +295,18 @@ export function KnowledgeApp({ content, store, onActivity, onStatus }: Props) {
           {entry.facts && entry.facts.length > 0 && (
             <div className="k-facts">
               {entry.facts.map((f, i) => <div key={i} className="k-fact"><span className="k-fact__k dl-muted">{f.label}</span><span className="k-fact__v">{f.value}</span></div>)}
+            </div>
+          )}
+          {entry.profile && entry.profile.length > 0 && (
+            <div className="k-profile">
+              <div className="k-profile__head dl-muted">Typical style · 0–5</div>
+              {entry.profile.map((p, i) => (
+                <div key={i} className="k-profile__row">
+                  <span className="k-profile__label">{p.label}</span>
+                  <span className="k-planbar k-profile__bar"><span className="k-planbar__fill" style={{ width: (Math.max(0, Math.min(5, p.value)) / 5) * 100 + '%' }} /></span>
+                  <span className="k-profile__val dl-muted">{p.value}</span>
+                </div>
+              ))}
             </div>
           )}
           {paras(entry.body).map((p, i) => <p key={i} className="k-body">{p}</p>)}
@@ -372,6 +430,13 @@ export function KnowledgeApp({ content, store, onActivity, onStatus }: Props) {
 
       {tab === 'explore' && (
         <>
+          {quizPool.length >= 12 && (
+            <section className="dl-panel">
+              <h2>Gallery quiz</h2>
+              <p className="dl-muted" style={{ marginBottom: 12 }}>Endless recognition — see a work, name the hand. {quizPool.length} works in rotation.</p>
+              <button className="dl-btn dl-btn--accent" onClick={() => nextQuiz(0)}>Start the quiz</button>
+            </section>
+          )}
           {content.mapPins && content.mapPins.length > 0 && (
             <section className="dl-panel">
               <h2>Map</h2>
@@ -392,7 +457,7 @@ export function KnowledgeApp({ content, store, onActivity, onStatus }: Props) {
                   ) : (
                     <button key={e.id} className="k-excard" onClick={() => openEntry(e.id)}>
                       {e.image
-                        ? <span className="k-excard__img" style={{ backgroundImage: `url(${e.image})` }} />
+                        ? <img className="k-excard__img" loading="lazy" src={e.image} alt="" />
                         : <span className="k-excard__mono" aria-hidden="true">{e.title[0]}</span>}
                       <span className="k-excard__title">{e.title}</span>
                       {e.subtitle && <span className="k-excard__sub dl-muted">{e.subtitle}</span>}

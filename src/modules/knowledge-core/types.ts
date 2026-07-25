@@ -40,6 +40,8 @@ export interface ExploreEntry {
   subtitle?: string;       // e.g. country · grape, or artist · year
   image?: string;          // optional image (art works)
   facts?: { label: string; value: string }[];  // quick-reference key/value rows
+  /** Typicity bars on a 0–5 scale (wine: the tasting axes — acidity, tannin, body…). */
+  profile?: { label: string; value: number }[];
   body: string;            // paragraphs separated by blank lines
   source?: string;
 }

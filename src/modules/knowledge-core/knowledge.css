@@ -127,6 +127,14 @@
 
 /* ---- Explore ---- */
 .k-map { background: var(--plat-surface); border: 1px solid var(--plat-line); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 14px; overflow: hidden; }
+.k-mapbar { display: flex; gap: 6px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+.k-mapbar__btn {
+  font: inherit; font-size: 13px; cursor: pointer; min-height: 32px;
+  padding: 5px 12px; border-radius: var(--radius-pill);
+  border: 1px solid var(--plat-line-strong); background: var(--plat-surface); color: var(--plat-text);
+}
+.k-mapbar__btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.k-mapbar__spacer { flex: 1; }
 .k-worldmap { width: 100%; height: auto; display: block; border-radius: var(--radius-sm); }
 .k-worldmap--region { max-height: 340px; }
 .k-exsec { display: flex; flex-direction: column; gap: 10px; }
@@ -140,7 +148,7 @@
   transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 .k-excard:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); }
-.k-excard__img { display: block; width: 100%; aspect-ratio: 4 / 3; background-size: cover; background-position: center; background-color: var(--plat-surface-2); }
+.k-excard__img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--plat-surface-2); }
 .k-excard__mono {
   display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 4 / 3;
   font-family: var(--font-serif); font-size: 40px; color: #fff; background: var(--accent);
@@ -156,6 +164,14 @@
 .k-exrow:hover { background: var(--plat-surface-2); }
 .k-exrow__title { font-weight: 700; }
 .k-exrow__sub { font-size: var(--fs-cap); }
+
+/* ---- Typicity profile bars ---- */
+.k-profile { display: flex; flex-direction: column; gap: 8px; background: var(--plat-surface); border: 1px solid var(--plat-line); border-radius: var(--radius); padding: 14px 16px; }
+.k-profile__head { font-size: var(--fs-cap); text-transform: uppercase; letter-spacing: 0.08em; }
+.k-profile__row { display: flex; align-items: center; gap: 10px; }
+.k-profile__label { flex: none; width: 96px; font-size: 14px; font-weight: 600; }
+.k-profile__bar { flex: 1; height: 7px; }
+.k-profile__val { flex: none; width: 20px; text-align: right; font-size: var(--fs-cap); }
 
 /* ---- Entry reader ---- */
 .k-entry__img { width: 100%; max-height: 52vh; object-fit: contain; border-radius: var(--radius-lg); background: var(--plat-surface-2); }

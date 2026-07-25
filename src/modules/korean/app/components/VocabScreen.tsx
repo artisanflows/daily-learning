@@ -16,8 +16,12 @@ const REVIEW_ROUND = 15;
 const STORE_KEY = 'kr-vocab-v1';
 
 const TOPIC_LABELS: Record<string, string> = {
-  all: 'All', things: 'Things', food: 'Food', restaurant: 'Dining', signs: 'Signs', core: 'Course',
+  all: 'All', things: 'Things', food: 'Food', restaurant: 'Dining', signs: 'Signs',
+  numbers: 'Numbers', time: 'Time', colors: 'Colours', verbs: 'Verbs', adjectives: 'Describing',
+  people: 'People', body: 'Body', nature: 'Nature', places: 'Places', travel: 'Travel',
+  shopping: 'Money', function: 'Small words', life: 'Daily life', core: 'Course',
 };
+const TOPIC_ORDER = ['things', 'food', 'restaurant', 'signs', 'numbers', 'time', 'colors', 'verbs', 'adjectives', 'people', 'body', 'nature', 'places', 'travel', 'shopping', 'function', 'life', 'core'];
 const today = () => new Date().toISOString().slice(0, 10);
 
 interface VocabStore { states: Record<string, StoredCard>; day: string; introduced: number }
@@ -207,7 +211,7 @@ export function VocabScreen({ content, onBack }: { content: ContentJson; onBack:
   }
 
   if (mode === 'browse') {
-    const topics = ['all', ...['things', 'food', 'restaurant', 'signs', 'core'].filter((t) => vocab.some((v) => (v.topic ?? 'core') === t))];
+    const topics = ['all', ...TOPIC_ORDER.filter((t) => vocab.some((v) => (v.topic ?? 'core') === t))];
     const list = topic === 'all' ? vocab : vocab.filter((v) => (v.topic ?? 'core') === topic);
     return (
       <div className="screen">

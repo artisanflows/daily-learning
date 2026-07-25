@@ -1,4 +1,5 @@
-import type { DomainContent } from '../knowledge-core/types';
+import type { DomainContent, ExploreSection } from '../knowledge-core/types';
+import COLLECTION from './collection.json';
 
 // Art — recognition first (Simon's brief, 2026-07-25): see a picture → know the painter,
 // ideally the title and rough year, and have one thing worth saying. Conversational, not
@@ -377,3 +378,56 @@ export const ART: DomainContent = {
     },
   ],
 };
+
+// ---- The big collection (Met Open Access, fetched by scripts/fetch-collection.mjs) ----
+// ~700 works grouped by movement, appended as explore galleries. Metadata (artist,
+// title, date) comes straight from the Met; images live in public/art/coll/ and are
+// cached lazily (not precached) so the app install stays light.
+interface CollWork { id: number; artist: string; title: string; date: string; movement: string }
+const CURATED_IDS = new Set([
+  435809, 437398, 437878, 383001, 437853, 437854, 436135, 436121, 436535, 459123,
+  435868, 436105, 45434, 11417, 634108, 436616, 436243, 437986, 436572, 437871,
+  436543, 438417, 436023, 437430, 438002, 437999, 459116, 436820, 11145, 12127, 438822,
+]);
+const MOVE_ORDER = [
+  'Northern Renaissance', 'Venetian Renaissance', 'Mannerism', 'Baroque', 'Dutch Golden Age',
+  'Rococo & the 18th century', 'Neoclassicism & Romanticism', 'Realism & the 19th century',
+  'Impressionism', 'Post-Impressionism & Symbolism', 'Japan — Ukiyo-e',
+];
+{
+  const seen = new Set<number>();
+  const byMove = new Map<string, CollWork[]>();
+  for (const w of COLLECTION as CollWork[]) {
+    if (CURATED_IDS.has(w.id) || seen.has(w.id)) continue;
+    seen.add(w.id);
+    const list = byMove.get(w.movement) ?? [];
+    list.push(w);
+    byMove.set(w.movement, list);
+  }
+  const timeline = ART.explore!.pop()!; // keep the timeline list as the final section
+  for (const m of MOVE_ORDER) {
+    const list = byMove.get(m);
+    if (!list?.length) continue;
+    const section: ExploreSection = {
+      id: 'coll-' + m.toLowerCase().replace(/[^a-z]+/g, '-'),
+      title: `${m} — the collection`,
+      blurb: `${list.length} works from the Met’s open collection. Open one, then ask the one question.`,
+      kind: 'gallery',
+      entries: list.map((w) => ({
+        id: 'c' + w.id,
+        title: w.title,
+        subtitle: `${w.artist} · ${w.date || 'undated'}`,
+        image: `art/coll/${w.id}.jpg`,
+        facts: [
+          { label: 'Artist', value: w.artist },
+          { label: 'Date', value: w.date || '—' },
+          { label: 'Movement', value: m },
+        ],
+        body: 'Look before you read: where does your eye land first, and what pulls it there? Then the one question — what problem was this artist solving?',
+        source: 'Met Open Access (CC0)',
+      })),
+    };
+    ART.explore!.push(section);
+  }
+  ART.explore!.push(timeline);
+}
