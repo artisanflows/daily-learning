@@ -3,12 +3,13 @@ import type { LearningModule } from '../platform/module';
 import { exportToFile, importFromText, gistPush, gistPull, getSyncSettings, setSyncSettings } from '../platform/sync';
 
 interface Props {
-  modules: LearningModule[];
+  modules: LearningModule[];      // already in priority order
   hidden: string[];
   onToggle: (id: string, hide: boolean) => void;
+  onMove: (id: string, dir: -1 | 1) => void;
 }
 
-export function SettingsCard({ modules, hidden, onToggle }: Props) {
+export function SettingsCard({ modules, hidden, onToggle, onMove }: Props) {
   const s = getSyncSettings();
   const [token, setToken] = useState(s.syncToken ?? '');
   const [gistId, setGistId] = useState(s.syncGistId ?? '');
@@ -42,18 +43,25 @@ export function SettingsCard({ modules, hidden, onToggle }: Props) {
       <summary>Settings &amp; backup</summary>
       <div className="settings__body">
         <p className="dl-muted settings__hint" style={{ marginTop: 0 }}>
-          Subjects on this device — untick what you don’t use (progress is kept; tick to bring it back):
+          Subjects on this device — order is your priority: when today’s time is short, #1 gets its
+          new material first (due reviews always run for every subject). Hide keeps progress safe.
         </p>
-        <div className="settings__row" style={{ marginBottom: 14 }}>
-          {modules.map((m) => {
+        <div className="settings__subjects">
+          {modules.map((m, i) => {
             const isHidden = hidden.includes(m.id);
             const lastVisible = !isHidden && modules.filter((x) => !hidden.includes(x.id)).length === 1;
             return (
-              <button key={m.id} className="dl-btn" style={{ opacity: isHidden ? 0.5 : 1, borderColor: isHidden ? 'var(--plat-line)' : m.accent }}
-                disabled={lastVisible} title={lastVisible ? 'At least one subject stays on' : undefined}
-                onClick={() => onToggle(m.id, !isHidden)}>
-                {isHidden ? '○' : '●'} {m.title}
-              </button>
+              <div key={m.id} className={'settings__subj' + (isHidden ? ' is-off' : '')}>
+                <span className="settings__rank" style={{ background: isHidden ? 'var(--plat-line)' : m.accent }}>{i + 1}</span>
+                <span className="settings__subjname">{m.title}</span>
+                <button className="settings__mini" disabled={i === 0} onClick={() => onMove(m.id, -1)} aria-label={`Move ${m.title} up`}>↑</button>
+                <button className="settings__mini" disabled={i === modules.length - 1} onClick={() => onMove(m.id, 1)} aria-label={`Move ${m.title} down`}>↓</button>
+                <button className="settings__mini settings__mini--wide" disabled={lastVisible}
+                  title={lastVisible ? 'At least one subject stays on' : undefined}
+                  onClick={() => onToggle(m.id, !isHidden)}>
+                  {isHidden ? 'Show' : 'Hide'}
+                </button>
+              </div>
             );
           })}
         </div>

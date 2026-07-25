@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { DailyStatus, LearningModule } from '../platform/module';
-import { getBudget, setBudget, getHiddenModules, setModuleHidden } from '../platform/storage';
+import { getBudget, setBudget, getHiddenModules, setModuleHidden, getModuleOrder, setModuleOrder } from '../platform/storage';
 import { SettingsCard } from './SettingsCard';
 
 interface Props {
@@ -28,10 +28,13 @@ function planDay(rows: { m: LearningModule; s: DailyStatus }[], budget: number):
   });
   if (!budget) { items.forEach((i) => { i.today = i.dueMin + i.newMin; }); return items; }
   let remaining = budget - items.reduce((a, i) => a + i.dueMin, 0); // due always included
+  // New material goes to subjects in PRIORITY order (the items array is pre-sorted),
+  // and the top subject takes a partial slice rather than losing its turn entirely.
   for (const i of items) {
     if (i.newMin <= 0 || i.s.done) continue;
-    if (remaining >= i.newMin) { i.today += i.newMin; remaining -= i.newMin; }
-    else i.deferNew = true;
+    const grant = Math.min(i.newMin, Math.max(0, remaining));
+    if (grant > 0) { i.today += grant; remaining -= grant; }
+    if (grant < i.newMin) i.deferNew = true;
   }
   return items;
 }
@@ -45,8 +48,21 @@ export function Today({ modules, streak, onOpen }: Props) {
   // Per-device subject visibility — hidden modules vanish from the plan/stats/grid,
   // but their saved progress stays untouched (toggle back any time in Settings).
   const [hidden, setHidden] = useState<string[]>(getHiddenModules());
-  const visible = modules.filter((m) => !hidden.includes(m.id));
+  // Per-device priority: sets display order AND who gets new-material minutes first
+  // when the time budget is tight (planDay iterates in this order).
+  const [order, setOrder] = useState<string[]>(getModuleOrder());
+  const rank = (id: string) => { const i = order.indexOf(id); return i === -1 ? 100 + modules.findIndex((m) => m.id === id) : i; };
+  const ordered = [...modules].sort((a, b) => rank(a.id) - rank(b.id));
+  const visible = ordered.filter((m) => !hidden.includes(m.id));
   const rows = visible.map((m) => ({ m, s: m.getDailyStatus() }));
+  const move = (id: string, dir: -1 | 1) => {
+    const ids = ordered.map((m) => m.id);
+    const i = ids.indexOf(id);
+    const j = i + dir;
+    if (j < 0 || j >= ids.length) return;
+    [ids[i], ids[j]] = [ids[j]!, ids[i]!];
+    setOrder(setModuleOrder(ids));
+  };
   const plan = planDay(rows, budget);
   const plannedMin = plan.reduce((a, i) => a + (i.s.done ? 0 : i.today), 0);
   const dueTotal = rows.reduce((a, x) => a + x.s.dueCount, 0);
@@ -135,9 +151,10 @@ export function Today({ modules, streak, onOpen }: Props) {
       </section>
 
       <SettingsCard
-        modules={modules}
+        modules={ordered}
         hidden={hidden}
         onToggle={(id, hide) => setHidden(setModuleHidden(id, hide))}
+        onMove={move}
       />
       <p className="shell__foot dl-muted">More trainers slot in here as they’re built.</p>
     </div>

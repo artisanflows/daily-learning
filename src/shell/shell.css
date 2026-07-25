@@ -82,6 +82,27 @@
 .settings__input { width: 100%; margin-bottom: 8px; padding: 11px 13px; font: inherit; border: 1px solid var(--plat-line-strong); border-radius: var(--radius); background: var(--plat-surface-2); color: var(--plat-text); }
 .settings__msg { margin-top: 10px; font-size: var(--fs-cap); color: var(--plat-accent-strong); }
 
+/* Subjects & priority list in Settings */
+.settings__subjects { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.settings__subj {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--plat-surface-2); border-radius: var(--radius); padding: 8px 12px;
+}
+.settings__subj.is-off .settings__subjname { color: var(--plat-muted); }
+.settings__rank {
+  width: 24px; height: 24px; flex: none; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 13px; font-weight: 700;
+}
+.settings__subjname { flex: 1; font-weight: 600; }
+.settings__mini {
+  font: inherit; font-size: 14px; cursor: pointer; min-width: 36px; min-height: 34px;
+  border: 1px solid var(--plat-line-strong); border-radius: var(--radius-sm);
+  background: var(--plat-surface); color: var(--plat-text);
+}
+.settings__mini:disabled { opacity: 0.35; cursor: default; }
+.settings__mini--wide { min-width: 56px; font-size: 13px; }
+
 /* ---- Subject view: a host the module renders into ---- */
 .subject-view { min-height: 100vh; }
 .subject-view[data-theme="light"] { background: var(--plat-bg); }
