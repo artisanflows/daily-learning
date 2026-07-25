@@ -1,7 +1,14 @@
 import { useState } from 'react';
+import type { LearningModule } from '../platform/module';
 import { exportToFile, importFromText, gistPush, gistPull, getSyncSettings, setSyncSettings } from '../platform/sync';
 
-export function SettingsCard() {
+interface Props {
+  modules: LearningModule[];
+  hidden: string[];
+  onToggle: (id: string, hide: boolean) => void;
+}
+
+export function SettingsCard({ modules, hidden, onToggle }: Props) {
   const s = getSyncSettings();
   const [token, setToken] = useState(s.syncToken ?? '');
   const [gistId, setGistId] = useState(s.syncGistId ?? '');
@@ -34,6 +41,22 @@ export function SettingsCard() {
     <details className="dl-card settings">
       <summary>Settings &amp; backup</summary>
       <div className="settings__body">
+        <p className="dl-muted settings__hint" style={{ marginTop: 0 }}>
+          Subjects on this device — untick what you don’t use (progress is kept; tick to bring it back):
+        </p>
+        <div className="settings__row" style={{ marginBottom: 14 }}>
+          {modules.map((m) => {
+            const isHidden = hidden.includes(m.id);
+            const lastVisible = !isHidden && modules.filter((x) => !hidden.includes(x.id)).length === 1;
+            return (
+              <button key={m.id} className="dl-btn" style={{ opacity: isHidden ? 0.5 : 1, borderColor: isHidden ? 'var(--plat-line)' : m.accent }}
+                disabled={lastVisible} title={lastVisible ? 'At least one subject stays on' : undefined}
+                onClick={() => onToggle(m.id, !isHidden)}>
+                {isHidden ? '○' : '●'} {m.title}
+              </button>
+            );
+          })}
+        </div>
         <div className="settings__row">
           <button className="dl-btn" onClick={() => void exportToFile()}>Export backup</button>
           <label className="dl-btn" style={{ cursor: 'pointer' }}>

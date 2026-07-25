@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { DailyStatus, LearningModule } from '../platform/module';
-import { getBudget, setBudget } from '../platform/storage';
+import { getBudget, setBudget, getHiddenModules, setModuleHidden } from '../platform/storage';
 import { SettingsCard } from './SettingsCard';
 
 interface Props {
@@ -42,7 +42,11 @@ const CHIPS: { label: string; min: number }[] = [
 
 export function Today({ modules, streak, onOpen }: Props) {
   const [budget, setBudgetState] = useState(getBudget());
-  const rows = modules.map((m) => ({ m, s: m.getDailyStatus() }));
+  // Per-device subject visibility — hidden modules vanish from the plan/stats/grid,
+  // but their saved progress stays untouched (toggle back any time in Settings).
+  const [hidden, setHidden] = useState<string[]>(getHiddenModules());
+  const visible = modules.filter((m) => !hidden.includes(m.id));
+  const rows = visible.map((m) => ({ m, s: m.getDailyStatus() }));
   const plan = planDay(rows, budget);
   const plannedMin = plan.reduce((a, i) => a + (i.s.done ? 0 : i.today), 0);
   const dueTotal = rows.reduce((a, x) => a + x.s.dueCount, 0);
@@ -130,7 +134,11 @@ export function Today({ modules, streak, onOpen }: Props) {
         </div>
       </section>
 
-      <SettingsCard />
+      <SettingsCard
+        modules={modules}
+        hidden={hidden}
+        onToggle={(id, hide) => setHidden(setModuleHidden(id, hide))}
+      />
       <p className="shell__foot dl-muted">More trainers slot in here as they’re built.</p>
     </div>
   );

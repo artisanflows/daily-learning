@@ -8,7 +8,7 @@ export interface PlatformState {
   meta: {
     streak: number;
     lastActiveDay: string;   // YYYY-MM-DD of the last day any session completed
-    settings: { syncToken?: string; syncGistId?: string; budget?: number };  // budget = minutes/day; 0/undefined = all
+    settings: { syncToken?: string; syncGistId?: string; budget?: number; hiddenModules?: string[] };  // budget = minutes/day; 0/undefined = all
   };
   modules: Record<string, unknown>;  // per-module snapshots, keyed by module id
 }
@@ -61,6 +61,17 @@ function dayDiff(a: string, b: string): number {
 }
 export function getBudget(): number { return getState().meta.settings.budget || 0; }  // 0 = all
 export function setBudget(min: number): void { getState().meta.settings.budget = min; savePlatform(); }
+
+/* ---- Per-device subject visibility (e.g. Simon's wife hides Korean on her phone).
+   Hiding only removes a module from the home — its saved progress stays intact. ---- */
+export function getHiddenModules(): string[] { return getState().meta.settings.hiddenModules ?? []; }
+export function setModuleHidden(id: string, hidden: boolean): string[] {
+  const cur = new Set(getHiddenModules());
+  if (hidden) cur.add(id); else cur.delete(id);
+  getState().meta.settings.hiddenModules = [...cur];
+  savePlatform();
+  return [...cur];
+}
 
 export function markActivity(): void {
   const t = todayStr();
