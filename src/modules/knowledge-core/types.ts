@@ -51,8 +51,10 @@ export interface ExploreSection {
   entries: ExploreEntry[];
 }
 // Optional world map pinned to explore entries (wine). Coordinates are equirectangular
-// in a 360×180 space (x = lon+180, y = 90−lat) so pins land on the shared world outline.
-export interface MapPin { entryId: string; label: string; x: number; y: number }
+// in a 360×180 space (x = lon+180, y = 90−lat) so pins land on the real Natural Earth
+// outlines. `country` (Natural Earth name) lights up the home country on the entry's
+// zoomed regional map.
+export interface MapPin { entryId: string; label: string; x: number; y: number; country?: string }
 
 // An optional study goal turns the blocks into an ordered study plan on the Today tab
 // (like chess's "Today's plan"): each block is a unit, with read + card-mastery tracking.

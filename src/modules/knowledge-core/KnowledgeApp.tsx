@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { Card, DomainContent, ExploreEntry } from './types';
 import { freshCard, rateCard, isDue, Rating, type Grade, type StoredCard } from './srs';
-import { WorldMap } from './WorldMap';
+import { WorldMap, RegionMap } from './WorldMap';
 import './knowledge.css';
 
 interface Store { get<T>(k: string, f: T): T; set(k: string, v: unknown): void }
@@ -237,11 +237,13 @@ export function KnowledgeApp({ content, store, onActivity, onStatus }: Props) {
   }
 
   if (view === 'entry' && entry) {
+    const pin = (content.mapPins ?? []).find((p) => p.entryId === entry.id);
     return (
       <div className="mod-knowledge dl-module" style={accentStyle}>
         <div className="mod-knowledge__back"><button type="button" onClick={() => { setTab('explore'); setView('tab'); }}><span className="ic ic-back" /> Explore</button></div>
         <div className="k-focus k-focus--read">
           {entry.image && <img className="k-entry__img" src={entry.image} alt="" />}
+          {pin && <div className="k-map"><RegionMap pin={pin} accent={content.accent} /></div>}
           <h1 className="dl-serif k-h1">{entry.title}</h1>
           {entry.subtitle && <p className="k-entry__sub dl-muted">{entry.subtitle}</p>}
           {entry.facts && entry.facts.length > 0 && (

@@ -3,9 +3,10 @@
 
 /* Container width/margin come from the shared .dl-module (chess-identical). */
 .mod-knowledge {
-  --k-ocean: #e7eef3;
+  --k-ocean: #dfe9f0;
   --k-land: #efe4cf;
-  --k-land-edge: #d8c6a3;
+  --k-land-hi: #e6d3ae;   /* highlighted (home) country on regional maps */
+  --k-land-edge: #cbb894;
   min-height: calc(100vh - 76px);
   display: flex;
   flex-direction: column;
@@ -125,8 +126,9 @@
 .k-navrow > button { flex: 1; }
 
 /* ---- Explore ---- */
-.k-map { background: var(--plat-surface); border: 1px solid var(--plat-line); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 14px; }
-.k-worldmap { width: 100%; height: auto; display: block; }
+.k-map { background: var(--plat-surface); border: 1px solid var(--plat-line); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 14px; overflow: hidden; }
+.k-worldmap { width: 100%; height: auto; display: block; border-radius: var(--radius-sm); }
+.k-worldmap--region { max-height: 340px; }
 .k-exsec { display: flex; flex-direction: column; gap: 10px; }
 .k-exsec__h { font-family: var(--font-serif); font-size: var(--fs-h2); font-weight: 600; }
 .k-exsec__blurb { margin-top: -4px; }
