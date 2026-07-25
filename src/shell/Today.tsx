@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
 import type { DailyStatus, LearningModule } from '../platform/module';
-import { getBudget, setBudget, getHiddenModules, setModuleHidden, getModuleOrder, setModuleOrder } from '../platform/storage';
+import {
+  getBudget, setBudget, getBudgetMode, setBudgetMode, getModuleBudgets, setModuleBudget,
+  getHiddenModules, setModuleHidden, getModuleOrder, setModuleOrder,
+} from '../platform/storage';
 import { SettingsCard } from './SettingsCard';
 
 interface Props {
@@ -17,19 +20,30 @@ const GLYPH: Record<string, string> = {
   chess: '♞', korean: '한', wine: 'W', physics: 'P', psychology: 'Ψ', art: 'A',
 };
 
-// Spec's allocation: due SRS across every subject first (retention), then new material
-// subject by subject until the day's minutes run out. A short day is a complete day.
-function planDay(rows: { m: LearningModule; s: DailyStatus }[], budget: number): Planned[] {
+// Allocation: due SRS always runs for every subject (retention first). New material is
+// what the budget gates. Two modes:
+//   'total' — one pot, granted in priority order (#1 first, partial slices allowed);
+//   'per'   — each subject has its own daily target; blank target = as needed.
+// Neither mode touches the SRS engines — this only shapes today's suggestions.
+function planDay(rows: { m: LearningModule; s: DailyStatus }[], budget: number, mode: 'total' | 'per', perBudgets: Record<string, number>): Planned[] {
   const items: Planned[] = rows.map(({ m, s }) => {
     const cnt = s.dueCount + s.newAvailable;
     const dueMin = cnt > 0 ? Math.round((s.minutes * s.dueCount) / cnt) : (s.dueCount > 0 ? s.minutes : 0);
     const newMin = Math.max(0, s.minutes - dueMin);
     return { m, s, dueMin, newMin, today: dueMin, deferNew: false };
   });
+  if (mode === 'per') {
+    for (const i of items) {
+      const cap = perBudgets[i.m.id];
+      if (!cap) { i.today = i.dueMin + i.newMin; continue; }        // no target = as needed
+      const grant = Math.min(i.newMin, Math.max(0, cap - i.dueMin)); // due counts against the target but is never cut
+      i.today += grant;
+      if (grant < i.newMin) i.deferNew = true;
+    }
+    return items;
+  }
   if (!budget) { items.forEach((i) => { i.today = i.dueMin + i.newMin; }); return items; }
-  let remaining = budget - items.reduce((a, i) => a + i.dueMin, 0); // due always included
-  // New material goes to subjects in PRIORITY order (the items array is pre-sorted),
-  // and the top subject takes a partial slice rather than losing its turn entirely.
+  let remaining = budget - items.reduce((a, i) => a + i.dueMin, 0);
   for (const i of items) {
     if (i.newMin <= 0 || i.s.done) continue;
     const grant = Math.min(i.newMin, Math.max(0, remaining));
@@ -45,6 +59,8 @@ const CHIPS: { label: string; min: number }[] = [
 
 export function Today({ modules, streak, onOpen }: Props) {
   const [budget, setBudgetState] = useState(getBudget());
+  const [mode, setModeState] = useState<'total' | 'per'>(getBudgetMode());
+  const [perBudgets, setPerBudgets] = useState<Record<string, number>>(getModuleBudgets());
   // Per-device subject visibility — hidden modules vanish from the plan/stats/grid,
   // but their saved progress stays untouched (toggle back any time in Settings).
   const [hidden, setHidden] = useState<string[]>(getHiddenModules());
@@ -63,7 +79,7 @@ export function Today({ modules, streak, onOpen }: Props) {
     [ids[i], ids[j]] = [ids[j]!, ids[i]!];
     setOrder(setModuleOrder(ids));
   };
-  const plan = planDay(rows, budget);
+  const plan = planDay(rows, budget, mode, perBudgets);
   const plannedMin = plan.reduce((a, i) => a + (i.s.done ? 0 : i.today), 0);
   const dueTotal = rows.reduce((a, x) => a + x.s.dueCount, 0);
   const doneCount = rows.filter((x) => x.s.done).length;
@@ -92,9 +108,25 @@ export function Today({ modules, streak, onOpen }: Props) {
         </div>
         <div className="budget">
           <span className="budget__label"><span className="ic ic-clock" />Time today</span>
-          {CHIPS.map((c) => (
-            <button key={c.label} className={'budget__chip' + (budget === c.min ? ' is-on' : '')} onClick={() => chooseBudget(c.min)}>{c.label}</button>
-          ))}
+          {mode === 'total' ? (
+            <>
+              {CHIPS.map((c) => (
+                <button key={c.label} className={'budget__chip' + (budget === c.min ? ' is-on' : '')} onClick={() => chooseBudget(c.min)}>{c.label}</button>
+              ))}
+              <span className="budget__custom">
+                or exactly
+                <input className="budget__input" type="number" min={0} max={600} inputMode="numeric" placeholder="min"
+                  value={CHIPS.some((c) => c.min === budget) ? '' : budget || ''}
+                  onChange={(e) => chooseBudget(Math.max(0, Math.min(600, Number(e.target.value) || 0)))} />
+                min
+              </span>
+            </>
+          ) : (
+            <span className="dl-muted">Per-subject targets (set in Settings) · ~{plannedMin} min today</span>
+          )}
+          <button className="budget__chip budget__mode" onClick={() => { const m = mode === 'total' ? 'per' : 'total'; setBudgetMode(m); setModeState(m); }}>
+            {mode === 'total' ? 'Switch to per-subject targets' : 'Switch to one daily total'}
+          </button>
         </div>
       </section>
 
@@ -155,6 +187,9 @@ export function Today({ modules, streak, onOpen }: Props) {
         hidden={hidden}
         onToggle={(id, hide) => setHidden(setModuleHidden(id, hide))}
         onMove={move}
+        budgetMode={mode}
+        budgets={perBudgets}
+        onBudget={(id, min) => setPerBudgets(setModuleBudget(id, min))}
       />
       <p className="shell__foot dl-muted">More trainers slot in here as they’re built.</p>
     </div>

@@ -7,9 +7,12 @@ interface Props {
   hidden: string[];
   onToggle: (id: string, hide: boolean) => void;
   onMove: (id: string, dir: -1 | 1) => void;
+  budgetMode: 'total' | 'per';
+  budgets: Record<string, number>;
+  onBudget: (id: string, min: number) => void;
 }
 
-export function SettingsCard({ modules, hidden, onToggle, onMove }: Props) {
+export function SettingsCard({ modules, hidden, onToggle, onMove, budgetMode, budgets, onBudget }: Props) {
   const s = getSyncSettings();
   const [token, setToken] = useState(s.syncToken ?? '');
   const [gistId, setGistId] = useState(s.syncGistId ?? '');
@@ -54,6 +57,14 @@ export function SettingsCard({ modules, hidden, onToggle, onMove }: Props) {
               <div key={m.id} className={'settings__subj' + (isHidden ? ' is-off' : '')}>
                 <span className="settings__rank" style={{ background: isHidden ? 'var(--plat-line)' : m.accent }}>{i + 1}</span>
                 <span className="settings__subjname">{m.title}</span>
+                {budgetMode === 'per' && !isHidden && (
+                  <label className="settings__minlabel dl-muted">
+                    <input className="settings__min" type="number" min={0} max={120} inputMode="numeric" placeholder="—"
+                      value={budgets[m.id] || ''}
+                      onChange={(e) => onBudget(m.id, Math.max(0, Math.min(120, Number(e.target.value) || 0)))} />
+                    min/day
+                  </label>
+                )}
                 <button className="settings__mini" disabled={i === 0} onClick={() => onMove(m.id, -1)} aria-label={`Move ${m.title} up`}>↑</button>
                 <button className="settings__mini" disabled={i === modules.length - 1} onClick={() => onMove(m.id, 1)} aria-label={`Move ${m.title} down`}>↓</button>
                 <button className="settings__mini settings__mini--wide" disabled={lastVisible}

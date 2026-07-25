@@ -8,7 +8,13 @@ export interface PlatformState {
   meta: {
     streak: number;
     lastActiveDay: string;   // YYYY-MM-DD of the last day any session completed
-    settings: { syncToken?: string; syncGistId?: string; budget?: number; hiddenModules?: string[]; moduleOrder?: string[] };  // budget = minutes/day; 0/undefined = all
+    settings: {
+      syncToken?: string; syncGistId?: string;
+      budget?: number;                        // total minutes/day; 0/undefined = all
+      budgetMode?: 'total' | 'per';           // one pot split by priority, or per-subject targets
+      moduleBudgets?: Record<string, number>; // per-subject minutes/day (per mode); missing = as needed
+      hiddenModules?: string[]; moduleOrder?: string[];
+    };
   };
   modules: Record<string, unknown>;  // per-module snapshots, keyed by module id
 }
@@ -61,6 +67,16 @@ function dayDiff(a: string, b: string): number {
 }
 export function getBudget(): number { return getState().meta.settings.budget || 0; }  // 0 = all
 export function setBudget(min: number): void { getState().meta.settings.budget = min; savePlatform(); }
+export function getBudgetMode(): 'total' | 'per' { return getState().meta.settings.budgetMode ?? 'total'; }
+export function setBudgetMode(m: 'total' | 'per'): void { getState().meta.settings.budgetMode = m; savePlatform(); }
+export function getModuleBudgets(): Record<string, number> { return getState().meta.settings.moduleBudgets ?? {}; }
+export function setModuleBudget(id: string, min: number): Record<string, number> {
+  const b = { ...getModuleBudgets() };
+  if (min > 0) b[id] = min; else delete b[id];  // 0/empty = "as needed" (uncapped)
+  getState().meta.settings.moduleBudgets = b;
+  savePlatform();
+  return b;
+}
 
 /* ---- Per-device subject priority: the order subjects appear AND the order the
    time budget grants new material (#1 first). Due reviews always run for everyone. ---- */
