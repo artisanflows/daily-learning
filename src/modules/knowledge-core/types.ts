@@ -31,6 +31,28 @@ export interface Block {
   lessons: Lesson[];
 }
 
+// The EXPLORE layer (like chess's broad reference tabs). Browsable one-pagers the
+// learner can wander through with no session — the "wander and read" side of the app.
+export interface ExploreEntry {
+  id: string;
+  title: string;
+  subtitle?: string;       // e.g. country · grape, or artist · year
+  image?: string;          // optional image (art works)
+  facts?: { label: string; value: string }[];  // quick-reference key/value rows
+  body: string;            // paragraphs separated by blank lines
+  source?: string;
+}
+export interface ExploreSection {
+  id: string;
+  title: string;
+  blurb?: string;
+  kind?: 'gallery' | 'list';   // gallery = image/monogram cards; list = text rows
+  entries: ExploreEntry[];
+}
+// Optional world map pinned to explore entries (wine). Coordinates are equirectangular
+// in a 360×180 space (x = lon+180, y = 90−lat) so pins land on the shared world outline.
+export interface MapPin { entryId: string; label: string; x: number; y: number }
+
 export interface DomainContent {
   id: string;              // module id, e.g. 'wine'
   title: string;
@@ -39,4 +61,6 @@ export interface DomainContent {
   newPerDay: number;       // per-module new-card cap (platform-wide budgeting is a later step)
   blocks: Block[];         // the Learn layer
   cards: Card[];           // the Review layer
+  explore?: ExploreSection[];  // the Explore layer (optional)
+  mapPins?: MapPin[];      // optional map markers (rendered over the shared world outline)
 }
