@@ -35,6 +35,26 @@
 .k-input { font: inherit; font-size: 20px; width: 100%; min-height: 48px; padding: 12px 14px; border-radius: var(--radius); border: 1px solid var(--plat-line-strong); background: var(--plat-surface-2); color: var(--plat-text); }
 .k-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+/* ---- Learn layer ---- */
+.k-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 320px; }
+.k-blocklist { display: flex; flex-direction: column; gap: 10px; }
+.k-blockrow {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  font: inherit; text-align: left; cursor: pointer;
+  background: var(--plat-surface); border: 1px solid var(--plat-line);
+  border-left: 4px solid var(--accent); border-radius: var(--radius); padding: 14px 16px;
+}
+.k-blockrow:hover { background: var(--plat-surface-2); }
+.k-blockrow__title { font-weight: 600; }
+.k-blockrow__meta { font-size: var(--fs-cap); }
+.k-lesson { display: flex; flex-direction: column; gap: 12px; }
+.k-lesson h2 { font-size: var(--fs-h2); font-weight: 700; }
+.k-body { line-height: 1.65; font-size: 16px; }
+.k-diagram { background: var(--plat-surface); border: 1px solid var(--plat-line); border-radius: var(--radius); padding: 16px; }
+.k-diagram svg { width: 100%; height: auto; display: block; }
+.k-navrow { display: flex; gap: 10px; }
+.k-navrow > button { flex: 1; }
+
 .k-grades { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .k-g { font: inherit; font-weight: 700; border: none; border-radius: var(--radius); min-height: 52px; cursor: pointer; color: #fff; }
 .k-g-again { background: #b0503a; }

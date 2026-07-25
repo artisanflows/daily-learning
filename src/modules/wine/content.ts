@@ -10,6 +10,54 @@ export const WINE: DomainContent = {
   blurb: 'Tasting · regions · grapes',
   accent: '#7b2f3f',
   newPerDay: 6,
+  blocks: [
+    {
+      id: 'tasting',
+      title: 'Systematic tasting',
+      primer: 'Before any bottle can teach you anything, you need a fixed structure to taste against. Without one, every wine is an isolated impression you forget by the next glass.\n\nWith one, each bottle becomes a data point you can compare across regions, grapes and years. Assess the same six things, in the same order, every time.',
+      lessons: [
+        {
+          id: 'six-axes',
+          title: 'The six axes',
+          diagram: '<svg viewBox="0 0 340 208" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, sans-serif">' +
+            '<circle cx="18" cy="24" r="5" fill="var(--accent)"/><text x="34" y="28" font-size="14" font-weight="600" fill="var(--plat-text)">Acid</text><text x="150" y="28" font-size="12" fill="var(--plat-muted)">freshness · backbone</text>' +
+            '<circle cx="18" cy="56" r="5" fill="var(--accent)"/><text x="34" y="60" font-size="14" font-weight="600" fill="var(--plat-text)">Tannin</text><text x="150" y="60" font-size="12" fill="var(--plat-muted)">grip · structure (reds)</text>' +
+            '<circle cx="18" cy="88" r="5" fill="var(--accent)"/><text x="34" y="92" font-size="14" font-weight="600" fill="var(--plat-text)">Alcohol</text><text x="150" y="92" font-size="12" fill="var(--plat-muted)">warmth</text>' +
+            '<circle cx="18" cy="120" r="5" fill="var(--accent)"/><text x="34" y="124" font-size="14" font-weight="600" fill="var(--plat-text)">Body</text><text x="150" y="124" font-size="12" fill="var(--plat-muted)">weight · texture</text>' +
+            '<circle cx="18" cy="152" r="5" fill="var(--accent)"/><text x="34" y="156" font-size="14" font-weight="600" fill="var(--plat-text)">Fruit</text><text x="150" y="156" font-size="12" fill="var(--plat-muted)">ripeness · profile</text>' +
+            '<circle cx="18" cy="184" r="5" fill="var(--accent)"/><text x="34" y="188" font-size="14" font-weight="600" fill="var(--plat-text)">Finish</text><text x="150" y="188" font-size="12" fill="var(--plat-muted)">length</text>' +
+            '</svg>',
+          body: 'Acid is the wine’s freshness and backbone — it makes your mouth water and keeps a wine lively. High acid feels tart and crisp; low acid feels soft, even flabby.\n\nTannin is the drying, grippy sensation on your gums, mostly in reds, from grape skins and oak. It gives structure and ageing potential.\n\nAlcohol is felt as warmth; body is the wine’s overall weight and texture — light like skim milk, or full like cream.\n\nFruit describes the ripeness and flavour family (citrus, stone fruit, red or black berry). Finish is how long the flavour lasts after you swallow — a long finish is a mark of quality.',
+        },
+        {
+          id: 'pairing-logic',
+          title: 'Pairing is logic, not lists',
+          body: 'You don’t memorise pairings — you reason them from four rules.\n\nMatch acidity to fat: a high-acid wine cuts through rich, fatty food and refreshes the palate.\n\nMatch tannin to protein: tannin binds with protein and fat, so a tannic red feels smoother beside a steak than on its own.\n\nKeep the wine’s sweetness above the dish’s: a wine less sweet than the dessert tastes thin and sour.\n\nMatch weight to weight: a delicate dish is flattened by a heavy wine, and vice versa.',
+        },
+      ],
+    },
+    {
+      id: 'labelling',
+      title: 'What the label tells you',
+      primer: 'Here is the single most useful thing to learn about wine: every country answers “what does the label tell you?” differently.\n\nLearn each country’s organising principle and you can read a label you’ve never seen before — worth more than memorising any individual appellation.',
+      lessons: [
+        { id: 'lab-france', title: 'France — by place', body: 'France labels by PLACE. The grape is usually absent — a red Burgundy says “Gevrey-Chambertin”, not “Pinot Noir”, because the appellation implies the grape and style.\n\nMost French regions blend: Bordeaux (Cabernet Sauvignon, Merlot, Cabernet Franc, Petit Verdot, Malbec), the southern Rhône (Grenache-Syrah-Mourvèdre), Champagne (Chardonnay, Pinot Noir, Meunier).\n\nThe exception is Burgundy: monovarietal (Pinot Noir or Chardonnay) yet still labelled by place. The rule holds; the blending habit doesn’t.' },
+        { id: 'lab-italy', title: 'Italy — place + native grape', body: 'Italy labels by PLACE plus its NATIVE GRAPE, under the DOC/DOCG system, with enormous varietal diversity.\n\nBrunello di Montalcino is 100% Sangiovese; Barolo and Barbaresco are 100% Nebbiolo; Chianti Classico is at least 80% Sangiovese. The place tells you the rules; the grape tells you the character.' },
+        { id: 'lab-spain', title: 'Spain — grape + time in oak', body: 'Spain often labels by GRAPE plus TIME IN OAK AND BOTTLE. The ladder Joven → Crianza → Reserva → Gran Reserva is an AGEING classification — not a region, and not a quality tier, a point widely misread.\n\nA Gran Reserva has simply spent the most time maturing before release.' },
+        { id: 'lab-germany', title: 'Germany — grape + ripeness', body: 'Germany labels by GRAPE plus RIPENESS AT HARVEST. The Prädikat ladder — Kabinett → Spätlese → Auslese → Beerenauslese → Trockenbeerenauslese — measures must weight (sugar/ripeness when picked), not the sweetness of the finished wine.\n\nA Kabinett can be made bone dry.' },
+        { id: 'lab-newworld', title: 'New World — grape first', body: 'The New World (California, Australia, Chile and the rest) labels by GRAPE first, region second — the inverse of France. “Barossa Shiraz” names the grape, then the place.\n\nIt’s the most immediately readable system, and the reason France can feel opaque by comparison.' },
+      ],
+    },
+    {
+      id: 'regions',
+      title: 'A few anchor regions',
+      primer: 'The atomic unit of wine study is a single appellation — small enough to learn in one sitting, rich enough to be worth it.\n\nAn “introduction to Italian wine” is one overview; the real learning is region by region. Here are a few anchors; the review cards drill the specifics.',
+      lessons: [
+        { id: 'reg-italy', title: 'Italy: Piedmont & Tuscany', body: 'Piedmont’s Barolo and Barbaresco are 100% Nebbiolo — pale in colour, high in acid and tannin, powerful despite looking delicate.\n\nIn Tuscany, Sangiovese rules: Brunello di Montalcino (100% Sangiovese from the warmer Montalcino climate, five years’ minimum ageing) and Chianti Classico (at least 80% Sangiovese).' },
+        { id: 'reg-france', title: 'France: the classics', body: 'Bordeaux blends its five reds to hedge site and vintage. Burgundy splits into tiny place-named plots of Pinot Noir and Chardonnay.\n\nThe southern Rhône’s GSM (Grenache-Syrah-Mourvèdre) powers Châteauneuf-du-Pape. Champagne blends Chardonnay, Pinot Noir and Meunier — and is a place, not merely a style.' },
+      ],
+    },
+  ],
   cards: [
     // --- Block 1: systematic tasting + pairing logic ---
     { id: 'w-taste-axes', type: 'why', prompt: 'Systematic tasting fixes the things you assess in every glass. What are they?',
