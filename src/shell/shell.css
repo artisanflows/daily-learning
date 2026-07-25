@@ -28,6 +28,17 @@
 .today { margin-bottom: 18px; }
 .today h1 { font-size: var(--fs-h1); font-weight: 700; margin-bottom: 4px; }
 
+.budget { display: flex; align-items: center; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+.budget__label { margin-right: 4px; }
+.budget__chip {
+  font: inherit; font-size: var(--fs-cap); cursor: pointer;
+  padding: 4px 12px; border-radius: 999px;
+  border: 1px solid var(--plat-line); background: var(--plat-surface); color: var(--plat-ink);
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.budget__chip:hover { border-color: var(--plat-accent); }
+.budget__chip.is-on { background: var(--plat-accent); border-color: var(--plat-accent); color: #fff; }
+
 .subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
 
 .subject-card {

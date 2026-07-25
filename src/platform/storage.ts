@@ -8,7 +8,7 @@ export interface PlatformState {
   meta: {
     streak: number;
     lastActiveDay: string;   // YYYY-MM-DD of the last day any session completed
-    settings: { syncToken?: string; syncGistId?: string };
+    settings: { syncToken?: string; syncGistId?: string; budget?: number };  // budget = minutes/day; 0/undefined = all
   };
   modules: Record<string, unknown>;  // per-module snapshots, keyed by module id
 }
@@ -59,6 +59,9 @@ export function todayStr(now = new Date()): string {
 function dayDiff(a: string, b: string): number {
   return Math.round((Date.parse(b + 'T00:00:00') - Date.parse(a + 'T00:00:00')) / 86400000);
 }
+export function getBudget(): number { return getState().meta.settings.budget || 0; }  // 0 = all
+export function setBudget(min: number): void { getState().meta.settings.budget = min; savePlatform(); }
+
 export function markActivity(): void {
   const t = todayStr();
   const last = state.meta.lastActiveDay;
