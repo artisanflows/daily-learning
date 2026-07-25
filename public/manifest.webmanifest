@@ -1,0 +1,14 @@
+{
+  "name": "Daily Learning",
+  "short_name": "Daily",
+  "description": "One place to practise everything you're learning — chess, Korean, and more.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#5b8fc7",
+  "background_color": "#eef3f8",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

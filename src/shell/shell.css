@@ -1,0 +1,79 @@
+/* Shell chrome — the pastel-blue "hallway". Module skins live inside .subject-view. */
+
+.shell { max-width: 720px; margin: 0 auto; padding: max(16px, env(safe-area-inset-top)) 16px 64px; }
+
+.shell__top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 4px 20px;
+}
+.shell__brand { display: flex; align-items: center; gap: 10px; font-size: var(--fs-h3); font-weight: 700; color: var(--plat-text); }
+.shell__logo {
+  width: 26px; height: 26px; border-radius: 7px; flex: none;
+  background:
+    linear-gradient(135deg, var(--plat-accent) 0%, var(--plat-accent-strong) 100%);
+}
+.shell__streak { font-size: var(--fs-cap); }
+.shell__foot { text-align: center; margin-top: 24px; font-size: var(--fs-cap); }
+
+.settings { margin-top: 18px; padding: 0; }
+.settings > summary { cursor: pointer; padding: 16px 20px; font-weight: 600; list-style: none; }
+.settings > summary::-webkit-details-marker { display: none; }
+.settings > summary::before { content: '⚙  '; }
+.settings__body { padding: 0 20px 20px; }
+.settings__row { display: flex; gap: 10px; flex-wrap: wrap; }
+.settings__hint { font-size: var(--fs-cap); margin: 14px 0 8px; }
+.settings__input { width: 100%; margin-bottom: 8px; padding: 10px 12px; font: inherit; border: 1px solid var(--plat-line-strong); border-radius: var(--radius); background: var(--plat-surface-2); color: var(--plat-text); }
+.settings__msg { margin-top: 10px; font-size: var(--fs-cap); color: var(--plat-accent-strong); }
+
+.today { margin-bottom: 18px; }
+.today h1 { font-size: var(--fs-h1); font-weight: 700; margin-bottom: 4px; }
+
+.subject-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+
+.subject-card {
+  text-align: left; cursor: pointer; font: inherit;
+  background: var(--plat-surface);
+  border: 1px solid var(--plat-line);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 18px 20px;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.subject-card:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(40,60,90,.10), 0 12px 28px rgba(40,60,90,.08); }
+.subject-card__head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.subject-card__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex: none; }
+.subject-card__title { font-size: var(--fs-h3); font-weight: 700; }
+.subject-card__blurb { font-size: var(--fs-cap); margin-bottom: 12px; }
+.subject-card__status { font-size: var(--fs-cap); }
+
+/* ---- Subject view: a full-bleed host the module renders into ---- */
+.subject-view { min-height: 100vh; }
+.subject-view[data-theme="light"] { background: var(--plat-bg); }
+.subject-view[data-theme="dark"] { background: #131a22; }
+/* Full-width host; each module self-constrains (Korean caps at 460, chess fills for the board). */
+.subject-view__host { width: 100%; margin: 0 auto; padding: 16px; }
+
+/* Chess module: full-bleed embedded sub-app */
+.mod-chess { display: flex; flex-direction: column; min-height: calc(100vh - 32px); max-width: 1280px; margin: 0 auto; }
+.mod-chess__back { flex: none; padding: 0 0 8px; }
+.mod-chess__back button { font: inherit; background: none; border: none; color: var(--plat-muted); padding: 6px 4px; min-height: 40px; cursor: pointer; font-size: 15px; }
+.mod-chess__back button:hover { color: var(--plat-text); }
+.mod-chess__frame { flex: 1; width: 100%; border: none; min-height: calc(100vh - 80px); background: #f6efe3; border-radius: 12px; }
+
+/* ---- Stub module styling (Phase 1a placeholders) ---- */
+.module-stub { text-align: center; padding: 32px 8px; }
+.module-stub__mark {
+  width: 64px; height: 64px; border-radius: 16px; margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; color: #fff;
+}
+.module-stub h2 { font-size: var(--fs-h2); margin-bottom: 10px; }
+.module-stub p { max-width: 44ch; margin: 0 auto 20px; }
+.module-stub__row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.module-stub--light { color: #3b2f24; }
+.module-stub--light .dl-muted { color: #8a7864; }
+.module-stub--dark { color: #ede7da; }
+.module-stub--dark .dl-muted { color: #7a8794; }
+.module-stub--dark .dl-btn { background: #1c2530; color: #ede7da; border-color: #2b3846; }
+.module-stub--dark .dl-btn:hover { background: #223041; }

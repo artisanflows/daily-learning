@@ -1,0 +1,4544 @@
+{
+ "version": 1,
+ "sentences": {
+  "s0001": {
+   "id": "s0001",
+   "ko": "안녕하세요?",
+   "en": "Hello.",
+   "grammar": [],
+   "vocab": [],
+   "accept": [
+    "안녕하세요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula",
+    "greeting"
+   ],
+   "literal": "peace-do-POLITE-Q",
+   "register": "polite",
+   "note": "The all-purpose greeting — morning, afternoon, evening, strangers and in-laws alike."
+  },
+  "s0002": {
+   "id": "s0002",
+   "ko": "감사합니다.",
+   "en": "Thank you.",
+   "grammar": [],
+   "vocab": [],
+   "accept": [
+    "감사합니다."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula"
+   ],
+   "literal": "gratitude-do-FORMAL",
+   "register": "polite",
+   "note": "Pronounced [감사함니다] — the ㅂ→ㅁ rule from Phase 0, live in the wild."
+  },
+  "s0003": {
+   "id": "s0003",
+   "ko": "잘 먹겠습니다.",
+   "en": "Thank you for the meal. (before eating)",
+   "grammar": [],
+   "vocab": [],
+   "accept": [
+    "잘 먹겠습니다."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula",
+    "mealtime"
+   ],
+   "literal": "well eat-INTENT-FORMAL",
+   "register": "polite",
+   "note": "Obligatory before eating at the family table — not optional politeness."
+  },
+  "s0004": {
+   "id": "s0004",
+   "ko": "저는 사이먼이에요.",
+   "en": "I'm Simon.",
+   "grammar": [
+    "g001"
+   ],
+   "vocab": [],
+   "accept": [
+    "저는 사이먼이에요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "self-intro"
+   ],
+   "literal": "I-TOP Simon-COP",
+   "register": "polite",
+   "note": "는 is explained tomorrow — for today, \"저는 X이에요\" is the self-intro frame."
+  },
+  "s0005": {
+   "id": "s0005",
+   "ko": "이거 커피예요.",
+   "en": "This is coffee.",
+   "grammar": [
+    "g001"
+   ],
+   "vocab": [],
+   "accept": [
+    "이거 커피예요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily"
+   ],
+   "literal": "this-thing coffee-COP",
+   "register": "polite"
+  },
+  "s0006": {
+   "id": "s0006",
+   "ko": "아니에요.",
+   "en": "No, it isn't. / Not at all.",
+   "grammar": [
+    "g001"
+   ],
+   "vocab": [],
+   "accept": [
+    "아니에요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula"
+   ],
+   "literal": "not-COP",
+   "register": "polite",
+   "note": "Also the standard modest reply to thanks or a compliment — \"oh, it's nothing\"."
+  },
+  "s0007": {
+   "id": "s0007",
+   "ko": "저는 회사원이에요.",
+   "en": "I'm an office worker.",
+   "grammar": [
+    "g001",
+    "g002"
+   ],
+   "vocab": [],
+   "accept": [
+    "저는 회사원이에요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "self-intro"
+   ],
+   "literal": "I-TOP company-employee-COP",
+   "register": "polite"
+  },
+  "s0008": {
+   "id": "s0008",
+   "ko": "이 사람은 제 아내예요.",
+   "en": "This person is my wife.",
+   "grammar": [
+    "g001",
+    "g002"
+   ],
+   "vocab": [],
+   "accept": [
+    "이 사람은 제 아내예요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family"
+   ],
+   "literal": "this person-TOP my wife-COP",
+   "register": "polite"
+  },
+  "s0009": {
+   "id": "s0009",
+   "ko": "아내는 한국 사람이에요.",
+   "en": "My wife is Korean.",
+   "grammar": [
+    "g001",
+    "g002"
+   ],
+   "vocab": [],
+   "accept": [
+    "아내는 한국 사람이에요."
+   ],
+   "cards": [
+    "prod",
+    "cloze"
+   ],
+   "phase": 1,
+   "tags": [
+    "family"
+   ],
+   "literal": "wife-TOP Korea person-COP",
+   "register": "polite",
+   "cloze": {
+    "hidden": "는",
+    "accept": [
+     "는"
+    ]
+   }
+  },
+  "s0010": {
+   "id": "s0010",
+   "ko": "안녕히 주무세요.",
+   "en": "Good night. (to an elder)",
+   "grammar": [
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "안녕히 주무세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula",
+    "family",
+    "honorific"
+   ],
+   "literal": "peacefully sleep-HON-POLITE",
+   "register": "honorific",
+   "note": "주무시다 is the honorific verb for sleeping — a chunk for now, a system in Phase 3."
+  },
+  "s0011": {
+   "id": "s0011",
+   "ko": "안녕히 주무셨어요?",
+   "en": "Did you sleep well? (morning greeting to an elder)",
+   "grammar": [
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "안녕히 주무셨어요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula",
+    "family",
+    "honorific"
+   ],
+   "literal": "peacefully sleep-HON-PAST-POLITE-Q",
+   "register": "honorific"
+  },
+  "s0012": {
+   "id": "s0012",
+   "ko": "어머님, 진지 잡수셨어요?",
+   "en": "Mother, have you eaten?",
+   "grammar": [
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "어머님, 진지 잡수셨어요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula",
+    "family",
+    "honorific",
+    "mealtime"
+   ],
+   "literal": "mother-in-law-HON meal-HON eat-HON-PAST-POLITE-Q",
+   "register": "honorific",
+   "note": "Address form for the wife's mother is 어머님. 진지/잡수시다 are the honorific words for 밥/먹다. \"Have you eaten?\" is a greeting, not a question.\n"
+  },
+  "s0013": {
+   "id": "s0013",
+   "ko": "밥 먹었어?",
+   "en": "Have you eaten? (casual)",
+   "grammar": [
+    "g015"
+   ],
+   "vocab": [],
+   "accept": [
+    "밥 먹었어?"
+   ],
+   "cards": [
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "banmal",
+    "family"
+   ],
+   "literal": "rice eat-PAST-CASUAL-Q",
+   "register": "casual",
+   "note": "What you will actually hear at home. Recognition only — no production card."
+  },
+  "s0014": {
+   "id": "s0014",
+   "ko": "잘 잤어?",
+   "en": "Did you sleep well? (casual)",
+   "grammar": [
+    "g015"
+   ],
+   "vocab": [],
+   "accept": [
+    "잘 잤어?"
+   ],
+   "cards": [
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "banmal",
+    "family"
+   ],
+   "literal": "well sleep-PAST-CASUAL-Q",
+   "register": "casual"
+  },
+  "s0015": {
+   "id": "s0015",
+   "ko": "응, 먹었어.",
+   "en": "Yeah, I ate. (casual)",
+   "grammar": [
+    "g015"
+   ],
+   "vocab": [],
+   "accept": [
+    "응, 먹었어."
+   ],
+   "cards": [
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "banmal",
+    "family"
+   ],
+   "literal": "yeah eat-PAST-CASUAL",
+   "register": "casual",
+   "note": "응 = casual yes; 네 = polite yes. Hear the difference, don't copy it yet."
+  },
+  "s0016": {
+   "id": "s0016",
+   "ko": "커피 마셔요.",
+   "en": "I drink coffee. / I'm having coffee.",
+   "grammar": [
+    "g003"
+   ],
+   "vocab": [],
+   "accept": [
+    "커피 마셔요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily"
+   ],
+   "literal": "coffee drink-POLITE",
+   "register": "polite",
+   "note": "마시다 → 마셔요 — the ㅣ+어 contraction from the conjugation rules."
+  },
+  "s0017": {
+   "id": "s0017",
+   "ko": "텔레비전 봐요.",
+   "en": "I watch TV. / I'm watching TV.",
+   "grammar": [
+    "g003"
+   ],
+   "vocab": [],
+   "accept": [
+    "텔레비전 봐요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily",
+    "home"
+   ],
+   "literal": "television watch-POLITE",
+   "register": "polite",
+   "note": "보다 → 봐요 — ㅗ+아 contracts to 와."
+  },
+  "s0018": {
+   "id": "s0018",
+   "ko": "한국어 공부해요.",
+   "en": "I study Korean.",
+   "grammar": [
+    "g003"
+   ],
+   "vocab": [],
+   "accept": [
+    "한국어 공부해요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily",
+    "study"
+   ],
+   "literal": "Korean-language study-do-POLITE",
+   "register": "polite",
+   "note": "All 하다 verbs conjugate as 해요 — the single most productive pattern in the language."
+  },
+  "s0019": {
+   "id": "s0019",
+   "ko": "밥을 먹어요.",
+   "en": "I eat (a meal).",
+   "grammar": [
+    "g003",
+    "g005"
+   ],
+   "vocab": [],
+   "accept": [
+    "밥을 먹어요."
+   ],
+   "cards": [
+    "prod",
+    "cloze"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily",
+    "mealtime"
+   ],
+   "literal": "rice-OBJ eat-POLITE",
+   "register": "polite",
+   "cloze": {
+    "hidden": "을",
+    "accept": [
+     "을"
+    ]
+   }
+  },
+  "s0020": {
+   "id": "s0020",
+   "ko": "물을 마셔요.",
+   "en": "I drink water.",
+   "grammar": [
+    "g003",
+    "g005"
+   ],
+   "vocab": [],
+   "accept": [
+    "물을 마셔요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily"
+   ],
+   "literal": "water-OBJ drink-POLITE",
+   "register": "polite"
+  },
+  "s0021": {
+   "id": "s0021",
+   "ko": "책을 읽어요.",
+   "en": "I read a book.",
+   "grammar": [
+    "g003",
+    "g005"
+   ],
+   "vocab": [],
+   "accept": [
+    "책을 읽어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily"
+   ],
+   "literal": "book-OBJ read-POLITE",
+   "register": "polite",
+   "note": "읽어요 → [일거요] — the double batchim comes back to life before a vowel."
+  },
+  "s0022": {
+   "id": "s0022",
+   "ko": "아내가 요리해요.",
+   "en": "My wife is cooking.",
+   "grammar": [
+    "g003",
+    "g004"
+   ],
+   "vocab": [],
+   "accept": [
+    "아내가 요리해요."
+   ],
+   "cards": [
+    "prod",
+    "cloze"
+   ],
+   "phase": 1,
+   "tags": [
+    "family",
+    "home"
+   ],
+   "literal": "wife-SUBJ cook-do-POLITE",
+   "register": "polite",
+   "cloze": {
+    "hidden": "가",
+    "accept": [
+     "가"
+    ]
+   }
+  },
+  "s0023": {
+   "id": "s0023",
+   "ko": "날씨가 좋아요.",
+   "en": "The weather is nice.",
+   "grammar": [
+    "g003",
+    "g004"
+   ],
+   "vocab": [],
+   "accept": [
+    "날씨가 좋아요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "smalltalk"
+   ],
+   "literal": "weather-SUBJ good-POLITE",
+   "register": "polite"
+  },
+  "s0024": {
+   "id": "s0024",
+   "ko": "시간이 없어요.",
+   "en": "I don't have time.",
+   "grammar": [
+    "g004",
+    "g008"
+   ],
+   "vocab": [],
+   "accept": [
+    "시간이 없어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily"
+   ],
+   "literal": "time-SUBJ not-exist-POLITE",
+   "register": "polite"
+  },
+  "s0025": {
+   "id": "s0025",
+   "ko": "시간 있어요?",
+   "en": "Do you have time?",
+   "grammar": [
+    "g008"
+   ],
+   "vocab": [],
+   "accept": [
+    "시간 있어요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily"
+   ],
+   "literal": "time exist-POLITE-Q",
+   "register": "polite"
+  },
+  "s0026": {
+   "id": "s0026",
+   "ko": "질문이 있어요.",
+   "en": "I have a question.",
+   "grammar": [
+    "g004",
+    "g008"
+   ],
+   "vocab": [],
+   "accept": [
+    "질문이 있어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "study"
+   ],
+   "literal": "question-SUBJ exist-POLITE",
+   "register": "polite"
+  },
+  "s0027": {
+   "id": "s0027",
+   "ko": "고양이가 있어요.",
+   "en": "We have a cat. / There's a cat.",
+   "grammar": [
+    "g004",
+    "g008"
+   ],
+   "vocab": [],
+   "accept": [
+    "고양이가 있어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "home"
+   ],
+   "literal": "cat-SUBJ exist-POLITE",
+   "register": "polite"
+  },
+  "s0028": {
+   "id": "s0028",
+   "ko": "지금 집에 가요.",
+   "en": "I'm going home now.",
+   "grammar": [
+    "g003",
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "지금 집에 가요."
+   ],
+   "cards": [
+    "prod",
+    "cloze"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily"
+   ],
+   "literal": "now house-to go-POLITE",
+   "register": "polite",
+   "cloze": {
+    "hidden": "에",
+    "accept": [
+     "에"
+    ]
+   }
+  },
+  "s0029": {
+   "id": "s0029",
+   "ko": "아침에 회사에 가요.",
+   "en": "I go to work in the morning.",
+   "grammar": [
+    "g003",
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "아침에 회사에 가요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily",
+    "routine"
+   ],
+   "literal": "morning-at company-to go-POLITE",
+   "register": "polite",
+   "note": "Two 에 in one sentence — one marks time, one marks destination."
+  },
+  "s0030": {
+   "id": "s0030",
+   "ko": "어머님이 집에 계세요.",
+   "en": "Mother is at home. (honorific)",
+   "grammar": [
+    "g004",
+    "g006",
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "어머님이 집에 계세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family",
+    "honorific"
+   ],
+   "literal": "mother-in-law-SUBJ house-at be-HON-POLITE",
+   "register": "honorific",
+   "note": "계시다 replaces 있다 for people you honour. Chunk now, system in Phase 3."
+  },
+  "s0031": {
+   "id": "s0031",
+   "ko": "장모님 요리가 정말 맛있어요.",
+   "en": "My mother-in-law's cooking is really delicious.",
+   "grammar": [
+    "g004"
+   ],
+   "vocab": [],
+   "accept": [
+    "장모님 요리가 정말 맛있어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family",
+    "mealtime"
+   ],
+   "literal": "wife's-mother-HON cooking-SUBJ really tasty-POLITE",
+   "register": "polite",
+   "note": "장모님 = wife's mother (reference). Address her as 어머님 — s0012."
+  },
+  "s0032": {
+   "id": "s0032",
+   "ko": "아버님은 지금 집에 계세요?",
+   "en": "Is Father at home now? (honorific)",
+   "grammar": [
+    "g002",
+    "g006",
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "아버님은 지금 집에 계세요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family",
+    "honorific"
+   ],
+   "literal": "father-in-law-HON-TOP now house-at be-HON-POLITE-Q",
+   "register": "honorific",
+   "note": "Address form for the wife's father is 아버님; 장인어른 is the reference term."
+  },
+  "s0033": {
+   "id": "s0033",
+   "ko": "처남이 있어요.",
+   "en": "I have a brother-in-law. (wife's brother)",
+   "grammar": [
+    "g004",
+    "g008"
+   ],
+   "vocab": [],
+   "accept": [
+    "처남이 있어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family"
+   ],
+   "literal": "wife's-brother-SUBJ exist-POLITE",
+   "register": "polite",
+   "note": "처- terms name the wife's family from the husband's side: 처남 (her brother), 처형 (her older sister), 처제 (her younger sister). Fifty words of this vocabulary are the highest-value words in the whole course.\n"
+  },
+  "s0034": {
+   "id": "s0034",
+   "ko": "아버님, 안녕히 주무셨어요?",
+   "en": "Father, did you sleep well?",
+   "grammar": [
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "아버님, 안녕히 주무셨어요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family",
+    "formula",
+    "honorific"
+   ],
+   "literal": "father-in-law-HON peacefully sleep-HON-PAST-POLITE-Q",
+   "register": "honorific"
+  },
+  "s0035": {
+   "id": "s0035",
+   "ko": "어머님, 커피 드세요.",
+   "en": "Mother, please have some coffee.",
+   "grammar": [
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "어머님, 커피 드세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family",
+    "formula",
+    "honorific",
+    "mealtime"
+   ],
+   "literal": "mother-in-law-HON coffee consume-HON-POLITE",
+   "register": "honorific",
+   "note": "드시다 is the honorific for eating/drinking — the polite way to offer anything."
+  },
+  "s0036": {
+   "id": "s0036",
+   "ko": "여보, 이거 뭐야?",
+   "en": "Honey, what's this? (casual)",
+   "grammar": [
+    "g015"
+   ],
+   "vocab": [],
+   "accept": [
+    "여보, 이거 뭐야?"
+   ],
+   "cards": [
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "banmal",
+    "family"
+   ],
+   "literal": "honey this-thing what-CASUAL-Q",
+   "register": "casual",
+   "note": "여보 — how married couples address each other. 뭐야 is casual 뭐예요."
+  },
+  "s0037": {
+   "id": "s0037",
+   "ko": "회사에서 일해요.",
+   "en": "I work at a company.",
+   "grammar": [
+    "g003",
+    "g007"
+   ],
+   "vocab": [],
+   "accept": [
+    "회사에서 일해요."
+   ],
+   "cards": [
+    "prod",
+    "cloze"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily",
+    "work"
+   ],
+   "literal": "company-at work-do-POLITE",
+   "register": "polite",
+   "cloze": {
+    "hidden": "에서",
+    "accept": [
+     "에서"
+    ]
+   }
+  },
+  "s0038": {
+   "id": "s0038",
+   "ko": "집에서 한국어를 공부해요.",
+   "en": "I study Korean at home.",
+   "grammar": [
+    "g003",
+    "g005",
+    "g007"
+   ],
+   "vocab": [],
+   "accept": [
+    "집에서 한국어를 공부해요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily",
+    "study",
+    "home"
+   ],
+   "literal": "house-at Korean-OBJ study-do-POLITE",
+   "register": "polite"
+  },
+  "s0039": {
+   "id": "s0039",
+   "ko": "어디에서 일해요?",
+   "en": "Where do you work?",
+   "grammar": [
+    "g003",
+    "g007"
+   ],
+   "vocab": [],
+   "accept": [
+    "어디에서 일해요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "smalltalk",
+    "work"
+   ],
+   "literal": "where-at work-do-POLITE-Q",
+   "register": "polite"
+  },
+  "s0040": {
+   "id": "s0040",
+   "ko": "누나는 서울에 살아요.",
+   "en": "My older sister lives in Seoul. (male speaker)",
+   "grammar": [
+    "g002",
+    "g003",
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "누나는 서울에 살아요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family"
+   ],
+   "literal": "older-sister(of-male)-TOP Seoul-in live-POLITE",
+   "register": "polite",
+   "note": "Sibling terms are chosen by the SPEAKER's gender: you (male) say 누나/형; your wife says 언니/오빠 for the same people. This trips up every learner.\n"
+  },
+  "s0041": {
+   "id": "s0041",
+   "ko": "오빠가 있어요?",
+   "en": "Do you have an older brother? (asking a woman)",
+   "grammar": [
+    "g004",
+    "g008"
+   ],
+   "vocab": [],
+   "accept": [
+    "오빠가 있어요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family"
+   ],
+   "literal": "older-brother(of-female)-SUBJ exist-POLITE-Q",
+   "register": "polite",
+   "note": "오빠 is her word, not yours — as a man you'd say 형 about your own brother."
+  },
+  "s0042": {
+   "id": "s0042",
+   "ko": "처형은 미국에 살아요.",
+   "en": "My sister-in-law lives in America. (wife's older sister)",
+   "grammar": [
+    "g002",
+    "g003",
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "처형은 미국에 살아요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family"
+   ],
+   "literal": "wife's-older-sister-TOP America-in live-POLITE",
+   "register": "polite"
+  },
+  "s0043": {
+   "id": "s0043",
+   "ko": "이 김치가 정말 맛있어요.",
+   "en": "This kimchi is really delicious.",
+   "grammar": [
+    "g004"
+   ],
+   "vocab": [],
+   "accept": [
+    "이 김치가 정말 맛있어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "mealtime",
+    "family"
+   ],
+   "literal": "this kimchi-SUBJ really tasty-POLITE",
+   "register": "polite",
+   "note": "The single most useful sentence at any Korean table. Deploy generously."
+  },
+  "s0044": {
+   "id": "s0044",
+   "ko": "물 좀 주세요.",
+   "en": "Some water, please.",
+   "grammar": [
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "물 좀 주세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula",
+    "mealtime"
+   ],
+   "literal": "water a-little give-HON-POLITE",
+   "register": "polite",
+   "note": "좀 softens any request. N + 좀 + 주세요 is the universal asking frame."
+  },
+  "s0045": {
+   "id": "s0045",
+   "ko": "배고파요.",
+   "en": "I'm hungry.",
+   "grammar": [
+    "g003"
+   ],
+   "vocab": [],
+   "accept": [
+    "배고파요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily",
+    "mealtime"
+   ],
+   "literal": "stomach-empty-POLITE",
+   "register": "polite",
+   "note": "배고프다 → 배고파요 — the ㅡ drops and harmony looks back to ㅗ. Chunk it for now."
+  },
+  "s0046": {
+   "id": "s0046",
+   "ko": "이거 뭐예요?",
+   "en": "What is this?",
+   "grammar": [
+    "g001"
+   ],
+   "vocab": [],
+   "accept": [
+    "이거 뭐예요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily",
+    "question"
+   ],
+   "literal": "this-thing what-COP-Q",
+   "register": "polite"
+  },
+  "s0047": {
+   "id": "s0047",
+   "ko": "화장실이 어디에 있어요?",
+   "en": "Where is the bathroom?",
+   "grammar": [
+    "g004",
+    "g006",
+    "g008"
+   ],
+   "vocab": [],
+   "accept": [
+    "화장실이 어디에 있어요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily",
+    "question"
+   ],
+   "literal": "bathroom-SUBJ where-at exist-POLITE-Q",
+   "register": "polite"
+  },
+  "s0048": {
+   "id": "s0048",
+   "ko": "지금 어디에 가요?",
+   "en": "Where are you going now?",
+   "grammar": [
+    "g003",
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "지금 어디에 가요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily",
+    "question"
+   ],
+   "literal": "now where-to go-POLITE-Q",
+   "register": "polite"
+  },
+  "s0049": {
+   "id": "s0049",
+   "ko": "이 사람은 누구예요?",
+   "en": "Who is this person?",
+   "grammar": [
+    "g001",
+    "g002"
+   ],
+   "vocab": [],
+   "accept": [
+    "이 사람은 누구예요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "question",
+    "family"
+   ],
+   "literal": "this person-TOP who-COP-Q",
+   "register": "polite",
+   "note": "The photo-album question — you will use it constantly with family pictures."
+  },
+  "s0050": {
+   "id": "s0050",
+   "ko": "생일이 언제예요?",
+   "en": "When is your birthday?",
+   "grammar": [
+    "g001",
+    "g004"
+   ],
+   "vocab": [],
+   "accept": [
+    "생일이 언제예요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "question",
+    "family"
+   ],
+   "literal": "birthday-SUBJ when-COP-Q",
+   "register": "polite",
+   "note": "For elders the word changes: 생신 (honorific birthday) — s0093."
+  },
+  "s0051": {
+   "id": "s0051",
+   "ko": "누가 와요?",
+   "en": "Who is coming?",
+   "grammar": [
+    "g003",
+    "g004"
+   ],
+   "vocab": [],
+   "accept": [
+    "누가 와요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "question"
+   ],
+   "literal": "who-SUBJ come-POLITE-Q",
+   "register": "polite",
+   "note": "누구 + 가 contracts to 누가. 오다 → 와요."
+  },
+  "s0052": {
+   "id": "s0052",
+   "ko": "아침에 일찍 일어나요.",
+   "en": "I get up early in the morning.",
+   "grammar": [
+    "g003",
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "아침에 일찍 일어나요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "routine"
+   ],
+   "literal": "morning-at early get-up-POLITE",
+   "register": "polite"
+  },
+  "s0053": {
+   "id": "s0053",
+   "ko": "밤에 일찍 자요.",
+   "en": "I go to bed early at night.",
+   "grammar": [
+    "g003",
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "밤에 일찍 자요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "routine"
+   ],
+   "literal": "night-at early sleep-POLITE",
+   "register": "polite"
+  },
+  "s0054": {
+   "id": "s0054",
+   "ko": "주말에 뭐 해요?",
+   "en": "What do you do on weekends?",
+   "grammar": [
+    "g003",
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "주말에 뭐 해요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "smalltalk",
+    "question"
+   ],
+   "literal": "weekend-at what do-POLITE-Q",
+   "register": "polite"
+  },
+  "s0055": {
+   "id": "s0055",
+   "ko": "아침을 안 먹어요.",
+   "en": "I don't eat breakfast.",
+   "grammar": [
+    "g003",
+    "g005",
+    "g009"
+   ],
+   "vocab": [],
+   "accept": [
+    "아침을 안 먹어요."
+   ],
+   "cards": [
+    "prod",
+    "cloze"
+   ],
+   "phase": 1,
+   "tags": [
+    "routine",
+    "mealtime"
+   ],
+   "literal": "breakfast-OBJ not eat-POLITE",
+   "register": "polite",
+   "note": "아침 means both \"morning\" and \"breakfast\" — context decides.",
+   "cloze": {
+    "hidden": "안",
+    "accept": [
+     "안"
+    ]
+   }
+  },
+  "s0056": {
+   "id": "s0056",
+   "ko": "커피를 안 마셔요.",
+   "en": "I don't drink coffee.",
+   "grammar": [
+    "g003",
+    "g005",
+    "g009"
+   ],
+   "vocab": [],
+   "accept": [
+    "커피를 안 마셔요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily"
+   ],
+   "literal": "coffee-OBJ not drink-POLITE",
+   "register": "polite"
+  },
+  "s0057": {
+   "id": "s0057",
+   "ko": "오늘은 일 안 해요.",
+   "en": "I'm not working today.",
+   "grammar": [
+    "g002",
+    "g003",
+    "g009"
+   ],
+   "vocab": [],
+   "accept": [
+    "오늘은 일 안 해요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily",
+    "work"
+   ],
+   "literal": "today-TOP work not do-POLITE",
+   "register": "polite",
+   "note": "하다-verbs split before 안 — 일 안 해요, never 안 일해요."
+  },
+  "s0058": {
+   "id": "s0058",
+   "ko": "술을 못 마셔요.",
+   "en": "I can't drink alcohol.",
+   "grammar": [
+    "g003",
+    "g005",
+    "g010"
+   ],
+   "vocab": [],
+   "accept": [
+    "술을 못 마셔요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "mealtime",
+    "smalltalk"
+   ],
+   "literal": "alcohol-OBJ cannot drink-POLITE",
+   "register": "polite",
+   "note": "The polite escape hatch at any dinner — inability, not refusal."
+  },
+  "s0059": {
+   "id": "s0059",
+   "ko": "매운 음식을 못 먹어요.",
+   "en": "I can't eat spicy food.",
+   "grammar": [
+    "g003",
+    "g005",
+    "g010"
+   ],
+   "vocab": [],
+   "accept": [
+    "매운 음식을 못 먹어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "mealtime"
+   ],
+   "literal": "spicy food-OBJ cannot eat-POLITE",
+   "register": "polite"
+  },
+  "s0060": {
+   "id": "s0060",
+   "ko": "아직 한국말을 잘 못해요.",
+   "en": "I can't speak Korean well yet.",
+   "grammar": [
+    "g005",
+    "g010"
+   ],
+   "vocab": [],
+   "accept": [
+    "아직 한국말을 잘 못해요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula",
+    "smalltalk"
+   ],
+   "literal": "yet Korean-speech-OBJ well cannot-do-POLITE",
+   "register": "polite",
+   "note": "Your most-used sentence for the next year. Pronounced [모태요] — the ㅅ→ㄷ neutralisation then ㅎ-aspiration, both from Phase 0.\n"
+  },
+  "s0061": {
+   "id": "s0061",
+   "ko": "여기 앉으세요.",
+   "en": "Please sit here.",
+   "grammar": [
+    "g011"
+   ],
+   "vocab": [],
+   "accept": [
+    "여기 앉으세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily"
+   ],
+   "literal": "here sit-HON-POLITE",
+   "register": "polite",
+   "note": "앉다 has batchim → 으세요. Pronounced [안즈세요]."
+  },
+  "s0062": {
+   "id": "s0062",
+   "ko": "이거 보세요.",
+   "en": "Please look at this.",
+   "grammar": [
+    "g011"
+   ],
+   "vocab": [],
+   "accept": [
+    "이거 보세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "daily"
+   ],
+   "literal": "this-thing look-HON-POLITE",
+   "register": "polite"
+  },
+  "s0063": {
+   "id": "s0063",
+   "ko": "안녕히 가세요.",
+   "en": "Goodbye. (to the one leaving)",
+   "grammar": [
+    "g011",
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "안녕히 가세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula",
+    "greeting"
+   ],
+   "literal": "peacefully go-HON-POLITE",
+   "register": "polite",
+   "note": "The pair: 안녕히 가세요 (you're staying, they're leaving) vs 안녕히 계세요 (you're leaving, they're staying). Pick by who moves.\n"
+  },
+  "s0064": {
+   "id": "s0064",
+   "ko": "사과 한 개 주세요.",
+   "en": "One apple, please.",
+   "grammar": [
+    "g012",
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "사과 한 개 주세요."
+   ],
+   "cards": [
+    "prod",
+    "cloze"
+   ],
+   "phase": 1,
+   "tags": [
+    "shopping",
+    "numbers"
+   ],
+   "literal": "apple one-ATTR item give-HON-POLITE",
+   "register": "polite",
+   "cloze": {
+    "hidden": "한",
+    "accept": [
+     "한"
+    ]
+   }
+  },
+  "s0065": {
+   "id": "s0065",
+   "ko": "커피 두 잔 주세요.",
+   "en": "Two coffees, please.",
+   "grammar": [
+    "g012",
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "커피 두 잔 주세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "shopping",
+    "numbers"
+   ],
+   "literal": "coffee two-ATTR cup give-HON-POLITE",
+   "register": "polite"
+  },
+  "s0066": {
+   "id": "s0066",
+   "ko": "고양이가 세 마리 있어요.",
+   "en": "There are three cats.",
+   "grammar": [
+    "g004",
+    "g008",
+    "g012"
+   ],
+   "vocab": [],
+   "accept": [
+    "고양이가 세 마리 있어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "numbers",
+    "home"
+   ],
+   "literal": "cat-SUBJ three-ATTR animal-counter exist-POLITE",
+   "register": "polite"
+  },
+  "s0067": {
+   "id": "s0067",
+   "ko": "몇 살이에요?",
+   "en": "How old are you? (casual-polite — children and close peers only)",
+   "grammar": [
+    "g001",
+    "g012"
+   ],
+   "vocab": [],
+   "accept": [
+    "몇 살이에요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "question",
+    "numbers"
+   ],
+   "literal": "how-many years-COP-Q",
+   "register": "polite",
+   "note": "Fine for kids; rude to elders. For them, s0069 — the register is the lesson."
+  },
+  "s0068": {
+   "id": "s0068",
+   "ko": "저는 서른 살이에요.",
+   "en": "I'm thirty years old.",
+   "grammar": [
+    "g001",
+    "g002",
+    "g012"
+   ],
+   "vocab": [],
+   "accept": [
+    "저는 서른 살이에요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "self-intro",
+    "numbers"
+   ],
+   "literal": "I-TOP thirty years-COP",
+   "register": "polite",
+   "note": "Age takes native numbers — 서른 살, never 삼십 살."
+  },
+  "s0069": {
+   "id": "s0069",
+   "ko": "연세가 어떻게 되세요?",
+   "en": "May I ask your age? (honorific)",
+   "grammar": [
+    "g004",
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "연세가 어떻게 되세요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "question",
+    "honorific",
+    "family"
+   ],
+   "literal": "age-HON-SUBJ how become-HON-POLITE-Q",
+   "register": "honorific",
+   "note": "연세 is the honorific word for age. Chunk the whole question — you'll need it exactly once per elder, correctly."
+  },
+  "s0070": {
+   "id": "s0070",
+   "ko": "이거 얼마예요?",
+   "en": "How much is this?",
+   "grammar": [
+    "g001"
+   ],
+   "vocab": [],
+   "accept": [
+    "이거 얼마예요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "shopping",
+    "question"
+   ],
+   "literal": "this-thing how-much-COP-Q",
+   "register": "polite"
+  },
+  "s0071": {
+   "id": "s0071",
+   "ko": "오천 원이에요.",
+   "en": "It's 5,000 won.",
+   "grammar": [
+    "g001",
+    "g013"
+   ],
+   "vocab": [],
+   "accept": [
+    "오천 원이에요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "shopping",
+    "numbers"
+   ],
+   "literal": "five-thousand won-COP",
+   "register": "polite",
+   "note": "Money is always Sino — 오천 원, never 다섯천."
+  },
+  "s0072": {
+   "id": "s0072",
+   "ko": "오늘은 칠월 이십오일이에요.",
+   "en": "Today is July 25th.",
+   "grammar": [
+    "g001",
+    "g002",
+    "g013"
+   ],
+   "vocab": [],
+   "accept": [
+    "오늘은 칠월 이십오일이에요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "numbers",
+    "daily"
+   ],
+   "literal": "today-TOP seven-month two-ten-five-day-COP",
+   "register": "polite",
+   "note": "Dates are Sino throughout. 유월 (June) and 시월 (October) irregularly drop a sound."
+  },
+  "s0073": {
+   "id": "s0073",
+   "ko": "지금 몇 시예요?",
+   "en": "What time is it now?",
+   "grammar": [
+    "g001",
+    "g012"
+   ],
+   "vocab": [],
+   "accept": [
+    "지금 몇 시예요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "question",
+    "numbers",
+    "time"
+   ],
+   "literal": "now how-many hour-COP-Q",
+   "register": "polite"
+  },
+  "s0074": {
+   "id": "s0074",
+   "ko": "세 시 삼십 분이에요.",
+   "en": "It's 3:30.",
+   "grammar": [
+    "g001",
+    "g012",
+    "g013"
+   ],
+   "vocab": [],
+   "accept": [
+    "세 시 삼십 분이에요."
+   ],
+   "cards": [
+    "prod",
+    "cloze"
+   ],
+   "phase": 1,
+   "tags": [
+    "numbers",
+    "time"
+   ],
+   "literal": "three-ATTR hour three-ten minute-COP",
+   "register": "polite",
+   "note": "The famous mix: hours native (세 시), minutes Sino (삼십 분) — one phrase, both systems. This is where every learner fails first, so it's drilled here.\n",
+   "cloze": {
+    "hidden": "세",
+    "accept": [
+     "세"
+    ]
+   }
+  },
+  "s0075": {
+   "id": "s0075",
+   "ko": "일곱 시에 일어나요.",
+   "en": "I get up at seven.",
+   "grammar": [
+    "g003",
+    "g006",
+    "g012"
+   ],
+   "vocab": [],
+   "accept": [
+    "일곱 시에 일어나요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "routine",
+    "numbers",
+    "time"
+   ],
+   "literal": "seven-ATTR hour-at get-up-POLITE",
+   "register": "polite"
+  },
+  "s0076": {
+   "id": "s0076",
+   "ko": "괜찮아요?",
+   "en": "Are you okay?",
+   "grammar": [
+    "g003"
+   ],
+   "vocab": [],
+   "accept": [
+    "괜찮아요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "health",
+    "family"
+   ],
+   "literal": "fine-POLITE-Q",
+   "register": "polite",
+   "note": "Statement and question are the same word — intonation does all the work."
+  },
+  "s0077": {
+   "id": "s0077",
+   "ko": "어디 아파요?",
+   "en": "Where does it hurt? / Are you unwell?",
+   "grammar": [
+    "g003"
+   ],
+   "vocab": [],
+   "accept": [
+    "어디 아파요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "health",
+    "family"
+   ],
+   "literal": "where hurt-POLITE-Q",
+   "register": "polite"
+  },
+  "s0078": {
+   "id": "s0078",
+   "ko": "머리가 아파요.",
+   "en": "My head hurts.",
+   "grammar": [
+    "g003",
+    "g004"
+   ],
+   "vocab": [],
+   "accept": [
+    "머리가 아파요."
+   ],
+   "cards": [
+    "prod",
+    "cloze"
+   ],
+   "phase": 1,
+   "tags": [
+    "health"
+   ],
+   "literal": "head-SUBJ hurt-POLITE",
+   "register": "polite",
+   "note": "Body aches take 이/가, not 은/는 — what hurts is new information.",
+   "cloze": {
+    "hidden": "가",
+    "accept": [
+     "가"
+    ]
+   }
+  },
+  "s0079": {
+   "id": "s0079",
+   "ko": "감기에 걸렸어요.",
+   "en": "I caught a cold.",
+   "grammar": [
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "감기에 걸렸어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "health"
+   ],
+   "literal": "cold-at caught-PAST-POLITE",
+   "register": "polite",
+   "note": "A past-tense chunk ahead of its grammar (Phase 2) — learn it whole, like the formulas."
+  },
+  "s0080": {
+   "id": "s0080",
+   "ko": "푹 쉬세요.",
+   "en": "Get some good rest.",
+   "grammar": [
+    "g011"
+   ],
+   "vocab": [],
+   "accept": [
+    "푹 쉬세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "health",
+    "formula",
+    "family"
+   ],
+   "literal": "deeply rest-HON-POLITE",
+   "register": "polite",
+   "note": "The standard caring reply to any ailment. Pairs with s0079 as a mini-dialogue."
+  },
+  "s0081": {
+   "id": "s0081",
+   "ko": "물을 많이 드세요.",
+   "en": "Drink plenty of water.",
+   "grammar": [
+    "g005",
+    "g011",
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "물을 많이 드세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "health",
+    "family"
+   ],
+   "literal": "water-OBJ much consume-HON-POLITE",
+   "register": "polite",
+   "note": "많이 → [마니]. Using 드세요 (not 마시세요) keeps the caring register."
+  },
+  "s0082": {
+   "id": "s0082",
+   "ko": "방이 참 넓어요.",
+   "en": "The room is really spacious.",
+   "grammar": [
+    "g003",
+    "g004"
+   ],
+   "vocab": [],
+   "accept": [
+    "방이 참 넓어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "home"
+   ],
+   "literal": "room-SUBJ truly wide-POLITE",
+   "register": "polite",
+   "note": "넓어요 → [널버요] — double batchim ㄼ revived by the vowel. The house-visit compliment."
+  },
+  "s0083": {
+   "id": "s0083",
+   "ko": "부엌에서 요리해요.",
+   "en": "I cook in the kitchen.",
+   "grammar": [
+    "g003",
+    "g007"
+   ],
+   "vocab": [],
+   "accept": [
+    "부엌에서 요리해요."
+   ],
+   "cards": [
+    "prod",
+    "cloze"
+   ],
+   "phase": 1,
+   "tags": [
+    "home",
+    "routine"
+   ],
+   "literal": "kitchen-at cook-do-POLITE",
+   "register": "polite",
+   "note": "부엌에서 → [부어케서] — the ㅋ batchim jumps and keeps its true sound.",
+   "cloze": {
+    "hidden": "에서",
+    "accept": [
+     "에서"
+    ]
+   }
+  },
+  "s0084": {
+   "id": "s0084",
+   "ko": "거실에서 텔레비전을 봐요.",
+   "en": "I watch TV in the living room.",
+   "grammar": [
+    "g003",
+    "g005",
+    "g007"
+   ],
+   "vocab": [],
+   "accept": [
+    "거실에서 텔레비전을 봐요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "home",
+    "routine"
+   ],
+   "literal": "living-room-at television-OBJ watch-POLITE",
+   "register": "polite"
+  },
+  "s0085": {
+   "id": "s0085",
+   "ko": "오늘 날씨가 참 좋아요.",
+   "en": "The weather is really nice today.",
+   "grammar": [
+    "g003",
+    "g004"
+   ],
+   "vocab": [],
+   "accept": [
+    "오늘 날씨가 참 좋아요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "smalltalk"
+   ],
+   "literal": "today weather-SUBJ truly good-POLITE",
+   "register": "polite"
+  },
+  "s0086": {
+   "id": "s0086",
+   "ko": "밖에 비가 와요.",
+   "en": "It's raining outside.",
+   "grammar": [
+    "g003",
+    "g004",
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "밖에 비가 와요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "smalltalk"
+   ],
+   "literal": "outside-at rain-SUBJ come-POLITE",
+   "register": "polite",
+   "note": "Rain \"comes\" in Korean — 비가 와요, never a verb like \"fall\"."
+  },
+  "s0087": {
+   "id": "s0087",
+   "ko": "좀 추워요.",
+   "en": "It's a bit cold.",
+   "grammar": [
+    "g003"
+   ],
+   "vocab": [],
+   "accept": [
+    "좀 추워요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "smalltalk"
+   ],
+   "literal": "a-little cold-POLITE",
+   "register": "polite",
+   "note": "춥다 → 추워요 — your first live ㅂ-irregular. The ㅂ turns into 우 before a vowel."
+  },
+  "s0088": {
+   "id": "s0088",
+   "ko": "뭐 해?",
+   "en": "What are you doing? (casual)",
+   "grammar": [
+    "g015"
+   ],
+   "vocab": [],
+   "accept": [
+    "뭐 해?"
+   ],
+   "cards": [
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "banmal",
+    "family"
+   ],
+   "literal": "what do-CASUAL-Q",
+   "register": "casual",
+   "note": "The most common text message in Korea. Recognition only, still."
+  },
+  "s0089": {
+   "id": "s0089",
+   "ko": "빨리 와.",
+   "en": "Come quickly. (casual)",
+   "grammar": [
+    "g015"
+   ],
+   "vocab": [],
+   "accept": [
+    "빨리 와."
+   ],
+   "cards": [
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "banmal",
+    "family"
+   ],
+   "literal": "quickly come-CASUAL",
+   "register": "casual"
+  },
+  "s0090": {
+   "id": "s0090",
+   "ko": "괜찮아?",
+   "en": "You okay? (casual)",
+   "grammar": [
+    "g015"
+   ],
+   "vocab": [],
+   "accept": [
+    "괜찮아?"
+   ],
+   "cards": [
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "banmal",
+    "health",
+    "family"
+   ],
+   "literal": "fine-CASUAL-Q",
+   "register": "casual",
+   "note": "Same sentence as s0076 minus 요 — hear how register is often just that one syllable."
+  },
+  "s0091": {
+   "id": "s0091",
+   "ko": "주말에 처가에 가요.",
+   "en": "We're going to my in-laws' this weekend.",
+   "grammar": [
+    "g003",
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "주말에 처가에 가요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family",
+    "routine"
+   ],
+   "literal": "weekend-at wife's-family-home-to go-POLITE",
+   "register": "polite",
+   "note": "처가 = the wife's family home, from the husband's side. 시댁 is the mirror word — hers, not yours."
+  },
+  "s0092": {
+   "id": "s0092",
+   "ko": "설날에 가족이 모여요.",
+   "en": "The family gathers at Lunar New Year.",
+   "grammar": [
+    "g003",
+    "g004",
+    "g006"
+   ],
+   "vocab": [],
+   "accept": [
+    "설날에 가족이 모여요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family",
+    "events"
+   ],
+   "literal": "Lunar-New-Year-at family-SUBJ gather-POLITE",
+   "register": "polite",
+   "note": "설날 → [설랄]. The two big gathering days are 설날 and 추석 — both mean the full family, and full honorific pressure."
+  },
+  "s0093": {
+   "id": "s0093",
+   "ko": "생신 축하드려요.",
+   "en": "Happy birthday. (to an elder)",
+   "grammar": [
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "생신 축하드려요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "family",
+    "formula",
+    "honorific",
+    "events"
+   ],
+   "literal": "birthday-HON congratulation-give-HON-POLITE",
+   "register": "honorific",
+   "note": "생신 is honorific 생일; 축하드려요 upgrades 축하해요. Both shifts happen together."
+  },
+  "s0094": {
+   "id": "s0094",
+   "ko": "정말 잘 먹었습니다.",
+   "en": "That was a wonderful meal. (after eating)",
+   "grammar": [
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "정말 잘 먹었습니다."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula",
+    "mealtime",
+    "family"
+   ],
+   "literal": "really well eat-PAST-FORMAL",
+   "register": "polite",
+   "note": "The after-meal bookend to s0003. At the in-laws' table, non-negotiable."
+  },
+  "s0095": {
+   "id": "s0095",
+   "ko": "조금만 주세요.",
+   "en": "Just a little, please.",
+   "grammar": [
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "조금만 주세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "formula",
+    "mealtime"
+   ],
+   "literal": "little-only give-HON-POLITE",
+   "register": "polite",
+   "note": "Second helpings are coming whether you ask or not — this is the polite throttle."
+  },
+  "s0096": {
+   "id": "s0096",
+   "ko": "배불러요.",
+   "en": "I'm full.",
+   "grammar": [
+    "g003"
+   ],
+   "vocab": [],
+   "accept": [
+    "배불러요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "mealtime"
+   ],
+   "literal": "stomach-full-POLITE",
+   "register": "polite",
+   "note": "배부르다 → 배불러요 — a 르-irregular in the wild. Pairs with 배고파요 (s0045)."
+  },
+  "s0097": {
+   "id": "s0097",
+   "ko": "이거 한국말로 뭐예요?",
+   "en": "What is this in Korean?",
+   "grammar": [
+    "g001"
+   ],
+   "vocab": [],
+   "accept": [
+    "이거 한국말로 뭐예요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "study",
+    "question"
+   ],
+   "literal": "this-thing Korean-speech-by what-COP-Q",
+   "register": "polite",
+   "note": "The sentence that turns your whole house into a dictionary. (으)로 gets its full treatment in Phase 2."
+  },
+  "s0098": {
+   "id": "s0098",
+   "ko": "맞아요?",
+   "en": "Is that right?",
+   "grammar": [
+    "g003"
+   ],
+   "vocab": [],
+   "accept": [
+    "맞아요?"
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "study",
+    "formula"
+   ],
+   "literal": "correct-POLITE-Q",
+   "register": "polite",
+   "note": "Your agreed correction signal with your wife — she only corrects when she hears this word (specs/06 §5)."
+  },
+  "s0099": {
+   "id": "s0099",
+   "ko": "다시 한번 말해 주세요.",
+   "en": "Please say that one more time.",
+   "grammar": [
+    "g014"
+   ],
+   "vocab": [],
+   "accept": [
+    "다시 한번 말해 주세요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "study",
+    "formula"
+   ],
+   "literal": "again one-time speak-give-HON-POLITE",
+   "register": "polite",
+   "note": "The other survival tool. Chunk it whole; the -아/어 주다 pattern is analysed in Phase 2."
+  },
+  "s0100": {
+   "id": "s0100",
+   "ko": "한국어 공부가 재미있어요.",
+   "en": "Studying Korean is fun.",
+   "grammar": [
+    "g004",
+    "g008"
+   ],
+   "vocab": [],
+   "accept": [
+    "한국어 공부가 재미있어요."
+   ],
+   "cards": [
+    "prod",
+    "dict"
+   ],
+   "phase": 1,
+   "tags": [
+    "study"
+   ],
+   "literal": "Korean-language study-SUBJ interesting-POLITE",
+   "register": "polite",
+   "note": "재미있어요 is literally \"fun exists\" — 있어요 doing double duty again. One hundred sentences in; say this one to her and mean it.\n"
+  }
+ },
+ "vocab": {
+  "v0001": {
+   "id": "v0001",
+   "ko": "아내",
+   "en": "wife (my)",
+   "pos": "noun",
+   "first_seen": "s0008"
+  },
+  "v0002": {
+   "id": "v0002",
+   "ko": "여보",
+   "en": "honey / dear (between spouses)",
+   "pos": "noun",
+   "first_seen": "s0036"
+  },
+  "v0003": {
+   "id": "v0003",
+   "ko": "어머님",
+   "en": "mother (address form for wife's mother)",
+   "pos": "noun",
+   "register": "honorific",
+   "first_seen": "s0012"
+  },
+  "v0004": {
+   "id": "v0004",
+   "ko": "아버님",
+   "en": "father (address form for wife's father)",
+   "pos": "noun",
+   "register": "honorific",
+   "first_seen": "s0032"
+  },
+  "v0005": {
+   "id": "v0005",
+   "ko": "장모님",
+   "en": "wife's mother (reference term)",
+   "pos": "noun",
+   "register": "honorific",
+   "first_seen": "s0031"
+  },
+  "v0006": {
+   "id": "v0006",
+   "ko": "장인어른",
+   "en": "wife's father (reference term)",
+   "pos": "noun",
+   "register": "honorific"
+  },
+  "v0007": {
+   "id": "v0007",
+   "ko": "처남",
+   "en": "wife's brother",
+   "pos": "noun",
+   "first_seen": "s0033"
+  },
+  "v0008": {
+   "id": "v0008",
+   "ko": "처형",
+   "en": "wife's older sister",
+   "pos": "noun",
+   "first_seen": "s0042"
+  },
+  "v0009": {
+   "id": "v0009",
+   "ko": "처제",
+   "en": "wife's younger sister",
+   "pos": "noun"
+  },
+  "v0010": {
+   "id": "v0010",
+   "ko": "처가",
+   "en": "wife's family / in-laws' home",
+   "pos": "noun",
+   "first_seen": "s0091"
+  },
+  "v0011": {
+   "id": "v0011",
+   "ko": "누나",
+   "en": "older sister (of a man)",
+   "pos": "noun",
+   "first_seen": "s0040"
+  },
+  "v0012": {
+   "id": "v0012",
+   "ko": "형",
+   "en": "older brother (of a man)",
+   "pos": "noun"
+  },
+  "v0013": {
+   "id": "v0013",
+   "ko": "언니",
+   "en": "older sister (of a woman)",
+   "pos": "noun"
+  },
+  "v0014": {
+   "id": "v0014",
+   "ko": "오빠",
+   "en": "older brother (of a woman)",
+   "pos": "noun",
+   "first_seen": "s0041"
+  },
+  "v0015": {
+   "id": "v0015",
+   "ko": "가족",
+   "en": "family",
+   "pos": "noun",
+   "first_seen": "s0092"
+  },
+  "v0016": {
+   "id": "v0016",
+   "ko": "진지",
+   "en": "meal (honorific of 밥)",
+   "pos": "noun",
+   "register": "honorific",
+   "first_seen": "s0012"
+  },
+  "v0017": {
+   "id": "v0017",
+   "ko": "밥",
+   "en": "rice / meal",
+   "pos": "noun",
+   "first_seen": "s0013"
+  },
+  "v0018": {
+   "id": "v0018",
+   "ko": "연세",
+   "en": "age (honorific of 나이)",
+   "pos": "noun",
+   "register": "honorific",
+   "first_seen": "s0069"
+  },
+  "v0019": {
+   "id": "v0019",
+   "ko": "나이",
+   "en": "age",
+   "pos": "noun"
+  },
+  "v0020": {
+   "id": "v0020",
+   "ko": "살",
+   "en": "years old (native-number counter)",
+   "pos": "counter",
+   "first_seen": "s0067"
+  },
+  "v0021": {
+   "id": "v0021",
+   "ko": "생일",
+   "en": "birthday",
+   "pos": "noun",
+   "first_seen": "s0050"
+  },
+  "v0022": {
+   "id": "v0022",
+   "ko": "생신",
+   "en": "birthday (honorific)",
+   "pos": "noun",
+   "register": "honorific",
+   "first_seen": "s0093"
+  },
+  "v0023": {
+   "id": "v0023",
+   "ko": "설날",
+   "en": "Lunar New Year",
+   "pos": "noun",
+   "first_seen": "s0092"
+  },
+  "v0024": {
+   "id": "v0024",
+   "ko": "추석",
+   "en": "Chuseok (harvest festival)",
+   "pos": "noun"
+  },
+  "v0025": {
+   "id": "v0025",
+   "ko": "집",
+   "en": "house / home",
+   "pos": "noun",
+   "first_seen": "s0028"
+  },
+  "v0026": {
+   "id": "v0026",
+   "ko": "부엌",
+   "en": "kitchen",
+   "pos": "noun",
+   "first_seen": "s0083"
+  },
+  "v0027": {
+   "id": "v0027",
+   "ko": "거실",
+   "en": "living room",
+   "pos": "noun",
+   "first_seen": "s0084"
+  },
+  "v0028": {
+   "id": "v0028",
+   "ko": "화장실",
+   "en": "bathroom",
+   "pos": "noun",
+   "first_seen": "s0047"
+  },
+  "v0029": {
+   "id": "v0029",
+   "ko": "방",
+   "en": "room",
+   "pos": "noun",
+   "first_seen": "s0082"
+  },
+  "v0030": {
+   "id": "v0030",
+   "ko": "아침",
+   "en": "morning / breakfast",
+   "pos": "noun",
+   "first_seen": "s0029"
+  },
+  "v0031": {
+   "id": "v0031",
+   "ko": "밤",
+   "en": "night",
+   "pos": "noun",
+   "first_seen": "s0053"
+  },
+  "v0032": {
+   "id": "v0032",
+   "ko": "주말",
+   "en": "weekend",
+   "pos": "noun",
+   "first_seen": "s0054"
+  },
+  "v0033": {
+   "id": "v0033",
+   "ko": "오늘",
+   "en": "today",
+   "pos": "noun",
+   "first_seen": "s0057"
+  },
+  "v0034": {
+   "id": "v0034",
+   "ko": "지금",
+   "en": "now",
+   "pos": "adverb",
+   "first_seen": "s0028"
+  },
+  "v0035": {
+   "id": "v0035",
+   "ko": "먹다",
+   "en": "to eat",
+   "pos": "verb",
+   "first_seen": "s0019"
+  },
+  "v0036": {
+   "id": "v0036",
+   "ko": "드시다",
+   "en": "to eat/drink (honorific)",
+   "pos": "verb",
+   "register": "honorific",
+   "first_seen": "s0035"
+  },
+  "v0037": {
+   "id": "v0037",
+   "ko": "잡수시다",
+   "en": "to eat (highest honorific)",
+   "pos": "verb",
+   "register": "honorific",
+   "first_seen": "s0012"
+  },
+  "v0038": {
+   "id": "v0038",
+   "ko": "마시다",
+   "en": "to drink",
+   "pos": "verb",
+   "first_seen": "s0016"
+  },
+  "v0039": {
+   "id": "v0039",
+   "ko": "자다",
+   "en": "to sleep",
+   "pos": "verb",
+   "first_seen": "s0053"
+  },
+  "v0040": {
+   "id": "v0040",
+   "ko": "주무시다",
+   "en": "to sleep (honorific)",
+   "pos": "verb",
+   "register": "honorific",
+   "first_seen": "s0010"
+  },
+  "v0041": {
+   "id": "v0041",
+   "ko": "있다",
+   "en": "to exist / to have",
+   "pos": "verb",
+   "first_seen": "s0025"
+  },
+  "v0042": {
+   "id": "v0042",
+   "ko": "계시다",
+   "en": "to be present (honorific of 있다)",
+   "pos": "verb",
+   "register": "honorific",
+   "first_seen": "s0030"
+  },
+  "v0043": {
+   "id": "v0043",
+   "ko": "가다",
+   "en": "to go",
+   "pos": "verb",
+   "first_seen": "s0028"
+  },
+  "v0044": {
+   "id": "v0044",
+   "ko": "오다",
+   "en": "to come",
+   "pos": "verb",
+   "first_seen": "s0051"
+  },
+  "v0045": {
+   "id": "v0045",
+   "ko": "맛있다",
+   "en": "to be delicious",
+   "pos": "adjective",
+   "first_seen": "s0031"
+  },
+  "v0046": {
+   "id": "v0046",
+   "ko": "아프다",
+   "en": "to hurt / be sick",
+   "pos": "adjective",
+   "first_seen": "s0077"
+  },
+  "v0047": {
+   "id": "v0047",
+   "ko": "요리",
+   "en": "cooking / dish",
+   "pos": "noun",
+   "first_seen": "s0031"
+  },
+  "v0048": {
+   "id": "v0048",
+   "ko": "물",
+   "en": "water",
+   "pos": "noun",
+   "first_seen": "s0020"
+  },
+  "v0049": {
+   "id": "v0049",
+   "ko": "커피",
+   "en": "coffee",
+   "pos": "noun",
+   "first_seen": "s0005"
+  },
+  "v0050": {
+   "id": "v0050",
+   "ko": "김치",
+   "en": "kimchi",
+   "pos": "noun",
+   "first_seen": "s0043"
+  }
+ },
+ "grammar": {
+  "g001": {
+   "id": "g001",
+   "name": "이에요 / 예요",
+   "form": "noun + 이에요 (after consonant) / 예요 (after vowel)",
+   "meaning": "The polite copula — \"is / am / are\". 회사원이에요 (is an office worker), 커피예요 (is coffee).",
+   "examples": [
+    "s0004",
+    "s0005",
+    "s0006"
+   ],
+   "phase": 1,
+   "contrast": "The choice is purely phonetic: batchim → 이에요, no batchim → 예요. Same alternation logic as 은/는 and 이/가 — Korean constantly picks particle forms by whether the previous syllable ends in a consonant.\n"
+  },
+  "g002": {
+   "id": "g002",
+   "name": "은/는",
+   "form": "noun + 은 (after consonant) / 는 (after vowel)",
+   "meaning": "Topic marker — \"as for X\". Sets what the sentence is about. 저는 사이먼이에요.",
+   "examples": [
+    "s0007",
+    "s0008",
+    "s0009"
+   ],
+   "phase": 1,
+   "contrast": "Not the subject marker. 은/는 frames known information (\"as for me…\"); 이/가 (g004) points at new or emphasised information (\"it's the WEATHER that's nice\"). This distinction cannot be learned from one explanation — it needs thirty encounters. Expect it to stay fuzzy for months; that's normal.\n"
+  },
+  "g003": {
+   "id": "g003",
+   "name": "-아/어요 (해요체 present)",
+   "form": "verb stem + 아요 (stem vowel ㅏ/ㅗ) / 어요 (otherwise); 하다 → 해요",
+   "meaning": "The polite everyday present tense — the default register of this entire course.",
+   "examples": [
+    "s0016",
+    "s0017",
+    "s0018"
+   ],
+   "phase": 1,
+   "contrast": "Vowel harmony picks the ending: 가다 → 가요, 먹다 → 먹어요, 공부하다 → 공부해요. Korean present also covers \"am doing\" and near-future — 지금 가요 means \"I'm going now\".\n"
+  },
+  "g004": {
+   "id": "g004",
+   "name": "이/가",
+   "form": "noun + 이 (after consonant) / 가 (after vowel); 저+가 → 제가, 누구+가 → 누가",
+   "meaning": "Subject marker — flags who or what does the verb, with a nuance of new information.",
+   "examples": [
+    "s0022",
+    "s0023",
+    "s0024"
+   ],
+   "phase": 1,
+   "contrast": "See g002. Rule of thumb for now: answering \"what's new / what hurts / what exists?\" → 이/가. Talking about yourself or a known topic → 은/는.\n"
+  },
+  "g005": {
+   "id": "g005",
+   "name": "을/를",
+   "form": "noun + 을 (after consonant) / 를 (after vowel)",
+   "meaning": "Object marker — what the verb acts on. 밥을 먹어요.",
+   "examples": [
+    "s0019",
+    "s0020",
+    "s0021"
+   ],
+   "phase": 1,
+   "contrast": "In casual speech this particle is dropped constantly (커피 마셔요 is fine). In this course you type it in production cards — dropping it is never wrong Korean, but producing it correctly is what's being trained.\n"
+  },
+  "g006": {
+   "id": "g006",
+   "name": "에",
+   "form": "place/time + 에",
+   "meaning": "Destination (\"to\"), static location with 있다/계시다 (\"at\"), or point in time (\"at/on/in\").",
+   "examples": [
+    "s0028",
+    "s0029",
+    "s0030"
+   ],
+   "phase": 1,
+   "contrast": "에 vs 에서 (g007) is a top-five beginner error. 에 = where you're going or where something simply is; 에서 = where an action happens. 학교에 가요 / 학교에서 공부해요.\n"
+  },
+  "g007": {
+   "id": "g007",
+   "name": "에서",
+   "form": "place + 에서",
+   "meaning": "Where an action takes place — \"at/in (doing something)\". 회사에서 일해요.",
+   "examples": [
+    "s0037",
+    "s0038",
+    "s0039"
+   ],
+   "phase": 1,
+   "contrast": "If the verb is 있다/없다/계시다 or a movement verb, use 에. If something happens there — eating, working, studying — use 에서.\n"
+  },
+  "g008": {
+   "id": "g008",
+   "name": "있어요 / 없어요",
+   "form": "noun (+이/가) + 있어요/없어요",
+   "meaning": "Existence and possession in one — \"there is / I have\" and \"there isn't / I don't have\".",
+   "examples": [
+    "s0025",
+    "s0026",
+    "s0027"
+   ],
+   "phase": 1,
+   "contrast": "For people who deserve honorific speech, 있어요 becomes 계세요 — 어머님이 집에 계세요. Using 있어요 about an elder is a register mistake, not a grammar mistake, which makes it worse.\n"
+  },
+  "g009": {
+   "id": "g009",
+   "name": "안 + verb",
+   "form": "안 + verb; 하다-verbs split: 공부(를) 안 해요",
+   "meaning": "Plain negation — \"don't / doesn't\". 아침을 안 먹어요.",
+   "examples": [
+    "s0055",
+    "s0056",
+    "s0057"
+   ],
+   "phase": 1,
+   "contrast": "안 = choose not to. 못 (g010) = can't. 안 마셔요 \"I don't drink\" vs 못 마셔요 \"I can't drink\". Koreans hear these as completely different claims.\n"
+  },
+  "g010": {
+   "id": "g010",
+   "name": "못 + verb",
+   "form": "못 + verb; pronounced [몯], assimilates: 못 해요 → [모태요]",
+   "meaning": "Inability — \"can't\". 술을 못 마셔요.",
+   "examples": [
+    "s0058",
+    "s0059",
+    "s0060"
+   ],
+   "phase": 1,
+   "contrast": "잘 못해요 (\"can't do well\") is the standard modest reply about your own Korean — memorise 아직 잘 못해요 as a chunk, you will say it daily.\n"
+  },
+  "g011": {
+   "id": "g011",
+   "name": "-(으)세요",
+   "form": "stem + 으세요 (after consonant) / 세요 (after vowel)",
+   "meaning": "Polite request or honorific present — \"please do\" / \"(an elder) does\".",
+   "examples": [
+    "s0061",
+    "s0062",
+    "s0063"
+   ],
+   "phase": 1,
+   "contrast": "The same form serves two jobs: 앉으세요 (please sit) is a request; 어디 가세요? (where are you going?) honours the subject. You've been using it inside chunks since week 3 — 안녕히 주무세요, 드세요, 주세요.\n"
+  },
+  "g012": {
+   "id": "g012",
+   "name": "Native numbers + counters",
+   "form": "하나 둘 셋 넷… → 한 두 세 네 (스물→스무) before a counter",
+   "meaning": "Counting things, people, animals, hours, and age — 사과 한 개, 커피 두 잔, 세 마리, 서른 살.",
+   "examples": [
+    "s0064",
+    "s0065",
+    "s0066"
+   ],
+   "phase": 1,
+   "contrast": "The attributive forms are mandatory: 하나 개 is wrong, 한 개 is right. Which number system a counter takes is lexical — 시 (hour) is native, 분 (minute) is Sino, which is why 3:30 mixes both (g013).\n"
+  },
+  "g013": {
+   "id": "g013",
+   "name": "Sino numbers",
+   "form": "일 이 삼 사 오 육 칠 팔 구 십 백 천 만",
+   "meaning": "Money, dates, minutes, phone numbers — 오천 원, 칠월 이십오일, 삼십 분.",
+   "examples": [
+    "s0070",
+    "s0071",
+    "s0072"
+   ],
+   "phase": 1,
+   "contrast": "세 시 삼십 분 — \"3:30\" uses native for the hour and Sino for the minutes, in one phrase. This is the single most common place learners mix the systems up, and it is drilled deliberately.\n"
+  },
+  "g014": {
+   "id": "g014",
+   "name": "Honorific formulas (fixed chunks)",
+   "form": "memorised whole — not analysed until Phase 3",
+   "meaning": "진지 잡수셨어요? · 안녕히 주무셨어요? · 안녕히 주무세요 · 커피 드세요 · 생신 축하드려요 — the fixed phrases that carry a family visit.\n",
+   "examples": [
+    "s0010",
+    "s0011",
+    "s0012"
+   ],
+   "phase": 1,
+   "contrast": "These contain grammar (-시-, suppletive verbs) taught properly in Phase 3. For now they are vocabulary the size of a sentence: deploy them correctly and don't take them apart. Fifteen memorised chunks cover most of the actual pressure of dinner with her parents.\n"
+  },
+  "g015": {
+   "id": "g015",
+   "name": "반말 — recognising casual speech",
+   "form": "해요체 minus 요, roughly: 먹었어요 → 먹었어, 괜찮아요 → 괜찮아",
+   "meaning": "The register spoken at home, constantly, from day one. You learn to PARSE it now; you produce it much later.",
+   "examples": [
+    "s0013",
+    "s0014",
+    "s0015"
+   ],
+   "phase": 1,
+   "contrast": "These sentences appear as listening/dictation only, never as production cards — deliberately. Producing 반말 at the wrong moment (to her parents) is the highest-cost register error available to you. Understanding it when she says it is a day-one need.\n"
+  }
+ },
+ "minimalPairs": [
+  {
+   "id": "mp001",
+   "options": [
+    "달",
+    "딸",
+    "탈"
+   ],
+   "contrast": "ㄷ/ㄸ/ㅌ initial",
+   "en": [
+    "moon",
+    "daughter",
+    "mask"
+   ]
+  },
+  {
+   "id": "mp002",
+   "options": [
+    "덕",
+    "떡"
+   ],
+   "contrast": "ㄷ/ㄸ initial",
+   "en": [
+    "virtue",
+    "rice cake"
+   ]
+  },
+  {
+   "id": "mp003",
+   "options": [
+    "방",
+    "빵"
+   ],
+   "contrast": "ㅂ/ㅃ initial",
+   "en": [
+    "room",
+    "bread"
+   ]
+  },
+  {
+   "id": "mp004",
+   "options": [
+    "불",
+    "뿔",
+    "풀"
+   ],
+   "contrast": "ㅂ/ㅃ/ㅍ initial",
+   "en": [
+    "fire",
+    "horn",
+    "grass"
+   ]
+  },
+  {
+   "id": "mp005",
+   "options": [
+    "개",
+    "깨"
+   ],
+   "contrast": "ㄱ/ㄲ initial",
+   "en": [
+    "dog",
+    "sesame"
+   ]
+  },
+  {
+   "id": "mp006",
+   "options": [
+    "굴",
+    "꿀"
+   ],
+   "contrast": "ㄱ/ㄲ initial",
+   "en": [
+    "oyster",
+    "honey"
+   ]
+  },
+  {
+   "id": "mp007",
+   "options": [
+    "공",
+    "콩"
+   ],
+   "contrast": "ㄱ/ㅋ initial",
+   "en": [
+    "ball",
+    "bean"
+   ]
+  },
+  {
+   "id": "mp008",
+   "options": [
+    "자다",
+    "짜다",
+    "차다"
+   ],
+   "contrast": "ㅈ/ㅉ/ㅊ initial",
+   "en": [
+    "to sleep",
+    "to be salty",
+    "to be cold"
+   ]
+  },
+  {
+   "id": "mp009",
+   "options": [
+    "지다",
+    "찌다",
+    "치다"
+   ],
+   "contrast": "ㅈ/ㅉ/ㅊ initial",
+   "en": [
+    "to lose",
+    "to steam",
+    "to hit"
+   ]
+  },
+  {
+   "id": "mp010",
+   "options": [
+    "사다",
+    "싸다"
+   ],
+   "contrast": "ㅅ/ㅆ initial",
+   "en": [
+    "to buy",
+    "to be cheap"
+   ]
+  },
+  {
+   "id": "mp011",
+   "options": [
+    "살",
+    "쌀"
+   ],
+   "contrast": "ㅅ/ㅆ initial",
+   "en": [
+    "flesh / years old",
+    "uncooked rice"
+   ]
+  },
+  {
+   "id": "mp012",
+   "options": [
+    "커피",
+    "코피"
+   ],
+   "contrast": "ㅓ/ㅗ vowel",
+   "en": [
+    "coffee",
+    "nosebleed"
+   ]
+  },
+  {
+   "id": "mp013",
+   "options": [
+    "벌",
+    "볼"
+   ],
+   "contrast": "ㅓ/ㅗ vowel",
+   "en": [
+    "bee",
+    "cheek"
+   ]
+  },
+  {
+   "id": "mp014",
+   "options": [
+    "검",
+    "곰"
+   ],
+   "contrast": "ㅓ/ㅗ vowel",
+   "en": [
+    "sword",
+    "bear"
+   ]
+  },
+  {
+   "id": "mp015",
+   "options": [
+    "덜",
+    "돌"
+   ],
+   "contrast": "ㅓ/ㅗ vowel",
+   "en": [
+    "less",
+    "stone"
+   ]
+  },
+  {
+   "id": "mp016",
+   "options": [
+    "개",
+    "게"
+   ],
+   "contrast": "ㅐ/ㅔ vowel",
+   "en": [
+    "dog",
+    "crab"
+   ]
+  },
+  {
+   "id": "mp017",
+   "options": [
+    "매다",
+    "메다"
+   ],
+   "contrast": "ㅐ/ㅔ vowel",
+   "en": [
+    "to tie",
+    "to carry on the shoulder"
+   ]
+  },
+  {
+   "id": "mp018",
+   "options": [
+    "글",
+    "굴"
+   ],
+   "contrast": "ㅡ/ㅜ vowel",
+   "en": [
+    "writing",
+    "oyster"
+   ]
+  },
+  {
+   "id": "mp019",
+   "options": [
+    "들",
+    "둘"
+   ],
+   "contrast": "ㅡ/ㅜ vowel",
+   "en": [
+    "field",
+    "two"
+   ]
+  },
+  {
+   "id": "mp020",
+   "options": [
+    "산",
+    "상",
+    "삼"
+   ],
+   "contrast": "final ㄴ/ㅇ/ㅁ",
+   "en": [
+    "mountain",
+    "table/prize",
+    "three"
+   ]
+  },
+  {
+   "id": "mp021",
+   "options": [
+    "반",
+    "방",
+    "밤"
+   ],
+   "contrast": "final ㄴ/ㅇ/ㅁ",
+   "en": [
+    "half/class",
+    "room",
+    "night"
+   ]
+  }
+ ],
+ "readingWords": [
+  {
+   "id": "rw001",
+   "ko": "나"
+  },
+  {
+   "id": "rw002",
+   "ko": "우리"
+  },
+  {
+   "id": "rw003",
+   "ko": "바다"
+  },
+  {
+   "id": "rw004",
+   "ko": "나무"
+  },
+  {
+   "id": "rw005",
+   "ko": "어머니"
+  },
+  {
+   "id": "rw006",
+   "ko": "아버지"
+  },
+  {
+   "id": "rw007",
+   "ko": "머리"
+  },
+  {
+   "id": "rw008",
+   "ko": "모자"
+  },
+  {
+   "id": "rw009",
+   "ko": "사과"
+  },
+  {
+   "id": "rw010",
+   "ko": "우유"
+  },
+  {
+   "id": "rw011",
+   "ko": "물"
+  },
+  {
+   "id": "rw012",
+   "ko": "문"
+  },
+  {
+   "id": "rw013",
+   "ko": "밥"
+  },
+  {
+   "id": "rw014",
+   "ko": "집"
+  },
+  {
+   "id": "rw015",
+   "ko": "책"
+  },
+  {
+   "id": "rw016",
+   "ko": "손"
+  },
+  {
+   "id": "rw017",
+   "ko": "눈"
+  },
+  {
+   "id": "rw018",
+   "ko": "산"
+  },
+  {
+   "id": "rw019",
+   "ko": "강"
+  },
+  {
+   "id": "rw020",
+   "ko": "오빠"
+  },
+  {
+   "id": "rw021",
+   "ko": "빨리"
+  },
+  {
+   "id": "rw022",
+   "ko": "밖",
+   "note": "[박] — ㄲ neutralises to ㄱ in final position"
+  },
+  {
+   "id": "rw023",
+   "ko": "부엌",
+   "note": "[부억] — ㅋ neutralises to ㄱ"
+  },
+  {
+   "id": "rw024",
+   "ko": "옷",
+   "note": "[옫] — ㅅ neutralises to ㄷ"
+  },
+  {
+   "id": "rw025",
+   "ko": "꽃",
+   "note": "[꼳] — ㅊ neutralises to ㄷ"
+  },
+  {
+   "id": "rw026",
+   "ko": "낮",
+   "note": "[낟] — ㅈ neutralises to ㄷ"
+  },
+  {
+   "id": "rw027",
+   "ko": "앞",
+   "note": "[압] — ㅍ neutralises to ㅂ"
+  },
+  {
+   "id": "rw028",
+   "ko": "무릎",
+   "note": "[무릅] — ㅍ neutralises to ㅂ"
+  },
+  {
+   "id": "rw029",
+   "ko": "음악",
+   "note": "[으막] — liaison: batchim moves onto the empty ㅇ"
+  },
+  {
+   "id": "rw030",
+   "ko": "한국어",
+   "note": "[한구거] — liaison"
+  },
+  {
+   "id": "rw031",
+   "ko": "발음",
+   "note": "[바름] — liaison"
+  },
+  {
+   "id": "rw032",
+   "ko": "먹어요",
+   "note": "[머거요] — liaison"
+  },
+  {
+   "id": "rw033",
+   "ko": "있어요",
+   "note": "[이써요] — liaison, ㅆ carries over"
+  },
+  {
+   "id": "rw034",
+   "ko": "합니다",
+   "note": "[함니다] — ㅂ becomes ㅁ before ㄴ (nasal assimilation)"
+  },
+  {
+   "id": "rw035",
+   "ko": "감사합니다",
+   "note": "[감사함니다] — same rule inside a longer word"
+  },
+  {
+   "id": "rw036",
+   "ko": "국물",
+   "note": "[궁물] — ㄱ becomes ㅇ before ㅁ"
+  },
+  {
+   "id": "rw037",
+   "ko": "종로",
+   "note": "[종노] — ㄹ becomes ㄴ after ㅇ"
+  },
+  {
+   "id": "rw038",
+   "ko": "같이",
+   "note": "[가치] — ㅌ + 이 palatalises to 치"
+  },
+  {
+   "id": "rw039",
+   "ko": "좋다",
+   "note": "[조타] — ㅎ merges with ㄷ into ㅌ (aspiration)"
+  },
+  {
+   "id": "rw040",
+   "ko": "학교",
+   "note": "[학꾜] — ㄱ tensifies to ㄲ after a stop"
+  }
+ ],
+ "errorPatterns": [
+  {
+   "id": "e001",
+   "when": {
+    "expected": "에",
+    "given": "에서"
+   },
+   "explain": "에서 marks where an action happens; 에 marks a destination, a point in time, or where something simply is. 학교에 가요 (going TO school) vs 학교에서 공부해요 (studying AT school). With 가다/오다/있다/계시다, use 에."
+  },
+  {
+   "id": "e002",
+   "when": {
+    "expected": "에서",
+    "given": "에"
+   },
+   "explain": "An action verb needs 에서 for its location: 집에서 일해요, 부엌에서 요리해요. 에 would make the place a destination or a mere position — right for 가요 and 있어요, wrong for doing something there."
+  },
+  {
+   "id": "e003",
+   "when": {
+    "expected": "은",
+    "given": "는"
+   },
+   "explain": "Right particle, wrong form: after a batchim (final consonant) the topic marker is 은. 사람은, 오늘은 — but 저는, 아내는."
+  },
+  {
+   "id": "e004",
+   "when": {
+    "expected": "는",
+    "given": "은"
+   },
+   "explain": "After a vowel the topic marker is 는, not 은. 저는, 아내는 — the 은 form only follows a final consonant."
+  },
+  {
+   "id": "e005",
+   "when": {
+    "expected": "이",
+    "given": "가"
+   },
+   "explain": "Right particle, wrong form: after a batchim the subject marker is 이. 시간이, 질문이 — but 아내가, 날씨가."
+  },
+  {
+   "id": "e006",
+   "when": {
+    "expected": "가",
+    "given": "이"
+   },
+   "explain": "After a vowel the subject marker is 가. 아내가, 고양이가 — 이 only follows a final consonant."
+  },
+  {
+   "id": "e007",
+   "when": {
+    "expected": "을",
+    "given": "를"
+   },
+   "explain": "Right particle, wrong form: after a batchim the object marker is 을. 밥을, 물을 — but 커피를, 한국어를."
+  },
+  {
+   "id": "e008",
+   "when": {
+    "expected": "를",
+    "given": "을"
+   },
+   "explain": "After a vowel the object marker is 를. 커피를, 텔레비전을? No — 텔레비전 ends in ㄴ, so 텔레비전을 is correct; 를 follows vowels only."
+  },
+  {
+   "id": "e009",
+   "when": {
+    "expected": "이에요",
+    "given": "예요"
+   },
+   "explain": "After a batchim the copula is 이에요: 회사원이에요, 사람이에요. 예요 only follows a vowel (커피예요)."
+  },
+  {
+   "id": "e010",
+   "when": {
+    "expected": "예요",
+    "given": "이에요"
+   },
+   "explain": "After a vowel the copula contracts to 예요: 커피예요, 아내예요. 이에요 only follows a final consonant."
+  },
+  {
+   "id": "e011",
+   "when": {
+    "expected": "가",
+    "given": "는"
+   },
+   "explain": "This sentence points at new or emphasised information, which takes 이/가. 은/는 frames a known topic. 머리가 아파요 — WHAT hurts is the news, so it takes 가. The distinction settles with exposure, not rules — expect to meet this note many times."
+  },
+  {
+   "id": "e012",
+   "when": {
+    "expected": "계세요",
+    "given": "있어요"
+   },
+   "explain": "있어요 is correct grammar but wrong register for an honoured person. 어머님이 집에 계세요 — people who get 님 get 계시다. This is the register system working, not an exception."
+  },
+  {
+   "id": "e013",
+   "when": {
+    "expected": "안",
+    "given": "못"
+   },
+   "explain": "못 means can't (inability); 안 means don't (choice). 아침을 안 먹어요 — skipping breakfast is a choice, not an incapacity."
+  },
+  {
+   "id": "e014",
+   "when": {
+    "expected": "못",
+    "given": "안"
+   },
+   "explain": "안 states a choice; 못 states inability. 술을 못 마셔요 tells the table you CAN'T drink — the polite, pressure-ending version. 안 마셔요 says you simply don't, which invites persuasion."
+  }
+ ],
+ "curriculum": [
+  {
+   "id": "p0-w01-d01",
+   "phase": 0,
+   "week": 1,
+   "day": 1,
+   "title": "Hangul recap — the core letters",
+   "body": "Hangul is featural: the consonant shapes draw the mouth making them. ㄱ is the tongue against the back of the roof; ㄴ is the tongue tip at the front; ㅁ is the closed lips; ㅅ is the teeth.\n\nToday's consonants: ㄱ (g/k) · ㄴ (n) · ㄷ (d/t) · ㄹ (r/l) · ㅁ (m) · ㅂ (b/p) · ㅅ (s)\n\nToday's vowels: ㅏ (a) · ㅓ (eo — open \"uh\") · ㅗ (o — rounded) · ㅜ (u) · ㅡ (eu — lips flat) · ㅣ (i)\n\nㅓ vs ㅗ is the pair English speakers merge. ㅓ is open and unrounded, like the vowel in \"up\". ㅗ is rounded, like \"oh\" but shorter. Say 어 / 오 in front of a mirror: lips relaxed for the first, pushed forward for the second.\n\nRead each drill word aloud. Speed matters more than perfection — the exit test for this phase is any word in under three seconds.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "reading"
+  },
+  {
+   "id": "p0-w01-d02",
+   "phase": 0,
+   "week": 1,
+   "day": 2,
+   "title": "Hangul recap — the rest of the letters",
+   "body": "Remaining plain consonants: ㅇ (silent at the start of a syllable, \"ng\" at the end) · ㅈ (j) · ㅊ (ch) · ㅋ (k) · ㅌ (t) · ㅍ (p) · ㅎ (h)\n\nㅇ is the one that confuses: at the start of a syllable it is a placeholder that makes the block look complete — 아 is just \"a\". At the bottom of a syllable it is the \"ng\" of \"song\" — 강 is \"kang\".\n\nThe y-vowels are the plain vowels with a second stroke: ㅑ (ya) · ㅕ (yeo) · ㅛ (yo) · ㅠ (yu).\n\nNotice ㅋ ㅌ ㅍ ㅊ are ㄱ ㄷ ㅂ ㅈ with an extra stroke — the extra stroke means an extra puff of air. Hold your palm in front of your mouth: 카 should hit it, 가 should not. That puff is tomorrow's whole lesson.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "reading"
+  },
+  {
+   "id": "p0-w01-d03",
+   "phase": 0,
+   "week": 1,
+   "day": 3,
+   "title": "The three-way contrast — plain, tense, aspirated",
+   "body": "Korean has three versions of most stop consonants where English has two:\n\n가 (plain — soft, little air) · 까 (tense — throat tight, no air, like the k in \"sky\" but harder) · 카 (aspirated — big puff of air)\n\nSame for ㄷ/ㄸ/ㅌ, ㅂ/ㅃ/ㅍ, ㅈ/ㅉ/ㅊ, and ㅅ/ㅆ.\n\nYour ear currently files all three under one English sound. That is normal and fixable — but only by forced-choice listening practice, not by explanation. 달 (moon), 딸 (daughter), 탈 (mask) are three unrelated words.\n\nThe tense series (ㄲ ㄸ ㅃ ㅉ ㅆ) has no English equivalent. The trick: say the vowel with your throat already tight, as if slightly annoyed. 짜다 said with a tight throat is \"salty\"; said loosely it becomes 자다, \"to sleep\".\n\nToday's drill plays one word from a set — pick which one you heard. Expect to be wrong a lot this week. The discrimination builds silently over days; wrong answers are the mechanism, not a problem.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "minimal-pairs"
+  },
+  {
+   "id": "p0-w01-d04",
+   "phase": 0,
+   "week": 1,
+   "day": 4,
+   "title": "Compound vowels",
+   "body": "ㅐ (ae) and ㅔ (e) were once different vowels; modern Seoul speakers pronounce them identically. You still must spell them correctly — 개 (dog) and 게 (crab) sound the same and are told apart by context and spelling.\n\nThe w-vowels are combinations, read left to right: ㅘ (o+a = wa) · ㅝ (u+eo = wo) · ㅙ / ㅞ / ㅚ (all ≈ \"we\") · ㅟ (wi).\n\nㅢ (ui) is its own case: word-initially it is \"ui\" (의사 — uisa), elsewhere it drifts toward \"i\", and as the possessive particle 의 it is pronounced \"에\".\n\nToday's listening drill mixes the ㅓ/ㅗ pairs in with the consonant sets — 커피 (coffee) vs 코피 (nosebleed) is the classic, and worth getting right before you order one in front of the in-laws.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "minimal-pairs"
+  },
+  {
+   "id": "p0-w01-d05",
+   "phase": 0,
+   "week": 1,
+   "day": 5,
+   "title": "Syllable blocks and batchim",
+   "body": "Every Korean syllable is a block: consonant + vowel, stacked left-right or top-bottom, with an optional final consonant underneath. That final consonant is the 받침 (batchim — \"support\").\n\n한 = ㅎ + ㅏ + ㄴ. 국 = ㄱ + ㅜ + ㄱ. The block shape is fixed by the vowel: vertical vowels (ㅏ ㅓ ㅣ) sit to the right, horizontal ones (ㅗ ㅜ ㅡ) sit below.\n\nBatchim is where reading speed goes to die in week one, because the final consonant is pronounced differently from the same letter at the start of a syllable: it is held, not released. 밥 ends with the lips closed on the ㅂ — no puff, no vowel after it.\n\nRead today's drill words slowly and deliberately close the final consonant. 밥, 집, 책, 손, 문, 물 — feel where each one ends in the mouth.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "reading"
+  },
+  {
+   "id": "p0-w01-d06",
+   "phase": 0,
+   "week": 1,
+   "day": 6,
+   "title": "Batchim neutralisation — seven sounds only",
+   "body": "Here is the rule that unlocks half of Korean spelling: **only seven sounds can end a syllable**, no matter what letter is written there.\n\nㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅇ — that's the full list.\n\nEverything else neutralises to one of them when final:\n- ㅋ, ㄲ → ㄱ (부엌 = 부억, 밖 = 박)\n- ㅅ, ㅆ, ㅈ, ㅊ, ㅌ, ㅎ → ㄷ (옷 = 옫, 꽃 = 꼳, 낮 = 낟)\n- ㅍ → ㅂ (앞 = 압, 무릎 = 무릅)\n\nSo why spell 꽃 with ㅊ at all? Because the underlying letter comes back the moment a vowel follows — 꽃이 is pronounced 꼬치. The spelling records the *underlying* sound; the pronunciation rules decide what surfaces. Korean spelling is deep, not phonetic, and this is the single insight that makes it stop feeling arbitrary.\n\nToday's drill is heavy on neutralised finals. Read the word as pronounced, not as spelled.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "reading"
+  },
+  {
+   "id": "p0-w01-d07",
+   "phase": 0,
+   "week": 1,
+   "day": 7,
+   "title": "Week 1 consolidation",
+   "body": "No new material. Today is the week's material run again, mixed.\n\nChecklist — say yes or no honestly:\n- Can you read a CV syllable (가, 노, 무) instantly, without sounding out?\n- Can you read a CVC syllable (밥, 문, 강) and close the final consonant?\n- Do you know the seven possible final sounds?\n- Can you hear 달/탈 as different words at least most of the time? (딸 can wait.)\n\nIf any answer is no, that is fine — Phase 0 has another week, and the two vowel pairs plus the tense consonants are expected to still be shaky. They are the long poles.\n\nRun the pair drill twice today if you have the minutes.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "minimal-pairs"
+  },
+  {
+   "id": "p0-w02-d01",
+   "phase": 0,
+   "week": 2,
+   "day": 1,
+   "title": "Liaison — the batchim jumps",
+   "body": "Week 2 is the week that explains why spoken Korean doesn't sound like written Korean. Five rules. Today: 연음, liaison.\n\n**When a syllable ends in a consonant and the next begins with the silent ㅇ, the consonant jumps across.**\n\n- 음악 (music) → [으막]\n- 한국어 → [한구거]\n- 먹어요 (eat) → [머거요]\n- 있어요 (there is) → [이써요]\n\nThis is not casual or fast speech — it is the only correct pronunciation. Reading 먹어요 as three separate blocks \"먹-어-요\" is how textbook learners are spotted at word one.\n\nThe consequence for listening: word boundaries move. When you hear [바름] it could be spelled 발음. Your ear has to learn to un-jump the consonant, and dictation practice later in the course exists to force exactly that.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "reading"
+  },
+  {
+   "id": "p0-w02-d02",
+   "phase": 0,
+   "week": 2,
+   "day": 2,
+   "title": "Nasal assimilation",
+   "body": "Rule two: stops surrender to nasals. **When ㄱ, ㄷ, or ㅂ is followed by ㄴ or ㅁ, it becomes the matching nasal** (ㄱ→ㅇ, ㄷ→ㄴ, ㅂ→ㅁ).\n\n- 합니다 → [함니다] — every polite sentence you will ever say ends this way\n- 국물 (soup broth) → [궁물]\n- 감사합니다 → [감사함니다]\n\nAnd the related rule: **ㄹ after most consonants becomes ㄴ** — 종로 (the Seoul district) → [종노].\n\nThese are not optional and Koreans do not hear themselves doing it — ask a native speaker how 합니다 is pronounced and they may well insist there's a ㅂ in it. Which is exactly why your listening cannot be built from spelling: the writing preserves what the mouth abandoned.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "reading"
+  },
+  {
+   "id": "p0-w02-d03",
+   "phase": 0,
+   "week": 2,
+   "day": 3,
+   "title": "Tensification",
+   "body": "Rule three: **after a stop consonant (ㄱ, ㄷ, ㅂ sounds), a following plain consonant tenses.**\n\n- 학교 (school) → [학꾜]\n- 식당 (restaurant) → [식땅]\n- 읽다 (to read) → [익따]\n\nThis is why the tense series from week 1 matters even in words spelled without it — tense sounds appear constantly in speech through this rule. If your ear can't tell 꾜 from 교 yet, that's today's pair drill still doing its slow work; the reading drill here just needs you to *produce* the tensing.\n\nRule of thumb: batchim ㄱ/ㄷ/ㅂ + following ㄱ/ㄷ/ㅂ/ㅅ/ㅈ → say the second one hard, with a tight throat, no puff.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "reading"
+  },
+  {
+   "id": "p0-w02-d04",
+   "phase": 0,
+   "week": 2,
+   "day": 4,
+   "title": "ㅎ — the disappearing consonant",
+   "body": "Rule four, in two halves.\n\n**ㅎ merges with a neighbouring stop into an aspirated consonant:**\n- 좋다 (to be good) → [조타] — ㅎ + ㄷ = ㅌ\n- 축하해요 (congratulations) → [추카해요] — ㄱ + ㅎ = ㅋ\n- 입학 (school entrance) → [이팍] — ㅂ + ㅎ = ㅍ\n\n**Between vowels, ㅎ all but vanishes:** 전화 (phone) sounds like [저놔], 결혼 (marriage) like [겨론]. Listen for it and you won't find it.\n\nAnd a bonus rule you've already met without noticing: **ㅌ before 이 palatalises to ㅊ** — 같이 (together) → [가치]. One word, constant use, always surprises people who read it letter by letter.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "reading"
+  },
+  {
+   "id": "p0-w02-d05",
+   "phase": 0,
+   "week": 2,
+   "day": 5,
+   "title": "Double batchim",
+   "body": "Some syllables carry two final consonants: 읽다, 없다, 앉다, 삶.\n\nThe rule: **only one of the two is pronounced** (which one is mostly fixed per cluster), and the other resurfaces when a vowel follows — same logic as batchim neutralisation.\n\n- 없다 (to not exist) → [업따], but 없어요 → [업써요]\n- 읽다 (to read) → [익따], but 읽어요 → [일거요]\n- 앉다 (to sit) → [안따], but 앉아요 → [안자요]\n\nDon't memorise the cluster table — it isn't worth it at this stage. Learn the pronunciation of each word as you meet it, and trust that the pattern (one consonant sounds; the vowel rescues the other) makes each new case unsurprising.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "reading"
+  },
+  {
+   "id": "p0-w02-d06",
+   "phase": 0,
+   "week": 2,
+   "day": 6,
+   "title": "The vowel pairs, one more round",
+   "body": "Last dedicated session on the two vowel contrasts that will otherwise follow you for years:\n\n**ㅓ / ㅗ.** The high-frequency trap. 커피/코피 (coffee/nosebleed), 벌/볼 (bee/cheek), 덜/돌 (less/stone). If you rely on context you will be fine in conversation and wrong in your own speech — natives hear the difference instantly even when they charitably don't correct it.\n\n**ㅐ / ㅔ.** The opposite situation: natives *can't* hear the difference either, because it merged in Seoul speech two generations ago. You only need the spelling. 개/게 is a spelling fact, not a listening skill. Don't spend listening effort here — spend it all on ㅓ/ㅗ.\n\nAlso today: the final-nasal sets (산/상/삼, 반/방/밤). English has all three sounds but not as bare finals — your ear tends to hallucinate a vowel after them.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "minimal-pairs"
+  },
+  {
+   "id": "p0-w02-d07",
+   "phase": 0,
+   "week": 2,
+   "day": 7,
+   "title": "Phase 0 exit check",
+   "body": "The exit criterion: **read any Hangul word aloud in under three seconds, 95% accuracy** — including applying the sound-change rules, not just naming letters.\n\nToday's drill is the full 40-word list, shuffled. Time yourself loosely; the app's timer is advisory.\n\nThe five rules you now own:\n1. Liaison — the batchim jumps onto a following vowel\n2. Nasal assimilation — ㄱ/ㄷ/ㅂ soften to ㅇ/ㄴ/ㅁ before nasals; ㄹ→ㄴ after ㅇ\n3. Tensification — plain consonants harden after stops\n4. ㅎ merges into aspiration, or vanishes between vowels\n5. Neutralisation — only seven sounds can end a syllable\n\nIf you pass: Phase 1 starts tomorrow — real sentences, real reviews, and the SRS queue switches on. If you don't pass yet: repeat this week. Two extra days here are cheaper than two shaky years.\n\nOne more thing to do today, off-app: install the Korean keyboard (iOS: Settings → General → Keyboard → Add New Keyboard → Korean → Standard). Phase 1 production cards need it from day one.",
+   "introduces": {
+    "grammar": [],
+    "sentences": []
+   },
+   "produce_models": [],
+   "drill": "reading"
+  },
+  {
+   "id": "p1-w03-d01",
+   "phase": 1,
+   "week": 3,
+   "day": 1,
+   "title": "First words that matter",
+   "body": "Phase 1 begins. From today the app runs a review queue: things you learn come back tomorrow, then in three days, then a week — timed to just before you'd forget them.\n\nThree fixed phrases first. No grammar yet — these are social hardware, used exactly as-is, dozens of times a day in any Korean household. Notice 감사합니다 is pronounced [감사함니다]: the Phase 0 rules apply to everything now.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0001",
+     "s0002",
+     "s0003"
+    ]
+   },
+   "produce_models": [
+    "s0001",
+    "s0002",
+    "s0003"
+   ],
+   "produce_prompt": "Greet someone, thank them, and say the before-meal phrase — out loud, then typed."
+  },
+  {
+   "id": "p1-w03-d02",
+   "phase": 1,
+   "week": 3,
+   "day": 2,
+   "title": "X이에요 — the polite \"is\"",
+   "body": "Your first grammar: the copula. Noun + 이에요 (after a consonant) or 예요 (after a vowel) — \"it is X\".\n\n사이먼이에요 — 사이먼 ends in ㄴ, so 이에요. 커피예요 — vowel, so 예요. This consonant-or-vowel switch runs through half of Korean grammar; you're meeting it here first.\n\n아니에요 is its negative — and doubles as the modest \"oh, it's nothing\" reply to any compliment. You'll need that within minutes of meeting Korean relatives.",
+   "introduces": {
+    "grammar": [
+     "g001"
+    ],
+    "sentences": [
+     "s0004",
+     "s0005",
+     "s0006"
+    ]
+   },
+   "produce_models": [
+    "s0004",
+    "s0005"
+   ],
+   "produce_prompt": "Introduce yourself by name, then point at any object near you and say what it is."
+  },
+  {
+   "id": "p1-w03-d03",
+   "phase": 1,
+   "week": 3,
+   "day": 3,
+   "title": "은/는 — as for me…",
+   "body": "은/는 marks the topic — the thing the sentence is about. 저는 회사원이에요: \"as for me, office worker.\"\n\nConsonant → 은, vowel → 는. Same switch as yesterday.\n\nThere is a second marker (이/가) coming next week, and the difference between them confuses learners for months. Today, don't compare — just build the habit: introducing yourself or your family? 은/는.",
+   "introduces": {
+    "grammar": [
+     "g002"
+    ],
+    "sentences": [
+     "s0007",
+     "s0008",
+     "s0009"
+    ]
+   },
+   "produce_models": [
+    "s0007",
+    "s0008"
+   ],
+   "produce_prompt": "Say three true sentences about yourself or your family with 은/는 + 이에요/예요."
+  },
+  {
+   "id": "p1-w03-d04",
+   "phase": 1,
+   "week": 3,
+   "day": 4,
+   "title": "Honorific formulas — memorise, don't analyse",
+   "body": "A standard course would make you wait a year for these. You can't — they're needed at the next family dinner.\n\nSo: fixed chunks. 안녕히 주무세요 at night. 안녕히 주무셨어요? in the morning. 어머님, 진지 잡수셨어요? — the classic elder greeting, which literally asks about a meal and actually just means warmth.\n\nInside these chunks is real machinery (honorific verbs, the -시- infix) that Phase 3 will teach you properly. For now they are single vocabulary items that happen to be sentence-shaped. Deploy them exactly as written; fifteen of these chunks carry most of a family visit.",
+   "introduces": {
+    "grammar": [
+     "g014"
+    ],
+    "sentences": [
+     "s0010",
+     "s0011",
+     "s0012"
+    ]
+   },
+   "produce_models": [
+    "s0011",
+    "s0012",
+    "s0010"
+   ],
+   "produce_prompt": "It's morning at your in-laws'. Greet her mother; at night, say the good-night phrase."
+  },
+  {
+   "id": "p1-w03-d05",
+   "phase": 1,
+   "week": 3,
+   "day": 5,
+   "title": "반말 — the register you'll hear at home",
+   "body": "Today is listening-only, by design. 반말 — casual speech — is what your wife actually speaks at home, and what her family speaks around you. A learner fed only polite textbook Korean fails to parse the household within the first hour.\n\n밥 먹었어? · 잘 잤어? · 응, 먹었어. — hear them, transcribe them, know them.\n\nBut do not produce them yet. The rule of thumb for the next year: understand 반말, answer in 해요체. Producing casual speech at the wrong person (her parents) is the most expensive register error available, and the safe default costs you nothing — 요-speech to your wife is merely a bit formal, never wrong.",
+   "introduces": {
+    "grammar": [
+     "g015"
+    ],
+    "sentences": [
+     "s0013",
+     "s0014",
+     "s0015"
+    ]
+   },
+   "produce_models": [
+    "s0012"
+   ],
+   "produce_prompt": "Type the POLITE version of what you heard today: 밥 먹었어? → the 요-form question you already know from the honorific chunk family."
+  },
+  {
+   "id": "p1-w04-d01",
+   "phase": 1,
+   "week": 4,
+   "day": 1,
+   "title": "Verbs at last — 해요체 present",
+   "body": "The pattern that unlocks sentences: stem + 아요/어요. Last vowel ㅏ or ㅗ → 아요; anything else → 어요; 하다 verbs → 해요.\n\nThen the contractions from the Phase 0 spirit: 마시다 → 마셔요, 보다 → 봐요. The drill cards will hammer these — today just notice the system is regular, not memorised word by word.\n\nOne tense, three meanings: 가요 covers \"I go\", \"I'm going\", and \"I'll go (soon)\". Korean present is generous; use it everywhere for now.",
+   "introduces": {
+    "grammar": [
+     "g003"
+    ],
+    "sentences": [
+     "s0016",
+     "s0017",
+     "s0018"
+    ]
+   },
+   "produce_models": [
+    "s0016",
+    "s0017",
+    "s0018"
+   ],
+   "produce_prompt": "Three things you actually do most days — drink, watch, study, in 해요체."
+  },
+  {
+   "id": "p1-w04-d02",
+   "phase": 1,
+   "week": 4,
+   "day": 2,
+   "title": "을/를 — marking the object",
+   "body": "을 after a consonant, 를 after a vowel — the object of the verb. 밥을 먹어요, 커피를 마셔요.\n\nIn relaxed speech Koreans drop this particle constantly, and yesterday's sentences did too. Both are correct. Here you'll type it every time, because choosing the right particle is precisely the skill under training — dropping it is a privilege you earn by first being able to place it.\n\n읽어요 is pronounced [일거요] — the buried ㄹ of the double batchim comes back when a vowel follows. Phase 0 keeps paying rent.",
+   "introduces": {
+    "grammar": [
+     "g005"
+    ],
+    "sentences": [
+     "s0019",
+     "s0020",
+     "s0021"
+    ]
+   },
+   "produce_models": [
+    "s0019",
+    "s0020",
+    "s0021"
+   ],
+   "produce_prompt": "What did you eat, drink, and read today? Full sentences with 을/를."
+  },
+  {
+   "id": "p1-w04-d03",
+   "phase": 1,
+   "week": 4,
+   "day": 3,
+   "title": "이/가 — the other subject marker",
+   "body": "이 after a consonant, 가 after a vowel. It marks the subject — with a flavour of new information: 아내가 요리해요 answers \"who's cooking?\", 날씨가 좋아요 announces the weather as news.\n\nVersus 은/는? Here is the honest truth the textbooks soften: no explanation makes this click. Thirty-plus real encounters do. The app will keep serving both across months — read the error notes when you slip, shrug, continue. Fluent particle choice is grown, not derived.\n\nNote 저 + 가 → 제가, and (next week) 누구 + 가 → 누가. The pronouns fuse.",
+   "introduces": {
+    "grammar": [
+     "g004"
+    ],
+    "sentences": [
+     "s0022",
+     "s0023",
+     "s0024"
+    ]
+   },
+   "produce_models": [
+    "s0022",
+    "s0023"
+   ],
+   "produce_prompt": "Who's cooking at your place tonight? What's the weather doing? Two sentences with 이/가."
+  },
+  {
+   "id": "p1-w04-d04",
+   "phase": 1,
+   "week": 4,
+   "day": 4,
+   "title": "있어요/없어요 — to have and have not",
+   "body": "One pair, two jobs: existence (\"there is/isn't\") and possession (\"I have/don't have\"). 시간이 없어요 — literally \"time doesn't exist\", meaning \"I don't have time\". Korean doesn't need a separate verb for owning.\n\n있어요 → [이써요], 없어요 → [업써요].\n\nThe honorific shadow: for people who get 님, 있어요 becomes 계세요. You met it inside a chunk already (어머님이 집에 계세요) — the pattern gets named properly in Phase 3, but your ear should start filing it now.",
+   "introduces": {
+    "grammar": [
+     "g008"
+    ],
+    "sentences": [
+     "s0025",
+     "s0026",
+     "s0027"
+    ]
+   },
+   "produce_models": [
+    "s0025",
+    "s0026"
+   ],
+   "produce_prompt": "Ask someone if they have time; then say one thing you have and one you don't."
+  },
+  {
+   "id": "p1-w04-d05",
+   "phase": 1,
+   "week": 4,
+   "day": 5,
+   "title": "에 — to, at, on",
+   "body": "에 attaches to places and times: destination (집에 가요 — going home), static location with 있다/계시다 (집에 있어요), and time (아침에 — in the morning).\n\n아침에 회사에 가요 uses it twice, once per job. Perfectly normal.\n\nNext week its rival 에서 appears — where an action happens. The pair 에/에서 will be your most frequent early error, which is exactly why the error notes for it are already written. Make the mistake freely; read the note; repeat.",
+   "introduces": {
+    "grammar": [
+     "g006"
+    ],
+    "sentences": [
+     "s0028",
+     "s0029",
+     "s0030"
+    ]
+   },
+   "produce_models": [
+    "s0029",
+    "s0028"
+   ],
+   "produce_prompt": "Where are you going after this session, and at what part of the day? Use 에 twice in one sentence if you can."
+  },
+  {
+   "id": "p1-w05-d01",
+   "phase": 1,
+   "week": 5,
+   "day": 1,
+   "title": "처가 — her family, your words",
+   "body": "This week is the vocabulary that matters more than any other fifty words in the course: your wife's family, from your side of it.\n\nReference terms (talking ABOUT them): 장인어른 (her father), 장모님 (her mother), 처남 (her brother), 처형 (her older sister), 처제 (her younger sister).\n\nAddress terms (talking TO them): her parents are 아버님 and 어머님 — the 님-upgraded parent words, not the reference terms.\n\nGetting these right is quietly impressive; getting them wrong is conspicuous. There is no partial credit socially, which is why the cards will drill them past the point that feels necessary.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0031",
+     "s0032",
+     "s0033"
+    ]
+   },
+   "produce_models": [
+    "s0031",
+    "s0032"
+   ],
+   "produce_prompt": "Compliment your mother-in-law's cooking, and ask whether your father-in-law is home — honorifically."
+  },
+  {
+   "id": "p1-w05-d02",
+   "phase": 1,
+   "week": 5,
+   "day": 2,
+   "title": "Offering and asking at the table",
+   "body": "Two more honorific chunks and one piece of home reality.\n\n어머님, 커피 드세요 — 드시다 is the honorific eat/drink verb, and N + 드세요 is how you offer anything to an elder. Offering food is the love language of Korean families; this sentence makes you a participant instead of a guest.\n\n여보, 이거 뭐야? — 여보 is what married couples call each other, and 뭐야 is the casual version of 뭐예요. Recognition only: it's today's dictation card, and what you'll hear across the kitchen roughly daily.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0034",
+     "s0035",
+     "s0036"
+    ]
+   },
+   "produce_models": [
+    "s0034",
+    "s0035"
+   ],
+   "produce_prompt": "Morning at the in-laws': greet her father, then offer her mother a coffee."
+  },
+  {
+   "id": "p1-w05-d03",
+   "phase": 1,
+   "week": 5,
+   "day": 3,
+   "title": "에서 — where the action is",
+   "body": "에서 marks where an action takes place: 회사에서 일해요, 집에서 공부해요.\n\nThe decision rule against 에: is the verb doing something there (eat, work, study, cook)? → 에서. Is it going there, or just being there with 있다/계시다? → 에.\n\n집에 있어요 but 집에서 일해요 — same house, different particle, because the verb changed. Run that pair in your head until it stops requiring thought.",
+   "introduces": {
+    "grammar": [
+     "g007"
+    ],
+    "sentences": [
+     "s0037",
+     "s0038",
+     "s0039"
+    ]
+   },
+   "produce_models": [
+    "s0037",
+    "s0038"
+   ],
+   "produce_prompt": "Where do you work, and where do you study Korean? Two sentences, 에서 in both."
+  },
+  {
+   "id": "p1-w05-d04",
+   "phase": 1,
+   "week": 5,
+   "day": 4,
+   "title": "Kinship depends on who's speaking",
+   "body": "Korean sibling terms encode the speaker's gender, not just the sibling's. You (a man) say 형 and 누나 for your older brother and sister. Your wife says 오빠 and 언니 for hers. Same people, different words, chosen by who's talking.\n\nThis is why 오빠 in dramas is such a loaded word — only women say it.\n\nAdd 처형 (her older sister) from the 처-series, and you can now map both families. The produce block today is a real exercise: describe your actual siblings and hers. Wrong term to the wrong person is this week's one truly avoidable embarrassment.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0040",
+     "s0041",
+     "s0042"
+    ]
+   },
+   "produce_models": [
+    "s0040",
+    "s0042"
+   ],
+   "produce_prompt": "Describe one of your siblings and one of hers — with the correct speaker-dependent terms."
+  },
+  {
+   "id": "p1-w05-d05",
+   "phase": 1,
+   "week": 5,
+   "day": 5,
+   "title": "Table survival kit",
+   "body": "Three sentences that do disproportionate work at any Korean table.\n\n이 김치가 정말 맛있어요 — the compliment that never misses. 물 좀 주세요 — N + 좀 + 주세요 is the universal polite-request frame; swap the noun and it asks for anything. 배고파요 — a chunk for now (the ㅡ-dropping behind it is Phase 3 material).\n\nNote what you can already do at a family meal after three weeks: greet, thank, praise, request, and bow out of drinking is coming next week. The formulas-first strategy is paying out.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0043",
+     "s0044",
+     "s0045"
+    ]
+   },
+   "produce_models": [
+    "s0043",
+    "s0044",
+    "s0045"
+   ],
+   "produce_prompt": "You're at the table: praise the kimchi, ask for water, admit you're hungry."
+  },
+  {
+   "id": "p1-w06-d01",
+   "phase": 1,
+   "week": 6,
+   "day": 1,
+   "title": "뭐 / 어디 — asking about things and places",
+   "body": "Question words drop into the sentence where the answer would go — no word-order gymnastics, no English-style inversion.\n\n이거 뭐예요? — what is this. 화장실이 어디에 있어요? — the where-is frame that works for any noun. 어디 takes the same particles a place noun would: 어디에 가요? (where to), and next week 어디에서 (where at).\n\nQuestions and statements share their shape; rising intonation is the question mark. Your ear already knows this from 괜찮아요/괜찮아요? coming in week 8.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0046",
+     "s0047",
+     "s0048"
+    ]
+   },
+   "produce_models": [
+    "s0046",
+    "s0047"
+   ],
+   "produce_prompt": "Point at something you can't name and ask what it is; then ask where something in the house is."
+  },
+  {
+   "id": "p1-w06-d02",
+   "phase": 1,
+   "week": 6,
+   "day": 2,
+   "title": "누구 / 언제 — people and times",
+   "body": "이 사람은 누구예요? — the photo-album question, and the fastest way to get your wife talking about her family in Korean. That conversation is the ten-minute home slot doing its job.\n\n생일이 언제예요? — when-questions with the copula. File the honorific twin for later: elders have a 생신, not a 생일 (week 9).\n\n누구 + 가 fuses to 누가: 누가 와요? — who's coming? The fused forms (제가, 누가) are small but non-optional; the cards will keep them honest.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0049",
+     "s0050",
+     "s0051"
+    ]
+   },
+   "produce_models": [
+    "s0049",
+    "s0050"
+   ],
+   "produce_prompt": "You're looking at her family photos: ask who someone is, and when their birthday is."
+  },
+  {
+   "id": "p1-w06-d03",
+   "phase": 1,
+   "week": 6,
+   "day": 3,
+   "title": "The daily round",
+   "body": "No new grammar — consolidation through the vocabulary of routine: 일어나다 (get up), 자다 (sleep), 일찍 (early), 아침/밤/주말 with the time-에 you already own.\n\n주말에 뭐 해요? is the universal small-talk opener — the Korean \"how was your week\" — and will be asked of you at every family gathering. Having a real answer ready (three sentences about your actual weekend) is this week's produce block, and genuinely useful preparation.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0052",
+     "s0053",
+     "s0054"
+    ]
+   },
+   "produce_models": [
+    "s0052",
+    "s0053",
+    "s0054"
+   ],
+   "produce_prompt": "Describe your real morning and evening — when you get up, when you sleep — and ask someone about their weekend."
+  },
+  {
+   "id": "p1-w06-d04",
+   "phase": 1,
+   "week": 6,
+   "day": 4,
+   "title": "안 — don't",
+   "body": "Negation, version one: 안 in front of the verb. 안 먹어요, 안 마셔요.\n\nThe one wrinkle: 하다 verbs split. 일해요 → 일 안 해요 (the 안 slides inside, before 해요). 안 일해요 is the beginner tell; the cards will catch it.\n\n안 is choice (\"I don't\"). Tomorrow's 못 is inability (\"I can't\") — and the difference decides whether the table keeps refilling your glass.",
+   "introduces": {
+    "grammar": [
+     "g009"
+    ],
+    "sentences": [
+     "s0055",
+     "s0056",
+     "s0057"
+    ]
+   },
+   "produce_models": [
+    "s0055",
+    "s0056",
+    "s0057"
+   ],
+   "produce_prompt": "Three true negatives: something you don't eat, don't drink, and don't do today."
+  },
+  {
+   "id": "p1-w06-d05",
+   "phase": 1,
+   "week": 6,
+   "day": 5,
+   "title": "못 — can't",
+   "body": "못 = can't. 술을 못 마셔요 ends the pouring; 안 마셔요 (\"I choose not to\") merely pauses it. Koreans hear these as entirely different sentences — pick 못 when you want the pressure gone.\n\nPronunciation earns its keep here: 못해요 → [모태요] (ㅅ neutralises to ㄷ, then ㅎ aspirates it to ㅌ). Two Phase 0 rules stacked in one everyday word.\n\n아직 한국말을 잘 못해요 — \"I can't speak Korean well yet.\" You will say this sentence more than any other this year. The 아직 (yet) is doing quiet, hopeful work in it.",
+   "introduces": {
+    "grammar": [
+     "g010"
+    ],
+    "sentences": [
+     "s0058",
+     "s0059",
+     "s0060"
+    ]
+   },
+   "produce_models": [
+    "s0058",
+    "s0059",
+    "s0060"
+   ],
+   "produce_prompt": "Politely decline alcohol and spicy food, then say your Korean isn't good yet — the modest trio."
+  },
+  {
+   "id": "p1-w07-d01",
+   "phase": 1,
+   "week": 7,
+   "day": 1,
+   "title": "-(으)세요 — the polite ask",
+   "body": "The chunks come apart today. 주무세요, 드세요, 주세요, 가세요 — you've been using -(으)세요 for four weeks; now you can build it: stem + 으세요 after a consonant, 세요 after a vowel.\n\nTwo jobs, one form: a gentle request (앉으세요 — please sit) and honouring the subject of a statement or question (어디 가세요? — where are you off to?). Context sorts them out.\n\nAnd the farewell pair finally makes sense: 안녕히 가세요 (go peacefully — they're leaving) vs 안녕히 계세요 (stay peacefully — you're leaving). Pick by who's moving.",
+   "introduces": {
+    "grammar": [
+     "g011"
+    ],
+    "sentences": [
+     "s0061",
+     "s0062",
+     "s0063"
+    ]
+   },
+   "produce_models": [
+    "s0061",
+    "s0062",
+    "s0063"
+   ],
+   "produce_prompt": "Invite someone to sit, show them something, and see a guest off at the door."
+  },
+  {
+   "id": "p1-w07-d02",
+   "phase": 1,
+   "week": 7,
+   "day": 2,
+   "title": "Native numbers — counting things",
+   "body": "Korean runs two number systems in parallel. Today: the native one — 하나, 둘, 셋, 넷, 다섯… — used for counting things, people, animals, hours, and age.\n\nBefore a counter, the first four (and twenty) change shape: 하나→한, 둘→두, 셋→세, 넷→네, 스물→스무. 한 개, 두 잔, 세 마리. The unchanged forms in that position (하나 개) are a beginner tell the cards will train out.\n\nCounters are mandatory — Korean never says \"two coffees\", it says \"coffee two-cups\" (커피 두 잔). Start with 개 (things), 잔 (cups), 마리 (animals), 명 (people).",
+   "introduces": {
+    "grammar": [
+     "g012"
+    ],
+    "sentences": [
+     "s0064",
+     "s0065",
+     "s0066"
+    ]
+   },
+   "produce_models": [
+    "s0064",
+    "s0065",
+    "s0066"
+   ],
+   "produce_prompt": "Order one of something and two of something else; then count something in your home."
+  },
+  {
+   "id": "p1-w07-d03",
+   "phase": 1,
+   "week": 7,
+   "day": 3,
+   "title": "Age — numbers meet register",
+   "body": "Age is native-number territory: 서른 살 (thirty), never 삼십 살. The tens — 열, 스물, 서른, 마흔, 쉰 — are worth knowing cold, because your own age is week-one small talk in Korea.\n\nWhy does age matter this much? Because it sets the register between any two Koreans. It is one of the first things her relatives will establish about you, and it isn't rude — it's calibration.\n\nThe register ladder in one question: 몇 살이에요? for children and close peers; 연세가 어떻게 되세요? for elders — 연세 being the honorific word for age itself. Ask her parents' generation nothing less.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0067",
+     "s0068",
+     "s0069"
+    ]
+   },
+   "produce_models": [
+    "s0068",
+    "s0069"
+   ],
+   "produce_prompt": "State your real age; then ask an elder's age the honorific way."
+  },
+  {
+   "id": "p1-w07-d04",
+   "phase": 1,
+   "week": 7,
+   "day": 4,
+   "title": "Sino numbers — money and dates",
+   "body": "System two: Sino-Korean — 일, 이, 삼, 사, 오… — fully compositional (이십오 = two-ten-five = 25), so a dozen morphemes generate every number to a trillion. It runs money (오천 원), dates (칠월 이십오일), minutes, and phone numbers.\n\nWhich system a context takes is lexical, not logical — money is Sino, age is native, and there's no deeper reason. Learn the assignment per counter, the way you learned irregularity per verb.\n\nTwo date quirks: June is 유월 (not 육월) and October is 시월 (not 십월). Everyone trips on them once; make yours today, cheaply.",
+   "introduces": {
+    "grammar": [
+     "g013"
+    ],
+    "sentences": [
+     "s0070",
+     "s0071",
+     "s0072"
+    ]
+   },
+   "produce_models": [
+    "s0070",
+    "s0071",
+    "s0072"
+   ],
+   "produce_prompt": "Ask a price and answer one; then say today's actual date."
+  },
+  {
+   "id": "p1-w07-d05",
+   "phase": 1,
+   "week": 7,
+   "day": 5,
+   "title": "Telling time — both systems at once",
+   "body": "The two systems meet on the clock face: hours are native, minutes are Sino. 세 시 삼십 분 — 3:30 — switches systems mid-phrase.\n\nThis is the single most common place learners scramble the systems, which is why it gets its own day and a cloze card. The drill is not \"know the rule\" (you now do) but \"produce it at speed while thinking about something else\" — which is what a clock demands.\n\n일곱 시에 일어나요 — time-에 attaches after the full time expression. From today, answer every \"몇 시예요?\" you see on any clock, silently, in Korean. Free reps, all day long.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0073",
+     "s0074",
+     "s0075"
+    ]
+   },
+   "produce_models": [
+    "s0073",
+    "s0074",
+    "s0075"
+   ],
+   "produce_prompt": "What time is it right now, actually? And at what time do you get up?"
+  },
+  {
+   "id": "p1-w08-d01",
+   "phase": 1,
+   "week": 8,
+   "day": 1,
+   "title": "괜찮아요? — the language of care",
+   "body": "Health talk is the standard register of care between Korean family members — asking after someone's body is how concern is expressed, far more than in English.\n\n괜찮아요 flexes four ways on intonation alone: are you okay? / I'm okay / it's fine / no thank you. It may be the single most-used word in the language.\n\n머리가 아파요 — what hurts takes 이/가 (it's the new information). Body part + 가 + 아파요 generalises to everything: 배가 (stomach), 목이 (throat), 다리가 (leg).",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0076",
+     "s0077",
+     "s0078"
+    ]
+   },
+   "produce_models": [
+    "s0076",
+    "s0077",
+    "s0078"
+   ],
+   "produce_prompt": "Someone winces. Ask if they're okay, ask where it hurts; then say your head hurts."
+  },
+  {
+   "id": "p1-w08-d02",
+   "phase": 1,
+   "week": 8,
+   "day": 2,
+   "title": "Colds and comfort",
+   "body": "감기에 걸렸어요 — \"I caught a cold\" — arrives as a chunk with past tense inside it, months before past tense is taught. Like the honorific formulas: use it whole, analyse it later (Phase 2, in this case).\n\nThe reply pair is cultural boilerplate you'll hear and give constantly: 푹 쉬세요 (rest deeply) and 물을 많이 드세요 (drink lots of water) — note it's 드세요, the honorific consume-verb, because care talk runs polite by default.\n\n많이 → [마니]. The ㅎ between vowels all but disappears — Phase 0, rule four, still collecting rent.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0079",
+     "s0080",
+     "s0081"
+    ]
+   },
+   "produce_models": [
+    "s0079",
+    "s0080",
+    "s0081"
+   ],
+   "produce_prompt": "Mini-dialogue with yourself: announce a cold, then give both standard comfort replies."
+  },
+  {
+   "id": "p1-w08-d03",
+   "phase": 1,
+   "week": 8,
+   "day": 3,
+   "title": "The rooms you live in",
+   "body": "The house vocabulary: 방 (room), 부엌 (kitchen), 거실 (living room) — joining 화장실 from week 6. This is the vocabulary of the rooms you're actually standing in, which is where the ten-minute home-practice slot lives.\n\n방이 참 넓어요 — the house-visit compliment. 넓어요 → [널버요], another double batchim revived by a vowel.\n\n부엌에서 요리해요 — hear [부어케서]: the ㅋ batchim jumps to the next syllable keeping its aspirated sound. Liaison moves the true consonant, not the neutralised one.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0082",
+     "s0083",
+     "s0084"
+    ]
+   },
+   "produce_models": [
+    "s0082",
+    "s0083",
+    "s0084"
+   ],
+   "produce_prompt": "Three sentences about your actual home: what's spacious, where you cook, where you watch TV."
+  },
+  {
+   "id": "p1-w08-d04",
+   "phase": 1,
+   "week": 8,
+   "day": 4,
+   "title": "Weather — the universal opener",
+   "body": "Weather small talk works identically in Korean — it's the safe channel with in-laws when deeper conversation is still out of reach.\n\n오늘 날씨가 참 좋아요 — 참 (truly) is the warmer cousin of 정말; both intensify anything.\n\n비가 와요 — rain \"comes\" in Korean; there is no raining verb. Snow too: 눈이 와요.\n\n좀 추워요 — your first live ㅂ-irregular: 춥다's ㅂ becomes 우 before a vowel (춥 + 어요 → 추워요). Use it as a chunk today; the full irregular system is a Phase 3 lesson and, later, a dedicated drill engine.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0085",
+     "s0086",
+     "s0087"
+    ]
+   },
+   "produce_models": [
+    "s0085",
+    "s0086",
+    "s0087"
+   ],
+   "produce_prompt": "Look outside right now and report: the weather, in two or three true sentences."
+  },
+  {
+   "id": "p1-w08-d05",
+   "phase": 1,
+   "week": 8,
+   "day": 5,
+   "title": "반말, round two — texting register",
+   "body": "Second listening-only day. 뭐 해? (what are you doing — the most-sent text message in Korea), 빨리 와 (come quickly), 괜찮아? (you okay?).\n\nPut 괜찮아? next to week's 괜찮아요? — the entire register difference is one syllable, dropped. That's the general recipe for parsing 반말: mentally restore the 요 and you usually have a sentence you already know.\n\nProduction rule unchanged: understand her 반말, answer in 해요체. Month 12 is when that changes, deliberately, together — not by accident at the dinner table.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0088",
+     "s0089",
+     "s0090"
+    ]
+   },
+   "produce_models": [
+    "s0076"
+   ],
+   "produce_prompt": "Translate today's three casual lines into the polite forms you'd actually produce."
+  },
+  {
+   "id": "p1-w09-d01",
+   "phase": 1,
+   "week": 9,
+   "day": 1,
+   "title": "처가 visits and the big days",
+   "body": "주말에 처가에 가요 — the sentence of many of your actual weekends, built entirely from pieces you own: time-에, destination-에, 가요.\n\nThe two great gathering days are 설날 (Lunar New Year) and 추석 (autumn harvest) — full-family, full-honorific occasions; exactly what the chunk arsenal was built for. 설날 is pronounced [설랄].\n\n생신 축하드려요 — elder birthdays upgrade twice at once: 생일 → 생신 (the honorific noun) and 축하해요 → 축하드려요 (giving the congratulation upward). Honorific words travel in packs; where one appears, its companions follow.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0091",
+     "s0092",
+     "s0093"
+    ]
+   },
+   "produce_models": [
+    "s0091",
+    "s0093"
+   ],
+   "produce_prompt": "Announce a weekend visit to the in-laws, and wish an elder happy birthday — honorifically."
+  },
+  {
+   "id": "p1-w09-d02",
+   "phase": 1,
+   "week": 9,
+   "day": 2,
+   "title": "Table formulas, complete",
+   "body": "The meal bracket closes: 잘 먹겠습니다 before (week 3), 정말 잘 먹었습니다 after — said to whoever cooked, non-negotiable at the in-laws' table and warmly received everywhere.\n\nBetween them, flow control: 조금만 주세요 (just a little, please) — because refusing food outright is hard to do gracefully, and the refills are coming either way. 배불러요 (I'm full) is the companion state report; 배고파요/배불러요 now bookend your appetite.\n\nWith these, the table is fully scripted: arrive, greet, praise, request, decline alcohol, pace the portions, thank the cook. Forty-six weeks of Phase 1 left and you can already survive its most important room.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0094",
+     "s0095",
+     "s0096"
+    ]
+   },
+   "produce_models": [
+    "s0003",
+    "s0095",
+    "s0094"
+   ],
+   "produce_prompt": "Run the full meal arc out loud: before eating, slowing the refills, after eating."
+  },
+  {
+   "id": "p1-w09-d03",
+   "phase": 1,
+   "week": 9,
+   "day": 3,
+   "title": "The learner's toolkit",
+   "body": "Three sentences that make every future sentence cheaper.\n\n이거 한국말로 뭐예요? turns your whole house into a dictionary — point and ask. 다시 한번 말해 주세요 buys you a second listen without switching to English.\n\n맞아요? is special: it's the agreed correction signal from the home-practice protocol. She corrects when you ask 맞아요? — and otherwise lets you talk. That agreement is what keeps a spouse from becoming an unpaid, exhausted teacher; the app drills, she confirms. Today's produce block is to actually run this loop once, for real, in the kitchen.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0097",
+     "s0098",
+     "s0099"
+    ]
+   },
+   "produce_models": [
+    "s0097",
+    "s0098",
+    "s0099"
+   ],
+   "produce_prompt": "Use the toolkit for real: ask your wife what one household object is called in Korean, check you got it right, ask for a repeat."
+  },
+  {
+   "id": "p1-w09-d04",
+   "phase": 1,
+   "week": 9,
+   "day": 4,
+   "title": "One hundred sentences",
+   "body": "한국어 공부가 재미있어요 — sentence one hundred, and hopefully true.\n\nStock check after seven weeks: two writing systems' worth of sound rules, the copula, five particles, present tense, two negations, polite requests, both number systems, the clock, the in-law vocabulary, a dozen honorific chunks, and an ear that parses kitchen-반말. That is a real foundation, built eighteen minutes at a time.\n\nThis is also where v0's authored content ends — deliberately. The next hundred sentences get written after this app has survived contact with real daily use. Keep reviewing; the queue is now the curriculum.",
+   "introduces": {
+    "grammar": [],
+    "sentences": [
+     "s0100"
+    ]
+   },
+   "produce_models": [
+    "s0100",
+    "s0060",
+    "s0043"
+   ],
+   "produce_prompt": "Free choice: three sentences you actually want to be able to say — build them from anything you've learned."
+  }
+ ]
+}
