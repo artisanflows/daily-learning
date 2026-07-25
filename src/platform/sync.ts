@@ -20,7 +20,7 @@ export async function buildSnapshot(): Promise<FullSnapshot> {
 }
 
 export async function applySnapshot(snap: FullSnapshot): Promise<void> {
-  if (!snap || typeof snap !== 'object' || snap.v !== 2) throw new Error('Not a Daily Learning backup');
+  if (!snap || typeof snap !== 'object' || snap.v !== 2) throw new Error('Not an Atelier backup');
   if (snap.platform) importAll(JSON.stringify(snap.platform));
   for (const m of MODULES) {
     if (m.loadData && snap.data && m.id in snap.data) {
@@ -35,7 +35,7 @@ export async function exportToFile(): Promise<void> {
   const blob = new Blob([json], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'daily-learning-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.download = 'atelier-' + new Date().toISOString().slice(0, 10) + '.json';
   a.click();
   URL.revokeObjectURL(a.href);
 }
@@ -50,7 +50,7 @@ export async function gistPush(token: string, gistId?: string): Promise<string |
   const res = await fetch(url, {
     method: gistId ? 'PATCH' : 'POST',
     headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },
-    body: JSON.stringify({ description: 'Daily Learning progress', public: false, files: { 'daily-learning.json': { content } } }),
+    body: JSON.stringify({ description: 'Atelier progress', public: false, files: { 'daily-learning.json': { content } } }),
   });
   if (!res.ok) return null;
   return (await res.json()).id as string;

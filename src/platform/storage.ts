@@ -97,7 +97,7 @@ export function importAll(json: string): boolean {
    Last-writer-wins by lastActiveDay/streak; UI wiring comes with the shell Settings. */
 export async function syncPush(token: string, gistId?: string): Promise<string | null> {
   const body = {
-    description: 'Daily Learning progress',
+    description: 'Atelier progress',
     public: false,
     files: { 'daily-learning.json': { content: exportAll() } },
   };

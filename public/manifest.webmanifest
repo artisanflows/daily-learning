@@ -1,7 +1,7 @@
 {
-  "name": "Daily Learning",
-  "short_name": "Daily",
-  "description": "One place to practise everything you're learning — chess, Korean, and more.",
+  "name": "Atelier",
+  "short_name": "Atelier",
+  "description": "The daily workshop — chess, Korean, wine and art in one practice.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

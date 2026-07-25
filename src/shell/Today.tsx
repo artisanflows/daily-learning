@@ -52,8 +52,8 @@ export function Today({ modules, streak, onOpen }: Props) {
   return (
     <div className="shell dl-module">
       <header className="dl-topbar">
-        <span className="shell__logo" aria-hidden="true" />
-        <h1 className="dl-topbar__title" style={{ color: 'var(--plat-accent-strong)' }}>Daily Learning</h1>
+        <img className="shell__logo" src="./icon.svg" alt="" aria-hidden="true" />
+        <h1 className="dl-topbar__title" style={{ color: 'var(--plat-accent-strong)' }}>Atelier</h1>
         <span className="dl-topbar__blurb">chess · korean · wine · art</span>
         <span className="shell__streak" style={{ marginLeft: 'auto' }}>
           {streak > 0

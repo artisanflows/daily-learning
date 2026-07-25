@@ -13,7 +13,7 @@ export function chessModule(): LearningModule {
 
   return {
     id: 'chess',
-    title: 'Chess Atelier',
+    title: 'Chess',
     blurb: 'Openings · tactics · endgames',
     accent: '#bc5b3d',
     prefersTheme: 'light',
@@ -27,7 +27,7 @@ export function chessModule(): LearningModule {
       // shared floating "Subjects" pill provides the way back (same as every module).
       const frame = document.createElement('iframe');
       frame.className = 'mod-chess__frame';
-      frame.title = 'Chess Atelier';
+      frame.title = 'Chess';
       frame.src = './chess/index.html';
       wrap.append(frame);
       container.appendChild(wrap);
