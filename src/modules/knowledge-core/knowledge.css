@@ -1,0 +1,44 @@
+/* Knowledge domains share the platform design language (tokens.css); each sets its own
+   --accent. Light theme, phone-first column, scoped under .mod-knowledge. */
+
+.mod-knowledge {
+  max-width: 560px;
+  margin: 0 auto;
+  min-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  color: var(--plat-text);
+}
+.mod-knowledge__back { flex: none; padding: 0 0 8px; }
+.mod-knowledge__back button { font: inherit; background: none; border: none; color: var(--plat-muted); padding: 6px 4px; min-height: 40px; cursor: pointer; font-size: 15px; }
+.mod-knowledge__back button:hover { color: var(--plat-text); }
+
+.k-screen { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+.k-center { align-items: center; justify-content: center; text-align: center; gap: 20px; }
+.k-center h1 { font-size: var(--fs-h1); font-weight: 700; }
+
+.k-progress { font-size: var(--fs-cap); }
+
+.k-card {
+  background: var(--plat-surface); border: 1px solid var(--plat-line);
+  border-left: 4px solid var(--accent); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card); padding: 24px 20px; display: flex; flex-direction: column; gap: 14px;
+}
+.k-prompt { font-size: 22px; line-height: 1.4; }
+.k-reveal { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--plat-line); padding-top: 14px; }
+.k-ok { color: var(--ok); font-weight: 600; }
+.k-no { color: var(--danger); font-weight: 600; }
+.k-explain { line-height: 1.6; }
+.k-source { font-size: var(--fs-cap); font-style: italic; }
+
+.k-thumb { margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding-top: 16px; }
+.k-input { font: inherit; font-size: 20px; width: 100%; min-height: 48px; padding: 12px 14px; border-radius: var(--radius); border: 1px solid var(--plat-line-strong); background: var(--plat-surface-2); color: var(--plat-text); }
+.k-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.k-grades { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.k-g { font: inherit; font-weight: 700; border: none; border-radius: var(--radius); min-height: 52px; cursor: pointer; color: #fff; }
+.k-g-again { background: #b0503a; }
+.k-g-hard { background: #b98a3c; }
+.k-g-good { background: #4e8578; }
+.k-g-easy { background: #5b7ea8; }
+.k-g:active { transform: scale(0.97); }
