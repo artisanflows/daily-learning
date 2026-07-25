@@ -7,6 +7,7 @@ export interface Card {
   id: string;
   type: CardType;
   prompt: string;          // question, or a cloze sentence with a ___ blank
+  image?: string;          // optional image shown above the prompt (art recognition cards)
   answer?: string;         // canonical answer for typed cards (cloze / instance)
   accept?: string[];       // accepted variants (normalised match); falls back to [answer]
   explanation: string;     // shown after answering — the actual lesson

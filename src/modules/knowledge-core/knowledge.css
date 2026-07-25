@@ -25,6 +25,7 @@
   box-shadow: var(--shadow-card); padding: 24px 20px; display: flex; flex-direction: column; gap: 14px;
 }
 .k-prompt { font-size: 22px; line-height: 1.4; }
+.k-img { width: 100%; max-height: 46vh; object-fit: contain; border-radius: var(--radius); background: var(--plat-surface-2); }
 .k-reveal { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--plat-line); padding-top: 14px; }
 .k-ok { color: var(--ok); font-weight: 600; }
 .k-no { color: var(--danger); font-weight: 600; }

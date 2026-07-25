@@ -1,0 +1,58 @@
+[
+ {
+  "q": "Van Gogh",
+  "artist": "Vincent van Gogh",
+  "title": "Wheat Field with Cypresses",
+  "date": "1889",
+  "img": "https://images.metmuseum.org/CRDImages/ep/web-large/DP-42549-001.jpg",
+  "id": 436535
+ },
+ {
+  "q": "Vermeer",
+  "artist": "Johannes Vermeer",
+  "title": "A Maid Asleep",
+  "date": "ca. 1656–57",
+  "img": "https://images.metmuseum.org/CRDImages/ep/web-large/DP355525.jpg",
+  "id": 437878
+ },
+ {
+  "q": "Rembrandt",
+  "artist": "Rembrandt (Rembrandt van Rijn)",
+  "title": "Flora",
+  "date": "ca. 1654",
+  "img": "https://images.metmuseum.org/CRDImages/ep/web-large/DP120785.jpg",
+  "id": 437398
+ },
+ {
+  "q": "Hokusai",
+  "artist": "Katsushika Hokusai",
+  "title": "Random Sketches by Hokusai, Volume 12",
+  "date": "1834",
+  "img": "https://images.metmuseum.org/CRDImages/as/web-large/JIB_112_Preface 1_sf.JPG",
+  "id": 57805
+ },
+ {
+  "q": "Bruegel",
+  "artist": "Pieter Bruegel the Elder",
+  "title": "The Harvesters",
+  "date": "1565",
+  "img": "https://images.metmuseum.org/CRDImages/ep/web-large/DP119115.jpg",
+  "id": 435809
+ },
+ {
+  "q": "Turner",
+  "artist": "Joseph Mallord William Turner",
+  "title": "Juvenile Tricks (Liber Studiorum, part V, plate 22)",
+  "date": "January 1, 1811",
+  "img": "https://images.metmuseum.org/CRDImages/dp/web-large/DP821401.jpg",
+  "id": 383001
+ },
+ {
+  "q": "Degas",
+  "artist": "Edgar Degas",
+  "title": "Dancer with a Fan",
+  "date": "ca. 1880",
+  "img": "https://images.metmuseum.org/CRDImages/ep/web-large/DP-43276-001.jpg",
+  "id": 436135
+ }
+]

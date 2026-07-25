@@ -111,6 +111,7 @@ export function KnowledgeApp({ content, store, onActivity, onStatus, onHome }: P
         <div className="k-screen">
           <div className="k-progress dl-muted">{idx + 1} / {queue.length}{isNew ? ' · new' : ''}{cur.tag ? ' · ' + cur.tag : ''}</div>
           <div className="k-card">
+            {cur.image && <img className="k-img" src={cur.image} alt="" />}
             <p className="k-prompt">{cur.prompt}</p>
             {revealed && (
               <div className="k-reveal">
