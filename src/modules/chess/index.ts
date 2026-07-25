@@ -57,6 +57,16 @@ export function chessModule(): LearningModule {
       return { dueCount: s.due, newAvailable: fresh ? s.newAvailable : 2, minutes: 12, done: fresh && s.done };
     },
 
+    getPlanItems() {
+      const s = store.get<CStatus | null>('status', null);
+      const fresh = s && s.day === todayStr();
+      return [{
+        label: 'Session — drills, tactics, an endgame',
+        sub: fresh ? `${s.due} due · ${s.newAvailable} new lines` : 'openings · tactics · endgames',
+        done: !!(fresh && s.done),
+      }];
+    },
+
     exportState() { return store.get<CStatus | null>('status', null); },
     importState() { /* status cache only; full data via dumpData/loadData */ },
 

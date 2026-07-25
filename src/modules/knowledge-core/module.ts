@@ -49,6 +49,24 @@ export function makeKnowledgeModule(content: DomainContent): LearningModule {
       return { dueCount: s.due, newAvailable: na, minutes: Math.max(3, Math.round((s.due + na) * 0.4)), done: fresh && s.done };
     },
 
+    // The same per-day ticks KnowledgeApp keeps ('meta'.doneDay + 'days'), read here for
+    // the home's aggregated Today's plan.
+    getPlanItems() {
+      const t = todayStr();
+      const s = store.get<KStatus | null>('status', null);
+      const meta = store.get<{ doneDay?: string }>('meta', {});
+      const days = store.get<{ read?: string; explore?: string }>('days', { read: '', explore: '' });
+      const fresh = s && s.day === t;
+      const items = [
+        { label: 'Review the cards', sub: fresh ? `${s.due} due · ${s.newAvailable} new` : undefined, done: meta.doneDay === t },
+        { label: 'Read a lesson', done: days.read === t },
+      ];
+      if ((content.explore ?? []).length > 0) {
+        items.push({ label: content.id === 'art' ? 'Gallery visit or quiz' : 'Explore a region', done: days.explore === t });
+      }
+      return items;
+    },
+
     exportState() { return store.get<KStatus | null>('status', null); },
     importState() { /* card SRS state rides in the platform island → covered by unified sync */ },
   };

@@ -71,6 +71,20 @@ export function koreanModule(): LearningModule {
       return { dueCount: s.due, newAvailable: s.newAvailable, minutes: 18, done: fresh && s.done };
     },
 
+    // The mixed daily plan (matches the module's own Today panel). Vocab/learn ticks
+    // live in localStorage under the Korean app's UTC-date convention.
+    getPlanItems() {
+      const s = store.get<KStatus | null>('status', null);
+      const fresh = s && s.day === todayStr();
+      const utcToday = new Date().toISOString().slice(0, 10);
+      const mark = (k: string) => { try { return localStorage.getItem(k) === utcToday; } catch { return false; } };
+      return [
+        { label: 'Daily session', sub: fresh && s.due > 0 ? `${s.due} due` : 'lesson + reviews', done: !!(fresh && s.done) },
+        { label: 'One vocabulary round', sub: 'learn 20 new or review due', done: mark('kr-plan-vocab') },
+        { label: 'Phrases or a lesson', sub: 'say one at dinner', done: mark('kr-plan-learn') },
+      ];
+    },
+
     exportState() { return store.get<KStatus | null>('status', null); },
     importState() { /* status cache only; full data via dumpData/loadData */ },
 

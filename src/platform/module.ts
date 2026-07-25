@@ -2,6 +2,12 @@
 // The shell knows nothing about chess or Korean specifically — only this interface.
 // A future trainer (currently just an MD spec) becomes a module by implementing this.
 
+export interface PlanItem {
+  label: string;   // "Daily session", "One vocabulary round"…
+  sub?: string;    // small print, e.g. "3 due · 6 new"
+  done: boolean;
+}
+
 export interface DailyStatus {
   dueCount: number;       // items due for review today
   newAvailable: number;   // new items that could be introduced today
@@ -24,6 +30,11 @@ export interface LearningModule {
 
   // For the unified "Today" screen. Must be cheap and synchronous.
   getDailyStatus(): DailyStatus;
+
+  // The module's daily plan sub-items (session / vocab / review / lesson…) with done
+  // state, for the home's aggregated "Today's plan". Cheap and synchronous. Optional —
+  // without it the home shows a single generic item from getDailyStatus.
+  getPlanItems?(): PlanItem[];
 
   // Lightweight synchronous snapshot (e.g. the status cache). Cheap; used for quick state.
   exportState(): unknown;

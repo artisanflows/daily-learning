@@ -1,12 +1,8 @@
-/* Shell chrome — the warm atelier "hallway". Module skins live inside .subject-view. */
+/* Shell chrome — the warm atelier "hallway". Module skins live inside .subject-view.
+   The home wears the same chess chrome as every module: .dl-module + .dl-topbar + .dl-panel. */
 
-.shell { max-width: 960px; margin: 0 auto; padding: max(20px, env(safe-area-inset-top)) 20px 72px; }
+.shell { padding: max(16px, env(safe-area-inset-top)) 20px 60px; }
 
-.shell__top {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 6px 2px 22px;
-}
-.shell__brand { display: flex; align-items: center; gap: 11px; font-size: var(--fs-h3); font-weight: 700; color: var(--plat-text); letter-spacing: 0.2px; }
 .shell__logo {
   width: 30px; height: 30px; border-radius: 8px; flex: none;
   background: linear-gradient(135deg, var(--plat-accent) 0%, var(--plat-accent-strong) 100%);
@@ -18,13 +14,23 @@
   padding: 6px 12px; border-radius: var(--radius-pill);
   background: var(--plat-surface); border: 1px solid var(--plat-line);
 }
-.shell__foot { text-align: center; margin-top: 28px; font-size: var(--fs-cap); }
+.shell__foot { text-align: center; margin-top: 20px; font-size: var(--fs-cap); }
 
-/* ---- Today hero ---- */
-.today { margin-bottom: 22px; }
-.today__eyebrow { font-size: var(--fs-cap); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--plat-accent-strong); }
-.today h1 { font-family: var(--font-serif); font-size: var(--fs-h1); font-weight: 600; margin: 4px 0 6px; letter-spacing: 0.2px; }
-.today__sub { font-size: var(--fs-h3); }
+/* ---- Aggregated Today's plan: one group per subject, sub-items beneath ---- */
+.plan-groups { display: flex; flex-direction: column; gap: 18px; }
+.plan-group__head {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  font: inherit; text-align: left; cursor: pointer; color: var(--plat-text);
+  background: none; border: none; padding: 0 0 8px;
+}
+.plan-group__badge {
+  width: 26px; height: 26px; border-radius: 7px; flex: none;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-size: 15px; color: #fff; background: var(--accent);
+}
+.plan-group__title { font-size: 16px; font-weight: 700; color: var(--accent); }
+.plan-group__meta { margin-left: auto; font-size: var(--fs-cap); }
+.plan-group .dl-planbox.done { background: var(--accent); border-color: var(--accent); }
 
 .budget { display: flex; align-items: center; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
 .budget__label { margin-right: 2px; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }

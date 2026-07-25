@@ -12,7 +12,7 @@ interface Props {
 
 interface Planned { m: LearningModule; s: DailyStatus; dueMin: number; newMin: number; today: number; deferNew: boolean }
 
-// A refined monogram per subject — a glyph, not an emoji (the user disliked emoji).
+// A refined monogram per subject — a glyph, not an emoji.
 const GLYPH: Record<string, string> = {
   chess: '♞', korean: '한', wine: 'W', physics: 'P', psychology: 'Ψ', art: 'A',
 };
@@ -37,7 +37,7 @@ function planDay(rows: { m: LearningModule; s: DailyStatus }[], budget: number):
 }
 
 const CHIPS: { label: string; min: number }[] = [
-  { label: '10', min: 10 }, { label: '20', min: 20 }, { label: '30', min: 30 }, { label: '45', min: 45 }, { label: 'All', min: 0 },
+  { label: '10m', min: 10 }, { label: '20m', min: 20 }, { label: '30m', min: 30 }, { label: '45m', min: 45 }, { label: 'All', min: 0 },
 ];
 
 export function Today({ modules, streak, onOpen }: Props) {
@@ -46,68 +46,92 @@ export function Today({ modules, streak, onOpen }: Props) {
   const plan = planDay(rows, budget);
   const plannedMin = plan.reduce((a, i) => a + (i.s.done ? 0 : i.today), 0);
   const dueTotal = rows.reduce((a, x) => a + x.s.dueCount, 0);
-  const allDone = rows.every((x) => x.s.done);
+  const doneCount = rows.filter((x) => x.s.done).length;
   const chooseBudget = (min: number) => { setBudget(min); setBudgetState(min); };
 
-  const sub = allDone
-    ? 'All done for today — nicely paced.'
-    : `${plannedMin} min planned${dueTotal ? ` · ${dueTotal} due for review` : ''} across ${rows.length} subjects.`;
-
   return (
-    <div className="shell">
-      <header className="shell__top">
-        <div className="shell__brand"><span className="shell__logo" aria-hidden="true" />Daily Learning</div>
-        <div className="shell__streak">
+    <div className="shell dl-module">
+      <header className="dl-topbar">
+        <span className="shell__logo" aria-hidden="true" />
+        <h1 className="dl-topbar__title" style={{ color: 'var(--plat-accent-strong)' }}>Daily Learning</h1>
+        <span className="dl-topbar__blurb">chess · korean · wine · art</span>
+        <span className="shell__streak" style={{ marginLeft: 'auto' }}>
           {streak > 0
             ? <><span className="ic ic-flame" style={{ color: 'var(--warn)' }} /> {streak}-day streak</>
             : <span className="dl-muted">Start today</span>}
-        </div>
+        </span>
       </header>
 
-      <section className="today">
-        <div className="today__eyebrow">Today</div>
-        <h1>Your daily plan</h1>
-        <p className="today__sub dl-muted">{sub}</p>
+      <section className="dl-panel">
+        <h2>Today</h2>
+        <div className="dl-statgrid">
+          <div className="dl-stat"><b>{plannedMin}</b><span>min planned</span></div>
+          <div className="dl-stat"><b>{dueTotal}</b><span>due for review</span></div>
+          <div className="dl-stat"><b>{doneCount}/{rows.length}</b><span>subjects done</span></div>
+          <div className="dl-stat"><b>{streak}</b><span>day streak</span></div>
+        </div>
         <div className="budget">
           <span className="budget__label"><span className="ic ic-clock" />Time today</span>
           {CHIPS.map((c) => (
-            <button key={c.label} className={'budget__chip' + (budget === c.min ? ' is-on' : '')} onClick={() => chooseBudget(c.min)}>{c.label}{c.min ? 'm' : ''}</button>
+            <button key={c.label} className={'budget__chip' + (budget === c.min ? ' is-on' : '')} onClick={() => chooseBudget(c.min)}>{c.label}</button>
           ))}
         </div>
       </section>
 
-      <div className="subject-grid">
-        {plan.map(({ m, s, today, deferNew }) => (
-          <button
-            key={m.id}
-            className="subject-card"
-            style={{ '--accent': m.accent } as CSSProperties}
-            onClick={() => onOpen(m.id)}
-          >
-            <div className="subject-card__head">
-              <span className="subject-card__badge" aria-hidden="true">{GLYPH[m.id] ?? m.title[0]}</span>
-              <span className="subject-card__title">{m.title}</span>
-            </div>
-            <div className="subject-card__blurb dl-muted">{m.blurb}</div>
-            <div className="subject-card__status">
-              {s.done
-                ? <span className="subject-card__done"><span className="ic ic-check" />Done today</span>
-                : <>
-                    {(s.dueCount > 0 || s.newAvailable > 0) && (
-                      <span className="dl-pill">{today > 0 ? `~${today} min` : 'review only'}</span>
-                    )}
-                    <span className="subject-card__meta">
-                      {s.dueCount} due · {s.newAvailable} new{deferNew ? ' · new deferred' : ''}
-                    </span>
-                  </>}
-            </div>
-          </button>
-        ))}
-      </div>
+      <section className="dl-panel">
+        <h2>Today’s plan</h2>
+        <p className="dl-muted" style={{ marginBottom: 14 }}>
+          {doneCount === rows.length ? 'Everything ticked — nicely paced.' : 'Work top to bottom, or jump to what you fancy. Any tick keeps the streak.'}
+        </p>
+        <div className="plan-groups">
+          {plan.map(({ m, s, today, deferNew }) => {
+            const items = m.getPlanItems?.() ?? [{ label: 'Daily session', done: s.done }];
+            return (
+              <div key={m.id} className="plan-group" style={{ '--accent': m.accent } as CSSProperties}>
+                <button className="plan-group__head" onClick={() => onOpen(m.id)}>
+                  <span className="plan-group__badge" aria-hidden="true">{GLYPH[m.id] ?? m.title[0]}</span>
+                  <span className="plan-group__title">{m.title}</span>
+                  <span className="plan-group__meta dl-muted">
+                    {s.done ? 'done today ✓' : `~${today} min${deferNew ? ' · new deferred' : ''}`}
+                  </span>
+                </button>
+                <div className="dl-todo">
+                  {items.map((it, i) => (
+                    <button key={i} className="dl-todo__row" onClick={() => onOpen(m.id)}>
+                      <span className={'dl-planbox' + (it.done ? ' done' : '')}>{it.done && <span className="ic ic-check" />}</span>
+                      <span className="dl-todo__label">{it.label}{it.sub && <small>{it.sub}</small>}</span>
+                      <span className="dl-todo__go">go →</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
-      <p className="shell__foot dl-muted">More trainers slot in here as they're built.</p>
+      <section className="dl-panel">
+        <h2>Subjects</h2>
+        <div className="subject-grid">
+          {plan.map(({ m, s }) => (
+            <button key={m.id} className="subject-card" style={{ '--accent': m.accent } as CSSProperties} onClick={() => onOpen(m.id)}>
+              <div className="subject-card__head">
+                <span className="subject-card__badge" aria-hidden="true">{GLYPH[m.id] ?? m.title[0]}</span>
+                <span className="subject-card__title">{m.title}</span>
+              </div>
+              <div className="subject-card__blurb dl-muted">{m.blurb}</div>
+              <div className="subject-card__status">
+                {s.done
+                  ? <span className="subject-card__done"><span className="ic ic-check" />Done today</span>
+                  : <span className="subject-card__meta">{s.dueCount} due · {s.newAvailable} new</span>}
+              </div>
+            </button>
+          ))}
+        </div>
+      </section>
 
       <SettingsCard />
+      <p className="shell__foot dl-muted">More trainers slot in here as they’re built.</p>
     </div>
   );
 }
