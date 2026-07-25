@@ -141,6 +141,25 @@ body {
   padding: 18px; margin-bottom: 14px;
 }
 .dl-panel > h2 { font-size: 17px; margin-bottom: 10px; color: var(--accent); }
+/* Chess-style "Today's plan" checklist rows (the planbox checkboxes). */
+.dl-todo { display: flex; flex-direction: column; gap: 8px; }
+.dl-todo__row {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  font: inherit; text-align: left; cursor: pointer; color: var(--plat-text);
+  background: var(--plat-surface-2); border: 1px solid transparent;
+  border-radius: var(--radius); padding: 12px 14px;
+}
+.dl-todo__row:hover { border-color: var(--plat-line-strong); }
+.dl-planbox {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border: 2px solid var(--plat-line-strong); border-radius: 5px;
+  flex: none; color: #fff; background: transparent;
+}
+.dl-planbox.done { background: var(--ok); border-color: var(--ok); }
+.dl-todo__label { flex: 1; font-weight: 600; }
+.dl-todo__label small { display: block; font-weight: 400; font-size: var(--fs-cap); color: var(--plat-muted); }
+.dl-todo__go { font-size: var(--fs-cap); color: var(--plat-muted); }
+
 .dl-statgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
 .dl-stat { background: var(--plat-surface-2); border-radius: var(--radius); padding: 16px 12px; text-align: center; }
 .dl-stat b { display: block; font-size: 28px; font-weight: 700; color: var(--accent); line-height: 1.1; }

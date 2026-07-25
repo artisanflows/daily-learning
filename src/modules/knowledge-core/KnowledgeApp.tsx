@@ -53,6 +53,11 @@ export function KnowledgeApp({ content, store, onActivity, onStatus }: Props) {
   const [states, setStates] = useState<Record<string, StoredCard>>(() => store.get('cards', {}));
   const [meta, setMeta] = useState<Meta>(() => store.get<Meta>('meta', { introducedDay: '', introducedCount: 0, doneDay: '' }));
   const [read, setRead] = useState<Record<string, 1>>(() => store.get('read', {}));
+  // Per-day plan ticks (chess's "Today's plan"): when did the user last read / explore.
+  const [days, setDays] = useState<{ read: string; explore: string }>(() => store.get('days', { read: '', explore: '' }));
+  const markDay = (k: 'read' | 'explore') => {
+    setDays((d) => { const next = { ...d, [k]: today() }; store.set('days', next); return next; });
+  };
   const [view, setView] = useState<View>('tab');
   const [tab, setTab] = useState<Tab>('today');
   // learn navigation
@@ -117,13 +122,14 @@ export function KnowledgeApp({ content, store, onActivity, onStatus }: Props) {
   const openBlock = (id: string) => { setBlockId(id); setPage(-1); setView('block'); };
   const finishBlock = () => {
     if (blockId) { const r = { ...read, [blockId]: 1 as const }; setRead(r); store.set('read', r); }
+    markDay('read');
     setTab('learn'); setView('tab');
   };
 
   /* ---------------- Explore ---------------- */
   const allEntries: ExploreEntry[] = useMemo(() => (content.explore ?? []).flatMap((s) => s.entries), [content.explore]);
   const entry = entryId ? allEntries.find((e) => e.id === entryId) ?? null : null;
-  const openEntry = (id: string) => { setEntryId(id); setView('entry'); };
+  const openEntry = (id: string) => { setEntryId(id); setView('entry'); markDay('explore'); };
   const hasExplore = (content.explore ?? []).length > 0 || (content.mapPins ?? []).length > 0;
   const readCount = content.blocks.filter((b) => read[b.id]).length;
   const nothing = dueCards.length + newAvailable === 0;
@@ -278,6 +284,29 @@ export function KnowledgeApp({ content, store, onActivity, onStatus }: Props) {
             <button className="dl-btn dl-btn--accent dl-btn--lg" disabled={nothing} onClick={start} style={{ marginTop: 16 }}>
               {nothing ? 'Review all caught up — come back tomorrow' : `Start review · ${dueCards.length + newAvailable} cards`}
             </button>
+          </section>
+
+          <section className="dl-panel">
+            <h2>Today’s plan</h2>
+            <div className="dl-todo">
+              <button className="dl-todo__row" onClick={start} disabled={nothing}>
+                <span className={'dl-planbox' + (meta.doneDay === today() ? ' done' : '')}>{meta.doneDay === today() && <span className="ic ic-check" />}</span>
+                <span className="dl-todo__label">Clear the review queue<small>{nothing ? 'done for today' : `${dueCards.length} due · ${newAvailable} new`}</small></span>
+                <span className="dl-todo__go">go →</span>
+              </button>
+              <button className="dl-todo__row" onClick={() => setTab('learn')}>
+                <span className={'dl-planbox' + (days.read === today() ? ' done' : '')}>{days.read === today() && <span className="ic ic-check" />}</span>
+                <span className="dl-todo__label">Read one lesson<small>{readCount}/{content.blocks.length} units read so far</small></span>
+                <span className="dl-todo__go">go →</span>
+              </button>
+              {hasExplore && (
+                <button className="dl-todo__row" onClick={() => setTab('explore')}>
+                  <span className={'dl-planbox' + (days.explore === today() ? ' done' : '')}>{days.explore === today() && <span className="ic ic-check" />}</span>
+                  <span className="dl-todo__label">Wander the collection<small>open one entry, no clock</small></span>
+                  <span className="dl-todo__go">go →</span>
+                </button>
+              )}
+            </div>
           </section>
 
           {content.goal && (
