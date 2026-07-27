@@ -255,6 +255,23 @@ select, input[type="number"] {
   border-radius: 6px; padding: 6px 10px; font-size: 14px;
 }
 .banner { background: #f0e9f7; border: 1px solid #c4b1dd; border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; font-size: 14px; }
+
+/* ---------- Coach review: mistake browser ---------- */
+.mistbar { display: flex; align-items: center; gap: 8px; margin: 12px 0 8px; font-size: 14px; }
+.mistbar .mistnav { margin-left: auto; display: flex; gap: 4px; }
+.mistbar .mistnav button { padding: 3px 12px; font-size: 12px; }
+.mistlist { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.mist {
+  display: inline-flex; align-items: center; gap: 7px; font: inherit; font-size: 13px; cursor: pointer;
+  background: var(--panel2); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px;
+}
+.mist:hover { border-color: #d3c1a2; }
+.mist.cur { border-color: var(--accent); background: var(--accent-soft); }
+.sev { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 1px 7px; border-radius: 999px; color: #fff; }
+.sev-blunder { background: var(--danger); }
+.sev-mistake { background: #b98a3c; }
+.sev-inaccuracy { background: #9a8b77; }
+.mistdetail { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
 a { color: var(--accent); }
 .crumb { font-size: 13px; color: var(--muted); margin-bottom: 10px; cursor: pointer; }
 .crumb:hover { color: var(--accent); }
@@ -532,6 +549,17 @@ function sanitizeState(obj) {
           blunderCount: Math.max(0, Number(rv.blunderCount) || 0),
           phases: { opening: Math.max(0, Number(ph.opening) || 0), middlegame: Math.max(0, Number(ph.middlegame) || 0), endgame: Math.max(0, Number(ph.endgame) || 0) },
         };
+        if (Array.isArray(rv.mistakes)) {
+          entry.review.mistakes = rv.mistakes.slice(0, 60).filter(m => m && typeof m === 'object').map(m => ({
+            ply: Math.max(0, Number(m.ply) || 0), san: String(m.san || '').slice(0, 10),
+            delta: Number(m.delta) || 0,
+            sev: ['blunder', 'mistake', 'inaccuracy'].includes(m.sev) ? m.sev : 'mistake',
+            phase: ['opening', 'middlegame', 'endgame'].includes(m.phase) ? m.phase : 'middlegame',
+            betterSan: m.betterSan ? String(m.betterSan).slice(0, 10) : null,
+            evBefore: Number(m.evBefore) || 0, evAfter: Number(m.evAfter) || 0,
+            tip: String(m.tip || '').slice(0, 300),
+          }));
+        }
       }
       clean.mygames.push(entry);
     }
@@ -2368,6 +2396,43 @@ function reviewStep() {
   });
 }
 
+/* Turns one bad move into one concrete lesson. Uses the position, the engine's better
+   move, and the engine's reply to the played move to say WHY it was bad and what the
+   habit to build is. Returns a short plain-English string. */
+function mistakeTip(fens, sans, k, delta, betterUci, replyUci, evBefore, evAfter) {
+  const PIECE = { p: 'pawn', n: 'knight', b: 'bishop', r: 'rook', q: 'queen', k: 'king' };
+  let played = null, betterMv = null, replyMv = null;
+  try { const t = new Chess(fens[k]); played = t.move(sans[k]); } catch (e) { /* ignore */ }
+  try {
+    if (betterUci) { const t = new Chess(fens[k]); betterMv = t.move({ from: betterUci.slice(0, 2), to: betterUci.slice(2, 4), promotion: betterUci.length > 4 ? betterUci[4] : undefined }); }
+  } catch (e) { /* ignore */ }
+  try {
+    if (replyUci && fens[k + 1]) { const t = new Chess(fens[k + 1]); replyMv = t.move({ from: replyUci.slice(0, 2), to: replyUci.slice(2, 4), promotion: replyUci.length > 4 ? replyUci[4] : undefined }); }
+  } catch (e) { /* ignore */ }
+
+  let why = '';
+  if (played && replyMv && replyMv.captured && replyMv.to === played.to) {
+    // The engine's answer captures the piece that just moved — the classic hang.
+    why = 'This hangs the ' + PIECE[played.piece] + ': after ' + replyMv.san + ' it is simply lost. Before every move, ask "what takes what?" on the square you are moving to.';
+  } else if (replyMv && (replyMv.captured || replyMv.san.includes('+') || replyMv.san.includes('#'))) {
+    why = 'It allows the forcing ' + replyMv.san + (replyMv.san.includes('#') ? ' — checkmate' : (replyMv.captured ? ' winning material' : ' with a dangerous attack')) + '. Check your opponent’s checks and captures before committing.';
+  } else if (betterMv && betterMv.captured) {
+    why = 'You missed winning material with ' + betterMv.san + '. Scan for YOUR checks and captures first — free material beats a quiet plan.';
+  } else if (betterMv && betterMv.san.includes('+')) {
+    why = 'The forcing ' + betterMv.san + ' was available — forcing moves first, quiet moves after.';
+  } else if (betterMv) {
+    why = 'Stronger was ' + betterMv.san + ', keeping the position’s tension instead of conceding ground.';
+  } else {
+    why = 'The engine preferred a different plan here — replay the position and compare ideas.';
+  }
+  // Frame what the eval swing MEANT — that's the part that changes behaviour.
+  let frame = '';
+  if (evBefore >= 1.5 && evAfter <= 0.5) frame = ' It turned a winning position into ' + (evAfter <= -1 ? 'a lost one' : 'an equal fight') + '.';
+  else if (evBefore >= -0.5 && evAfter <= -1.5) frame = ' It handed over the game from a level position.';
+  else if (evBefore <= -1.5) frame = ' Already worse, this made the defence much harder.';
+  return why + frame;
+}
+
 function finishGameReview() {
   const r = reviewRun;
   reviewRun = null;
@@ -2375,6 +2440,7 @@ function finishGameReview() {
   const startWhite = (r.startFen || INITIAL_FEN).split(' ')[1] !== 'b';
   const custom = isCustomStart(g);
   const phases = { opening: 0, middlegame: 0, endgame: 0 };
+  const mistakes = [];
   let firstBlunder = null, blunderCount = 0;
   for (let k = 0; k < g.sans.length; k++) {
     const mover = (startWhite ? (k % 2 === 0) : (k % 2 === 1)) ? 'w' : 'b';
@@ -2383,32 +2449,39 @@ function finishGameReview() {
     const after = r.evals[k] ? r.evals[k].ev : null;
     if (before === null || after === null) continue;
     const delta = after - before;
-    if (delta <= -1.2) {
+    if (delta > -0.6) continue;                               // below inaccuracy threshold
+    const sev = delta <= -2.5 ? 'blunder' : (delta <= -1.2 ? 'mistake' : 'inaccuracy');
+    const phase = (!custom && k < 20) ? 'opening' : (piecesOnBoard(r.fens[k]) <= 12 ? 'endgame' : 'middlegame');
+    const betterUci = k === 0 ? null : (r.evals[k - 1] ? r.evals[k - 1].mv : null);
+    const replyUci = r.evals[k] ? r.evals[k].mv : null;
+    let betterSan = null;
+    if (betterUci) {
+      try {
+        const t = new Chess(r.fens[k]);
+        const bm = t.move({ from: betterUci.slice(0, 2), to: betterUci.slice(2, 4), promotion: betterUci.length > 4 ? betterUci[4] : undefined });
+        if (bm) betterSan = bm.san;
+      } catch (e) { /* ignore */ }
+    }
+    const m = {
+      ply: k, san: g.sans[k], delta: Math.round(delta * 10) / 10, sev, phase, betterSan,
+      evBefore: Math.round(before * 10) / 10, evAfter: Math.round(after * 10) / 10,
+      tip: mistakeTip(r.fens, g.sans, k, delta, betterUci, replyUci, before, after).slice(0, 300),
+    };
+    mistakes.push(m);
+    if (sev !== 'inaccuracy') {
       blunderCount++;
-      const phase = (!custom && k < 20) ? 'opening' : (piecesOnBoard(r.fens[k]) <= 12 ? 'endgame' : 'middlegame');
-      phases[phase]++;
-      if (!firstBlunder) {
-        let betterSan = null;
-        const bestUci = k === 0 ? null : (r.evals[k - 1] ? r.evals[k - 1].mv : null);
-        if (bestUci) {
-          try {
-            const t = new Chess(r.fens[k]);
-            const bm = t.move({ from: bestUci.slice(0, 2), to: bestUci.slice(2, 4), promotion: bestUci.length > 4 ? bestUci[4] : undefined });
-            if (bm) betterSan = bm.san;
-          } catch (e) { /* ignore */ }
-        }
-        firstBlunder = { ply: k, san: g.sans[k], delta: Math.round(delta * 10) / 10, betterSan, phase };
-      }
+      phases[phase]++;                                        // ledger keeps its old ≥1.2 semantics
+      if (!firstBlunder) firstBlunder = { ply: k, san: m.san, delta: m.delta, betterSan, phase };
     }
   }
   g.review = {
     userColor, date: todayStr(),
     deviation: custom ? { custom: true } : findDeviation(g, userColor),
-    firstBlunder, blunderCount, phases,
+    firstBlunder, blunderCount, phases, mistakes,
   };
   bumpActivity('reviews');
   saveState();
-  if (gameView && gameView.g === g) { gameView.revealed = false; render(); }
+  if (gameView && gameView.g === g) { gameView.revealed = false; gameView.mi = null; render(); }
 }
 
 function reviewSummaryHtml(g) {
@@ -2426,9 +2499,35 @@ function reviewSummaryHtml(g) {
   } else {
     h += '<p class="small"><span class="ic ic-book"></span> <b>Repertoire:</b> your opponent left book at move ' + (Math.floor(dev.depth / 2) + 1) + ' (' + esc(dev.played) + ' instead of theory ' + esc(dev.theory) + ' in ' + esc(dev.lineName) + '). Positions like this are what Punish mode trains — check whether a punish line covers it.</p>';
   }
-  if (rv.firstBlunder) {
+  const ms = rv.mistakes;
+  if (ms && ms.length) {
+    const counts = { blunder: 0, mistake: 0, inaccuracy: 0 };
+    ms.forEach(m => counts[m.sev]++);
+    const startWhite = (g.startFen || INITIAL_FEN).split(' ')[1] !== 'b';
+    const mvNo = (ply) => Math.floor((ply + (startWhite ? 0 : 1)) / 2) + 1;
+    h += '<div class="mistbar"><b>Your errors</b> <span class="muted small">' +
+      (counts.blunder ? counts.blunder + ' blunder' + (counts.blunder > 1 ? 's' : '') + ' · ' : '') +
+      (counts.mistake ? counts.mistake + ' mistake' + (counts.mistake > 1 ? 's' : '') + ' · ' : '') +
+      counts.inaccuracy + ' inaccurac' + (counts.inaccuracy === 1 ? 'y' : 'ies') + '</span>' +
+      '<span class="mistnav"><button class="btn secondary small" id="mist-prev">◀</button><button class="btn secondary small" id="mist-next">▶</button></span></div>';
+    h += '<div class="mistlist">' + ms.map((m, i) =>
+      '<button class="mist' + (gameView && gameView.mi === i ? ' cur' : '') + '" data-mi="' + i + '">' +
+      '<span class="sev sev-' + m.sev + '">' + m.sev + '</span>' +
+      '<b>' + mvNo(m.ply) + '. ' + esc(m.san) + '</b>' +
+      '<span class="muted">−' + Math.abs(m.delta).toFixed(1) + ' · ' + m.phase + '</span></button>').join('') + '</div>';
+    const sel = gameView && gameView.mi !== null && gameView.mi !== undefined ? ms[gameView.mi] : null;
+    if (sel) {
+      h += '<div class="mistdetail"><p class="small" style="margin-bottom:6px"><b>' + mvNo(sel.ply) + '. ' + esc(sel.san) + '</b> (' + sel.evBefore.toFixed(1) + ' → ' + sel.evAfter.toFixed(1) + ')' +
+        (sel.betterSan ? ' · better: <b>' + esc(sel.betterSan) + '</b>' : '') + '</p>' +
+        '<p class="small">' + esc(sel.tip || '') + '</p>' +
+        '<p class="small muted" style="margin-bottom:0">The board shows the position BEFORE this move — find the better move yourself, then check. “Spar from here” lets you replay it against the engine.</p></div>';
+    } else {
+      h += '<p class="small muted">Tap an error to jump there and see what to do better — or use ◀ ▶ to walk them in order.</p>';
+    }
+  } else if (rv.firstBlunder) {
     const fb = rv.firstBlunder;
-    h += '<p class="small"><span class="ic ic-gear"></span> <b>First blunder:</b> move ' + (Math.floor(fb.ply / 2) + 1) + ', your <b>' + esc(fb.san) + '</b> cost about ' + Math.abs(fb.delta).toFixed(1) + ' pawns' + (fb.betterSan ? ' — stronger was <b>' + esc(fb.betterSan) + '</b>' : '') + ' (' + fb.phase + '). <button class="btn secondary" style="padding:3px 10px;font-size:12px" id="rev-jump">Jump to it</button></p>';
+    h += '<p class="small"><span class="ic ic-gear"></span> <b>First blunder:</b> move ' + (Math.floor(fb.ply / 2) + 1) + ', your <b>' + esc(fb.san) + '</b> cost about ' + Math.abs(fb.delta).toFixed(1) + ' pawns' + (fb.betterSan ? ' — stronger was <b>' + esc(fb.betterSan) + '</b>' : '') + ' (' + fb.phase + '). <button class="btn secondary" style="padding:3px 10px;font-size:12px" id="rev-jump">Jump to it</button></p>' +
+      '<p class="small muted">This review predates the mistake browser — run “Run coach review” again for the full error list with coaching tips.</p>';
   } else {
     h += '<p class="small"><span class="ic ic-gear"></span> <b>Blunder check:</b> no move lost more than ~1.2 pawns — a clean game by club standards. The result came down to smaller things (or the opponent’s mistakes).</p>';
   }
@@ -2512,6 +2611,21 @@ function viewGameViewer() {
     if (rr) rr.onclick = () => { gv.revealed = true; render(); };
     const rj = el('rev-jump');
     if (rj) rj.onclick = () => { gv.ply = g.review.firstBlunder.ply; update(); };
+    // Mistake browser: tap a row to jump the board there and show its coaching tip;
+    // ◀ ▶ walk the errors in order. Selecting re-renders (the detail box lives in the
+    // summary panel), so state goes through gv.mi.
+    const ms = g.review && g.review.mistakes;
+    if (ms && ms.length) {
+      const selectMi = (i) => {
+        gv.mi = ((i % ms.length) + ms.length) % ms.length;
+        gv.ply = ms[gv.mi].ply;   // board shows the position BEFORE the bad move
+        render();
+      };
+      app.querySelectorAll('[data-mi]').forEach(b => b.onclick = () => selectMi(parseInt(b.dataset.mi, 10)));
+      const mp = el('mist-prev'), mn = el('mist-next');
+      if (mp) mp.onclick = () => selectMi((gv.mi === null || gv.mi === undefined ? ms.length : gv.mi) - 1);
+      if (mn) mn.onclick = () => selectMi(gv.mi === null || gv.mi === undefined ? 0 : gv.mi + 1);
+    }
     update();
   });
   return h;
