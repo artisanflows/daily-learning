@@ -1061,6 +1061,9 @@ function viewStudyChapter() {
   let h = '<div class="crumb" id="crumb">← All chapters</div>';
   h += '<div class="panel"><h2>' + esc(ch.title) + '</h2>';
   h += (ch.primer || []).map(p => '<details class="primer"><summary>' + esc(p.h) + '</summary><div class="pbody"><p>' + esc(p.body) + '</p></div></details>').join('');
+  const chItems = chapterItems(ch);
+  h += '<div class="btnrow" style="margin:12px 0 4px"><button class="btn" id="ch-drill-btn"><span class="ic ic-swords"></span> Drill this chapter — ' + chItems.length + ' lines</button></div>' +
+    '<p class="muted small">A full rotation, mains then punish lines. Practice only — it never changes the review schedule.</p>';
   h += '<h3>Main lines</h3><div class="linelist">';
   for (const ln of ch.lines) {
     const key = ch.id + '/' + ln.id;
@@ -1085,6 +1088,8 @@ function viewStudyChapter() {
   h += '</div>';
   onRendered(() => {
     el('crumb').onclick = () => { studyCh = null; render(); };
+    const cd = el('ch-drill-btn');
+    if (cd) cd.onclick = () => startPractice(chapterItems(ch));
     app.querySelectorAll('[data-line]').forEach(c => c.onclick = () => {
       studyLine = ch.lines.find(x => x.id === c.dataset.line) || (ch.punish || []).find(x => x.id === c.dataset.line) || (ch.games || []).find(x => x.id === c.dataset.line);
       studyPly = 0; render();
@@ -1120,10 +1125,15 @@ function viewStudyLine() {
       if (studyPly >= ln.moves.length) {
         const key = ch.id + '/' + ln.id;
         if (ITEM_BY_KEY[key] && !S.studied[key]) { S.studied[key] = 1; saveState(); }
+        const drillable = !ln.isGame && ITEM_BY_KEY[key];
         el('study-extra').innerHTML = tabiyaHtml(ln) +
-          (ln.isGame ? '' : '<div class="btnrow"><button class="btn" id="spar-btn">♚ Play it out vs engine</button></div>');
+          (ln.isGame ? '' : '<div class="btnrow">' +
+            (drillable ? '<button class="btn" id="study-drill-btn"><span class="ic ic-swords"></span> Drill this line now</button>' : '') +
+            '<button class="btn secondary" id="spar-btn">♚ Play it out vs engine</button></div>');
         const sb = el('spar-btn');
         if (sb) sb.onclick = () => startSparring(ch, ln);
+        const db = el('study-drill-btn');
+        if (db) db.onclick = () => startPractice([ITEM_BY_KEY[key]]);
       } else el('study-extra').innerHTML = '';
     };
     el('mv-start').onclick = () => { studyPly = 0; update(); };
@@ -1157,19 +1167,51 @@ function buildSession() {
   return due.concat(news);
 }
 
+/* Practice mode: drill any line/chapter/everything ON DEMAND, beyond the daily
+   schedule. Deliberately does NOT grade or touch SM-2 — rehearsal can never
+   corrupt the review schedule; the daily queue stays the source of truth. */
+function chapterItems(ch) { return ITEMS.filter(i => i.ch.id === ch.id); }
+function startPractice(items) {
+  if (!items.length) return;
+  drill = { queue: items, idx: 0, doneCount: 0, practice: true };
+  activeTab = 'drill';   // not go('drill') — that helper clears the drill state
+  startDrillCard();
+}
+function shuffleItems(a) {
+  const r = a.slice();
+  for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; }
+  return r;
+}
+
 function viewDrill() {
   if (drill) return viewDrillActive();
   const queue = buildSession();
+  let h;
   if (!queue.length) {
     const soon = ITEMS.map(i => S.cards[i.key]).filter(c => c && c.due > Date.now()).sort((a, b) => a.due - b.due)[0];
     const when = soon ? new Date(soon.due) : null;
-    return '<div class="panel"><h2>Drill</h2><p><span class="ic ic-check" style="color:var(--accent2)"></span> Nothing due right now — you’re on schedule.</p>' +
+    h = '<div class="panel"><h2>Drill</h2><p><span class="ic ic-check" style="color:var(--accent2)"></span> Nothing due right now — you’re on schedule.</p>' +
       (when ? '<p class="muted small">Next review: ' + when.toLocaleString() + '.</p>' : '') +
-      '<p class="muted small">Want more new material today? Raise “new lines per day” on the Progress tab.</p></div>';
+      '<p class="muted small">Want more new material today? Raise “new lines per day” on the Progress tab — or free-practice below.</p></div>';
+  } else {
+    const dueN = queue.filter(q => isDue(q.key)).length;
+    h = '<div class="panel"><h2>Drill</h2><p>' + dueN + ' line' + (dueN === 1 ? '' : 's') + ' due, ' + (queue.length - dueN) + ' new. The board plays your opponent’s moves — you must find the theory move for your side. Two misses and it shows you.</p>' +
+      '<div class="btnrow"><button class="btn" id="drill-go">Begin</button></div></div>';
   }
-  const dueN = queue.filter(q => isDue(q.key)).length;
-  return '<div class="panel"><h2>Drill</h2><p>' + dueN + ' line' + (dueN === 1 ? '' : 's') + ' due, ' + (queue.length - dueN) + ' new. The board plays your opponent’s moves — you must find the theory move for your side. Two misses and it shows you.</p>' +
-    '<div class="btnrow"><button class="btn" id="drill-go">Begin</button></div></div>';
+  // Free practice: any chapter or the whole repertoire, any time. Rehearsal only —
+  // grades aren't recorded, so the spaced-repetition schedule is untouched.
+  h += '<div class="panel"><h2>Practice more</h2><p class="muted small">Beyond the daily schedule: rotate one chapter, or everything. Practice never changes your review schedule.</p>' +
+    '<div class="btnrow"><select id="prac-ch" class="input">' +
+    REPERTOIRE.chapters.map(c => '<option value="' + c.id + '">' + esc(c.title) + ' (' + chapterItems(c).length + ')</option>').join('') +
+    '</select><button class="btn secondary" id="prac-ch-go">Drill chapter</button>' +
+    '<button class="btn secondary" id="prac-all-go">Everything — ' + ITEMS.length + ' lines</button></div></div>';
+  onRendered(() => {
+    const cg = el('prac-ch-go');
+    if (cg) cg.onclick = () => { const ch = REPERTOIRE.chapters.find(c => c.id === el('prac-ch').value); if (ch) startPractice(chapterItems(ch)); };
+    const ag = el('prac-all-go');
+    if (ag) ag.onclick = () => startPractice(shuffleItems(ITEMS));
+  });
+  return h;
 }
 
 function startDrillCard() {
@@ -1184,6 +1226,15 @@ function startDrillCard() {
 function viewDrillActive() {
   const d = drill;
   if (d.idx >= d.queue.length) {
+    if (d.practice) {
+      const q = d.queue;
+      return '<div class="panel"><h2><span class="ic ic-flag big" style="color:var(--accent)"></span> Practice rotation complete</h2><p>' + d.doneCount + ' line' + (d.doneCount === 1 ? '' : 's') + ' rehearsed — schedule untouched.</p>' +
+        '<div class="btnrow"><button class="btn" id="prac-again-btn">Repeat rotation</button><button class="btn secondary" id="prac-done-btn">Done</button></div></div>' +
+      onRenderedReturn(() => {
+        const a = el('prac-again-btn'); if (a) a.onclick = () => startPractice(q);
+        const h = el('prac-done-btn'); if (h) h.onclick = () => { drill = null; render(); };
+      });
+    }
     const back = dueItems().length;
     return '<div class="panel"><h2><span class="ic ic-flag big" style="color:var(--accent)"></span> Session complete</h2><p>' + d.doneCount + ' line' + (d.doneCount === 1 ? '' : 's') + ' drilled.</p>' +
       (back ? '<p class="muted small">' + back + ' line(s) marked “Again” are already back in the queue — run another session when ready.</p>' : '<p class="muted small">Everything scheduled. Come back tomorrow — the schedule does the remembering.</p>') +
@@ -1196,7 +1247,7 @@ function viewDrillActive() {
   const c = d.cur;
   const it = c.item;
   const isNew = !isLearned(it.key) && !(S.cards[it.key] && S.cards[it.key].lapses > 0);
-  let h = '<div class="progressline">Line ' + (d.idx + 1) + ' of ' + d.queue.length + (isNew ? ' · <b style="color:var(--accent)">NEW</b>' : '') + (it.kind === 'punish' ? ' · <span class="badge punish">punish</span>' : '') + '</div>';
+  let h = '<div class="progressline">Line ' + (d.idx + 1) + ' of ' + d.queue.length + (d.practice ? ' · <b style="color:var(--accent2)">practice</b>' : (isNew ? ' · <b style="color:var(--accent)">NEW</b>' : '')) + (it.kind === 'punish' ? ' · <span class="badge punish">punish</span>' : '') + '</div>';
   h += '<div class="panel"><h2>' + esc(it.line.name) + '</h2><div class="muted small">' + esc(it.ch.title) + (it.line.vs ? ' · ' + esc(it.line.vs) : '') + '</div>';
   if (it.kind === 'punish' && c.ply <= it.line.deviationPly) h += '<div class="banner" style="margin-top:10px">Watch the moves play out — your opponent is about to go wrong…</div>';
   h += '<div class="boardwrap" style="margin-top:12px"><div class="boardcol"><div id="drill-board"></div></div>' +
@@ -1344,7 +1395,22 @@ function drillComplete(early) {
   const maxGrade = c.lapsed ? 'again' : (c.mistakes > 0 ? 'good' : 'easy');
   const allow = { again: true, hard: maxGrade !== 'again', good: maxGrade === 'good' || maxGrade === 'easy', easy: maxGrade === 'easy' };
   const fb = el('drill-feedback');
-  if (fb) fb.innerHTML = '<div class="feedback good">' + (early ? 'Graded early at move ' + Math.ceil(c.ply / 2) + ' — the scheduler treats it like a full pass.' : 'Line complete') + (c.mistakes === 0 ? (early ? '' : ' — flawless. <span class="ic ic-star"></span>') : ' — ' + c.mistakes + ' miss' + (c.mistakes === 1 ? '' : 'es') + '.') + '</div>';
+  if (fb) fb.innerHTML = '<div class="feedback good">' + (early ? 'Graded early at move ' + Math.ceil(c.ply / 2) + (drill.practice ? '.' : ' — the scheduler treats it like a full pass.') : 'Line complete') + (c.mistakes === 0 ? (early ? '' : ' — flawless. <span class="ic ic-star"></span>') : ' — ' + c.mistakes + ' miss' + (c.mistakes === 1 ? '' : 'es') + '.') + '</div>';
+  if (drill.practice) {
+    // Practice: no grading, no schedule writes — just move on.
+    endEl.innerHTML = tabiyaHtml(c.item.line) +
+      '<div class="btnrow"><button class="btn" id="prac-next">' + (drill.idx + 1 < drill.queue.length ? 'Next line ▶' : 'Finish rotation ✓') + '</button>' +
+      (Engine.status !== 'failed' ? '<button class="btn secondary" id="spar-after">♚ Play it out vs engine</button>' : '') + '</div>' +
+      '<p class="muted small">Practice run — your review schedule is untouched.</p>';
+    el('prac-next').onclick = () => {
+      drill.doneCount++;
+      drill.idx++;
+      if (drill.idx < drill.queue.length) startDrillCard(); else render();
+    };
+    const psp = el('spar-after');
+    if (psp) psp.onclick = () => startSparring(c.item.ch, c.item.line);
+    return;
+  }
   endEl.innerHTML = tabiyaHtml(c.item.line) +
     '<div class="grades">' +
     '<button class="g-again" data-g="again">Again<small>&lt;10 min</small></button>' +
