@@ -312,8 +312,64 @@ select, input[type="number"] {
 .clschip { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--panel2); border: 1px solid var(--line); }
 .cls-book { color: #7d5fa8; } .cls-best { color: #2e7d5b; } .cls-exc { color: #4e8578; } .cls-good { color: #6f8455; }
 .cls-inac { color: #9a8b77; } .cls-mist { color: #b98a3c; } .cls-blun { color: var(--danger); }
-.evchart-wrap { margin-bottom: 12px; }
-#evchart { display: block; width: 100%; height: 92px; border-radius: 8px; }
+.evchart-block { margin-bottom: 12px; }
+.evchart-wrap {
+  position: relative; height: 96px; border-radius: 8px; overflow: hidden; cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(59, 47, 36, 0.18);
+}
+.evchart-wrap svg { display: block; width: 100%; height: 100%; }
+.evdot {
+  position: absolute; border-radius: 50%; transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1.5px var(--panel); pointer-events: none;
+}
+.evdot.blunder { width: 11px; height: 11px; background: #a8402f; }
+.evdot.mistake { width: 9px; height: 9px; background: #b98a3c; }
+.evdot.inaccuracy { width: 8px; height: 8px; background: #9a8b77; }
+.evcursor {
+  position: absolute; top: 0; bottom: 0; width: 2px; background: var(--purple);
+  transform: translateX(-1px); pointer-events: none; opacity: 0.95;
+  transition: left 0.12s ease;
+}
+.evcursor::before {
+  content: ''; position: absolute; top: 0; left: -4px;
+  border: 5px solid transparent; border-top: 6px solid var(--purple);
+}
+
+/* Move-quality badge on the board (game viewer) */
+.mvbadge {
+  position: absolute; top: -5px; right: -5px; z-index: 4;
+  width: 32%; height: 32%; max-width: 26px; max-height: 26px; min-width: 18px; min-height: 18px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 12px; font-weight: 800; letter-spacing: -0.5px;
+  box-shadow: 0 1px 3px rgba(59, 47, 36, 0.4), inset 0 0 0 1.5px rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+}
+.mvbadge svg { width: 58%; height: 58%; display: block; }
+.mb-book { background: var(--purple); }
+.mb-best { background: #2e7d5b; }
+.mb-excellent { background: #4e8578; }
+.mb-good { background: var(--accent2); }
+.mb-inaccuracy { background: #9a8b77; }
+.mb-mistake { background: #b98a3c; }
+.mb-blunder { background: var(--danger); }
+
+/* Engine panel in the game viewer */
+.engbox { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
+.engrow {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  width: 100%; padding: 4px 6px; border: none; background: none; border-radius: 6px;
+  font-size: 13px; color: var(--text); text-align: left; cursor: pointer;
+}
+button.engrow:hover { background: var(--accent-soft); }
+.engrow.played { border-top: 1px dashed var(--line); margin-top: 4px; padding-top: 7px; cursor: default; }
+.engeval { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--muted); }
+.engrow:first-of-type .engeval { color: var(--accent); }
+.varline { color: var(--accent); font-style: italic; }
+.varbar {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  background: var(--accent-soft); border: 1px solid var(--line); border-radius: 8px;
+  padding: 7px 12px; margin-bottom: 10px;
+}
 
 /* ---------- Coach review: mistake browser ---------- */
 .mistbar { display: flex; align-items: center; gap: 8px; margin: 12px 0 8px; font-size: 14px; }
@@ -612,6 +668,10 @@ function sanitizeState(obj) {
           phases: { opening: Math.max(0, Number(ph.opening) || 0), middlegame: Math.max(0, Number(ph.middlegame) || 0), endgame: Math.max(0, Number(ph.endgame) || 0) },
         };
         if (Array.isArray(rv.evals)) entry.review.evals = rv.evals.slice(0, 501).map((e) => (e === null ? null : Math.max(-9.9, Math.min(9.9, Number(e) || 0))));
+        if (Array.isArray(rv.marks)) {
+          const MK = { book: 1, best: 1, excellent: 1, good: 1, inaccuracy: 1, mistake: 1, blunder: 1 };
+          entry.review.marks = rv.marks.slice(0, 500).map((m) => (MK[m] ? m : null));
+        }
         if (rv.acc && typeof rv.acc === 'object') {
           entry.review.acc = {
             user: rv.acc.user === null ? null : Math.max(0, Math.min(100, Number(rv.acc.user) || 0)),
@@ -776,6 +836,16 @@ function newItems(limit) {
 /* ================= Board component ================= */
 const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
+/* Move-quality badge glyphs (design-reviewed set: book/best/excellent/good as icons,
+   error tiers as the classic annotation marks). Rendered white on a colored disc. */
+const BADGE_GLYPHS = {
+  book: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M3.5 4.5h6A2.5 2.5 0 0 1 12 7v13.5a4 4 0 0 0-3-1.5H3.5zM20.5 4.5h-6A2.5 2.5 0 0 0 12 7v13.5a4 4 0 0 1 3-1.5h5.5z"/></svg>',
+  best: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2l2.6 6.6L21 9.2l-5 4.4 1.6 6.9L12 16.8 6.4 20.5 8 13.6 3 9.2l6.4-.6z"/></svg>',
+  excellent: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M7 11.5v9H3.5v-9zM9 20.5V11l3.2-6.3a1.9 1.9 0 0 1 3.6 1.1L15 10h4.4a2 2 0 0 1 2 2.5l-1.5 6.1a2.5 2.5 0 0 1-2.4 1.9z"/></svg>',
+  good: '<svg viewBox="0 0 24 24" fill="#fff"><path d="M4 12.5l2.5-2.5 4 4L19 5.5 21.5 8l-11 11z"/></svg>',
+  inaccuracy: '?!', mistake: '?', blunder: '??',
+};
+
 class Board {
   constructor(container, orientation) {
     this.el = container;
@@ -788,6 +858,7 @@ class Board {
     this.onPremoveChange = null;
     this.onUserMove = null;  // (from, to) => void
     this.lastMove = null;    // {from, to}
+    this.badge = null;       // {sq, cls} — move-quality badge on a square (game viewer)
     this.hintSquares = null; // [from, to] rings
     this.arrows = null;      // [{from, to, color}] — plan arrows drawn over the board
     this.selected = null;
@@ -896,6 +967,9 @@ class Board {
       if (piece) inner += '<span class="pc">' + PIECES[piece.color + piece.type] + '</span>';
       if (targets.includes(sq)) inner += piece ? '<span class="ring"></span>' : '<span class="dot"></span>';
       if (this.hintSquares && this.hintSquares.includes(sq)) inner += '<span class="ring hint"></span>';
+      if (this.badge && this.badge.sq === sq && BADGE_GLYPHS[this.badge.cls]) {
+        inner += '<span class="mvbadge mb-' + this.badge.cls + '">' + BADGE_GLYPHS[this.badge.cls] + '</span>';
+      }
       const idx = this.squares().indexOf(sq);
       const coordShade = dark ? 'on-dark' : 'on-light';
       if (idx >= 56) inner += '<span class="coord file ' + coordShade + '">' + sq[0] + '</span>';
@@ -984,6 +1058,7 @@ const Engine = {
           const mate = line.match(/score mate (-?\d+)/);
           if (cp) { this.scoreCp = parseInt(cp[1], 10); this.scoreMate = null; }
           if (mate) { this.scoreMate = parseInt(mate[1], 10); }
+          if (this.multiCollect && line.indexOf('info') === 0) this.multiCollect(line);
         }
         if (this.pending && line.indexOf('bestmove') === 0) {
           const cb = this.pending; this.pending = null;
@@ -1001,6 +1076,26 @@ const Engine = {
     this.worker.postMessage('setoption name Skill Level value ' + skill);
     this.worker.postMessage('position fen ' + fen);
     this.worker.postMessage('go movetime ' + (movetime || 1000));
+  },
+  /* Full-strength MultiPV analysis; cb gets an array of up to n {kind:'cp'|'mate', val, uci}
+     entries (side-to-move perspective, best first). MultiPV is reset to 1 afterwards so the
+     single-line analyze()/bestmove() paths keep their usual speed and score parsing. */
+  analyzeMulti(fen, movetime, n, cb) {
+    if (this.status !== 'ready' || this.pending) { cb(null); return; }
+    const lines = [];
+    this.multiCollect = (line) => {
+      const m = line.match(/multipv (\d+).*?score (cp|mate) (-?\d+).*? pv ([a-h][1-8][a-h][1-8][qrbn]?)/);
+      if (m) lines[parseInt(m[1], 10) - 1] = { kind: m[2], val: parseInt(m[3], 10), uci: m[4] };
+    };
+    this.pending = () => {
+      this.multiCollect = null;
+      this.worker.postMessage('setoption name MultiPV value 1');
+      cb(lines);
+    };
+    this.worker.postMessage('setoption name Skill Level value 20');
+    this.worker.postMessage('setoption name MultiPV value ' + n);
+    this.worker.postMessage('position fen ' + fen);
+    this.worker.postMessage('go movetime ' + (movetime || 700));
   },
   /* Full-strength eval of a position; cb gets {cp, mate, mv} from the side-to-move's perspective. */
   analyze(fen, movetime, cb) {
@@ -3205,6 +3300,8 @@ function finishGameReview() {
   const evalsW = [wpov(r.startEval)].concat(r.evals.map((e) => wpov(e.ev)));
   const accMoves = { w: [], b: [] };
   const classes = { book: 0, best: 0, excellent: 0, good: 0 };
+  const devOnce = custom ? null : findDeviation(g, userColor);
+  const marks = [];   // per-ply quality for BOTH sides — drives the board badges
   for (let k = 0; k < g.sans.length; k++) {
     const mover = (startWhite ? (k % 2 === 0) : (k % 2 === 1)) ? 'w' : 'b';
     // Accuracy: every move by BOTH players, from the mover's win-probability change.
@@ -3213,6 +3310,27 @@ function finishGameReview() {
       const sign = mover === 'w' ? 1 : -1;
       accMoves[mover].push(moveAccuracy(winPct(sign * bw * 100), winPct(sign * aw * 100)));
     }
+    // Per-ply quality mark (same ladder for both sides; deltas from the MOVER's view).
+    let mark = null;
+    if (bw !== null && aw !== null) {
+      const dm = mover === 'w' ? (aw - bw) : (bw - aw);
+      if (dm <= -2.5) mark = 'blunder';
+      else if (dm <= -1.2) mark = 'mistake';
+      else if (dm <= -0.6) mark = 'inaccuracy';
+      else if (devOnce && devOnce.depth > k) mark = 'book';
+      else {
+        const bestUci = k === 0 ? null : (r.evals[k - 1] ? r.evals[k - 1].mv : null);
+        let playedUci = null;
+        try { const t = new Chess(r.fens[k]); const mv = t.move(g.sans[k]); if (mv) playedUci = mv.from + mv.to + (mv.promotion || ''); } catch (e) { /* ignore */ }
+        if (bestUci && playedUci === bestUci) mark = 'best';
+        else {
+          const sign = mover === 'w' ? 1 : -1;
+          const drop = Math.max(0, winPct(sign * bw * 100) - winPct(sign * aw * 100));
+          mark = drop < 2 ? 'excellent' : 'good';
+        }
+      }
+    }
+    marks.push(mark);
     if (mover !== userColor) continue;
     const before = k === 0 ? r.startEval : (r.evals[k - 1] ? r.evals[k - 1].ev : null);
     const after = r.evals[k] ? r.evals[k].ev : null;
@@ -3220,19 +3338,7 @@ function finishGameReview() {
     const delta = after - before;
     if (delta > -0.6) {
       // Positive classifications for the summary chips (mirrors chess.com's ladder).
-      const dev = custom ? null : findDeviation(g, userColor);
-      if (dev && dev.depth > k) classes.book++;
-      else {
-        const bestUci = k === 0 ? null : (r.evals[k - 1] ? r.evals[k - 1].mv : null);
-        let playedUci = null;
-        try { const t = new Chess(r.fens[k]); const mv = t.move(g.sans[k]); if (mv) playedUci = mv.from + mv.to + (mv.promotion || ''); } catch (e) { /* ignore */ }
-        if (bestUci && playedUci === bestUci) classes.best++;
-        else {
-          const sign = userColor === 'w' ? 1 : -1;
-          const drop = Math.max(0, winPct(sign * (evalsW[k] ?? 0) * 100) - winPct(sign * (evalsW[k + 1] ?? 0) * 100));
-          if (drop < 2) classes.excellent++; else classes.good++;
-        }
-      }
+      if (mark && classes[mark] !== undefined) classes[mark]++;
       continue;                               // below inaccuracy threshold
     }
     const sev = delta <= -2.5 ? 'blunder' : (delta <= -1.2 ? 'mistake' : 'inaccuracy');
@@ -3273,39 +3379,41 @@ function finishGameReview() {
     firstBlunder, blunderCount, phases, mistakes,
     evals: evalsW.map((e) => (e === null ? null : Math.round(Math.max(-9.9, Math.min(9.9, e)) * 100) / 100)),
     acc: { user: gameAcc(accMoves[userColor]), opp: gameAcc(accMoves[userColor === 'w' ? 'b' : 'w']) },
-    classes,
+    classes, marks,
   };
   bumpActivity('reviews');
   saveState();
   if (gameView && gameView.g === g) { gameView.revealed = false; gameView.mi = null; render(); }
 }
 
-/* Clickable eval graph: white-perspective advantage over the game, clamped ±5 pawns,
-   with the user's error plies marked. A vertical cursor tracks the viewer's ply. */
+/* Clickable eval graph: WHITE's winning chances over the game (the sigmoid win% scale —
+   chess.com-style — keeps the fight around equality visible instead of squashing it).
+   Error dots and the ply cursor are HTML overlays so they stay round while the stretched
+   SVG area chart fills the strip. */
 function evalChartHtml(g) {
   const rv = g.review;
   if (!rv.evals || rv.evals.length < 3) return '';
   const n = rv.evals.length - 1;
   const X = (i) => (i / n) * 100;
-  const Y = (e) => 17 - Math.max(-5, Math.min(5, e === null ? 0 : e)) * 3;
-  let line = '', area = 'M0,17 ';
+  const Y = (e) => 32.5 - (winPct((e === null ? 0 : e) * 100) / 100) * 31;   // svg y in a 34-tall box
+  let line = '', area = 'M0,34 ';
   rv.evals.forEach((e, i) => {
     const pt = X(i).toFixed(1) + ',' + Y(e).toFixed(1);
     line += (i ? ' ' : '') + pt;
     area += 'L' + pt + ' ';
   });
-  area += 'L100,17 Z';
-  const SEVC = { blunder: '#a8402f', mistake: '#b98a3c', inaccuracy: '#9a8b77' };
+  area += 'L100,34 Z';
   const dots = (rv.mistakes || []).map((m) =>
-    '<circle cx="' + X(m.ply + 1).toFixed(1) + '" cy="' + Y(rv.evals[m.ply + 1]).toFixed(1) + '" r="1.6" fill="' + SEVC[m.sev] + '" stroke="#fff" stroke-width="0.5"/>').join('');
-  return '<div class="evchart-wrap"><svg id="evchart" viewBox="0 0 100 34" preserveAspectRatio="none">' +
-    '<rect x="0" y="0" width="100" height="34" fill="#3d332a"/>' +
-    '<path d="' + area + '" fill="#f0e6d6"/>' +
-    '<line x1="0" y1="17" x2="100" y2="17" stroke="#8a7864" stroke-width="0.3"/>' +
-    '<polyline points="' + line + '" fill="none" stroke="#bc5b3d" stroke-width="0.7"/>' +
-    dots +
-    '<line id="evcur" x1="0" y1="0" x2="0" y2="34" stroke="#7d5fa8" stroke-width="0.6" opacity="0.9"/>' +
-    '</svg><div class="small muted" style="margin-top:4px">Evaluation over the game (White up). Tap to jump; dots are your errors.</div></div>';
+    '<span class="evdot ' + m.sev + '" style="left:' + X(m.ply + 1).toFixed(1) + '%;top:' + (Y(rv.evals[m.ply + 1]) / 34 * 100).toFixed(1) + '%"></span>').join('');
+  return '<div class="evchart-block"><div class="evchart-wrap" id="evchart">' +
+    '<svg viewBox="0 0 100 34" preserveAspectRatio="none">' +
+    '<defs><linearGradient id="evgrad" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#f6efe3"/><stop offset="1" stop-color="#fdf8ee"/></linearGradient></defs>' +
+    '<rect x="0" y="0" width="100" height="34" fill="#42382e"/>' +
+    '<path d="' + area + '" fill="url(#evgrad)"/>' +
+    '<line x1="0" y1="17" x2="100" y2="17" stroke="#8a7864" stroke-width="0.25" stroke-dasharray="0.9 0.7" opacity="0.8"/>' +
+    '<polyline points="' + line + '" fill="none" stroke="#bc5b3d" stroke-width="0.55" stroke-linejoin="round"/>' +
+    '</svg>' + dots + '<div class="evcursor" id="evcur" style="left:0%"></div></div>' +
+    '<div class="small muted" style="margin-top:5px">White’s winning chances over the game — the cream area is White. Tap to jump there; dots are your errors, the marker is where you’re looking.</div></div>';
 }
 
 function reviewSummaryHtml(g) {
@@ -3419,42 +3527,133 @@ function viewGameViewer() {
   let h = '<div class="crumb" id="crumb">← My Games</div>' +
     '<div class="panel"><h2>' + esc(g.name) + '</h2><div class="muted small">' + esc(g.date || '') + ' · ' + esc(g.result) + (g.review ? ' · <span class="badge ok">reviewed</span>' : '') + '</div></div>' +
     coachPanel +
-    '<div class="panel"><div class="boardwrap" style="margin-top:0"><div class="boardcol"><div id="gv-board"></div>' +
+    '<div class="panel"><div class="boardwrap" style="margin-top:0"><div class="boardcol"><div class="evalwrap">' + evalBarHtml('gv-evalbar') + '<div id="gv-board" style="flex:1"></div></div>' +
     '<div class="btnrow"><button class="btn secondary" id="gv-start">⏮</button><button class="btn secondary" id="gv-prev">◀ Back</button><button class="btn" id="gv-next">Next ▶</button><button class="btn secondary" id="gv-end">⏭</button></div></div>' +
     '<div class="sidecol"><div class="progressline" id="gv-pos"></div>' +
+    '<div id="gv-varbar"></div>' +
+    '<div class="engbox" id="gv-engine"><div class="small muted">Engine warming up…</div></div>' +
     '<div class="btnrow"><button class="btn" id="gv-spar-w">♔ Spar from here as White</button><button class="btn secondary" id="gv-spar-b">♚ …as Black</button></div>' +
-    '<div class="movelist" id="gv-moves"></div></div></div></div>';
+    '<div class="movelist" id="gv-moves"></div>' +
+    '<p class="small muted" style="margin-bottom:0">Tip: play any move on the board to explore a correction — the engine follows you. ◀ takes the exploration back a move.</p></div></div></div>';
   onRendered(() => {
     el('crumb').onclick = () => { gameView = null; render(); };
     const startFen = g.startFen || INITIAL_FEN;
     const startWhite = startFen.split(' ')[1] !== 'b';
     const startNum = parseInt(startFen.split(' ')[5] || '1', 10);
     const board = new Board(el('gv-board'), g.userColor === 'b' ? 'black' : 'white');
+    const fmtEv = (v) => (Math.abs(v) >= 20 ? (v > 0 ? '+#' : '−#') : (v > 0 ? '+' : '') + v.toFixed(1));
+    // Live engine: eval bar + top-5 moves for whatever position is on the board
+    // (main line or an exploration). Sequenced so stale results are dropped; polite
+    // to the review sweep, which owns the worker while it runs.
+    let anaSeq = 0;
+    const renderEngine = (fen, lines) => {
+      const box = el('gv-engine');
+      if (!box || !gameView || gameView !== gv) return;
+      const stm = fen.split(' ')[1];
+      const rows = [];
+      (lines || []).forEach((l) => {
+        if (!l) return;
+        let san = l.uci;
+        try {
+          const t = new Chess(fen);
+          const m = t.move({ from: l.uci.slice(0, 2), to: l.uci.slice(2, 4), promotion: l.uci.length > 4 ? l.uci[4] : undefined });
+          if (m) san = m.san;
+        } catch (e) { /* keep uci */ }
+        let evw = l.kind === 'mate' ? (l.val > 0 ? 99 : -99) : l.val / 100;
+        if (stm !== 'w') evw = -evw;
+        rows.push({ san, evw, mate: l.kind === 'mate' ? Math.abs(l.val) : null });
+      });
+      if (!rows.length) { box.innerHTML = '<div class="small muted">No legal moves here.</div>'; return; }
+      evalBarSet('gv-evalbar', rows[0].evw, board.orientation);
+      let h2 = '<div class="small muted" style="margin-bottom:4px">Engine’s top moves here — tap one to try it</div>';
+      h2 += rows.map((r2, i) =>
+        '<button class="engrow" data-san="' + esc(r2.san) + '"><span>' + (i + 1) + '. <b>' + esc(r2.san) + '</b></span><span class="engeval">' +
+        (r2.mate !== null ? '#' + r2.mate : fmtEv(r2.evw)) + '</span></button>').join('');
+      if (!gv.varMoves && gv.ply < g.sans.length) {
+        const rv = g.review;
+        const evAfter = rv && rv.evals && rv.evals[gv.ply + 1] !== undefined ? rv.evals[gv.ply + 1] : null;
+        const inTop = rows.findIndex((r2) => r2.san === g.sans[gv.ply]);
+        h2 += '<div class="engrow played"><span>played: <b>' + esc(g.sans[gv.ply]) + '</b>' +
+          (inTop === 0 ? ' <span class="small muted">(the best move)</span>' : (inTop > 0 ? ' <span class="small muted">(#' + (inTop + 1) + ')</span>' : '')) +
+          '</span><span class="engeval">' + (evAfter === null ? '—' : fmtEv(evAfter)) + '</span></div>';
+      }
+      box.innerHTML = h2;
+      box.querySelectorAll('button.engrow').forEach((b) => b.onclick = () => {
+        try {
+          const c2 = new Chess(gv.fen);
+          const mv = c2.move(b.dataset.san);
+          if (mv) { gv.varMoves = (gv.varMoves || []).concat([mv.san]); update(); }
+        } catch (e) { /* illegal for this position — ignore */ }
+      });
+    };
+    const gvAnalyze = () => {
+      const box = el('gv-engine');
+      if (!box) return;
+      if (reviewRun) { box.innerHTML = '<div class="small muted">The coach review has the engine — top moves resume when it finishes.</div>'; return; }
+      const fen = gv.fen, seq = ++anaSeq;
+      const run = () => {
+        if (seq !== anaSeq || !gameView || gameView !== gv) return;
+        if (Engine.status === 'failed') { box.innerHTML = '<div class="small muted">Engine unavailable on this device.</div>'; return; }
+        if (Engine.status !== 'ready' || Engine.pending) { setTimeout(run, 350); return; }
+        Engine.analyzeMulti(fen, 700, 5, (lines) => {
+          if (seq !== anaSeq) return;
+          if (!lines) { setTimeout(run, 350); return; }
+          renderEngine(fen, lines);
+        });
+      };
+      run();
+    };
     const update = () => {
       const c = new Chess(startFen);
       let last = null;
       for (let i = 0; i < gv.ply; i++) last = c.move(g.sans[i]);
+      for (const s of (gv.varMoves || [])) last = c.move(s);
       gv.fen = c.fen();
-      board.game = c; board.lastMove = last ? { from: last.from, to: last.to } : null; board.render();
-      el('gv-pos').textContent = 'Move ' + gv.ply + ' of ' + g.sans.length + (isCustomStart(g) ? ' (from a set-up position)' : '');
+      board.game = c; board.lastMove = last ? { from: last.from, to: last.to } : null;
+      board.interactive = true; board.moveColor = c.turn();   // either side may explore
+      const marks = g.review && g.review.marks;
+      board.badge = (!gv.varMoves && gv.revealed && marks && gv.ply > 0 && marks[gv.ply - 1] && last)
+        ? { sq: last.to, cls: marks[gv.ply - 1] } : null;
+      board.render();
+      el('gv-pos').textContent = 'Move ' + gv.ply + ' of ' + g.sans.length + (isCustomStart(g) ? ' (from a set-up position)' : '') + (gv.varMoves ? ' — exploring a sideline' : '');
       el('gv-moves').innerHTML = g.sans.map((s, i) => {
         const isWhiteMove = startWhite ? (i % 2 === 0) : (i % 2 === 1);
         const moveNum = startNum + Math.floor((i + (startWhite ? 0 : 1)) / 2);
         const lbl = (isWhiteMove ? moveNum + '.' : (i === 0 ? moveNum + '…' : '')) + s;
-        return '<span class="' + (i === gv.ply - 1 ? 'cur' : '') + '">' + lbl + '</span>';
-      }).join(' ');
+        return '<span class="' + (i === gv.ply - 1 && !gv.varMoves ? 'cur' : '') + '">' + lbl + '</span>';
+      }).join(' ') + (gv.varMoves ? ' <span class="varline">(' + gv.varMoves.map(esc).join(' ') + ')</span>' : '');
+      const vb = el('gv-varbar');
+      if (vb) {
+        vb.innerHTML = gv.varMoves
+          ? '<div class="varbar"><span class="small"><b>Sideline:</b> ' + gv.varMoves.map(esc).join(' ') + '</span><button class="btn secondary small" id="gv-back-main">⤺ Back to the game</button></div>'
+          : '';
+        const bb = el('gv-back-main');
+        if (bb) bb.onclick = () => { gv.varMoves = null; update(); };
+      }
       // Eval-graph cursor follows the viewer.
       const evc = el('evcur');
       if (evc && g.review && g.review.evals && g.review.evals.length > 1) {
-        const x = (gv.ply / (g.review.evals.length - 1)) * 100;
-        evc.setAttribute('x1', x.toFixed(1));
-        evc.setAttribute('x2', x.toFixed(1));
+        evc.style.left = ((gv.ply / (g.review.evals.length - 1)) * 100).toFixed(1) + '%';
       }
+      gvAnalyze();
     };
-    el('gv-start').onclick = () => { gv.ply = 0; update(); };
-    el('gv-prev').onclick = () => { gv.ply = Math.max(0, gv.ply - 1); update(); };
-    el('gv-next').onclick = () => { gv.ply = Math.min(g.sans.length, gv.ply + 1); update(); };
-    el('gv-end').onclick = () => { gv.ply = g.sans.length; update(); };
+    board.onUserMove = (from, to) => {
+      let mv = null;
+      try { const c2 = new Chess(gv.fen); mv = c2.move({ from, to, promotion: 'q' }); } catch (e) { mv = null; }
+      if (!mv) { board.shake(); return; }
+      gv.varMoves = (gv.varMoves || []).concat([mv.san]);
+      update();
+    };
+    el('gv-start').onclick = () => { gv.varMoves = null; gv.ply = 0; update(); };
+    el('gv-prev').onclick = () => {
+      if (gv.varMoves && gv.varMoves.length) {
+        gv.varMoves.pop();
+        if (!gv.varMoves.length) gv.varMoves = null;
+      } else gv.ply = Math.max(0, gv.ply - 1);
+      update();
+    };
+    el('gv-next').onclick = () => { gv.varMoves = null; gv.ply = Math.min(g.sans.length, gv.ply + 1); update(); };
+    el('gv-end').onclick = () => { gv.varMoves = null; gv.ply = g.sans.length; update(); };
     el('gv-spar-w').onclick = () => startSparringFen(gv.fen, 'w', 'Play it out: ' + g.name, 'From move ' + gv.ply + ' — play it out and save to review later.', { allowSave: true, saveName: 'Play-out from ' + g.name });
     el('gv-spar-b').onclick = () => startSparringFen(gv.fen, 'b', 'Play it out: ' + g.name, 'From move ' + gv.ply + ' — play it out and save to review later.', { allowSave: true, saveName: 'Play-out from ' + g.name });
     const rs = el('rev-start');
@@ -3462,14 +3661,14 @@ function viewGameViewer() {
     const rr = el('rev-reveal');
     if (rr) rr.onclick = () => { gv.revealed = true; render(); };
     const rj = el('rev-jump');
-    if (rj) rj.onclick = () => { gv.ply = g.review.firstBlunder.ply; update(); };
+    if (rj) rj.onclick = () => { gv.varMoves = null; gv.ply = g.review.firstBlunder.ply; update(); };
     // Eval graph: tap anywhere to jump the board to that moment.
     const evc = el('evchart');
     if (evc && g.review && g.review.evals) {
-      evc.style.cursor = 'pointer';
       evc.addEventListener('click', (e) => {
         const rect = evc.getBoundingClientRect();
         const frac = (e.clientX - rect.left) / Math.max(1, rect.width);
+        gv.varMoves = null;
         gv.ply = Math.max(0, Math.min(g.sans.length, Math.round(frac * (g.review.evals.length - 1))));
         update();
       });
@@ -3480,6 +3679,7 @@ function viewGameViewer() {
     const ms = g.review && g.review.mistakes;
     if (ms && ms.length) {
       const selectMi = (i) => {
+        gv.varMoves = null;
         gv.mi = ((i % ms.length) + ms.length) % ms.length;
         gv.ply = ms[gv.mi].ply;   // board shows the position BEFORE the bad move
         render();
