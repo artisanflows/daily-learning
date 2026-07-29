@@ -1457,22 +1457,57 @@ function moveLabel(ply, san) {
    legal moves from the final position, so hovering a plan box DRAWS the plan.
    No authoring needed — the texts already contain the moves ("...Qc7", "b4-b5"). ---- */
 const SAN_TOKEN_RE = /O-O-O|O-O|[KQRBN][a-h]?[1-8]?x?[a-h][1-8]|[a-h]x[a-h][1-8]|[a-h][1-8](?:=[QRBN])?/g;
+const PIECE_WORD_RE = /\b(king|queen|rook|bishop|knight)s?(?:\s+\w+){0,2}?\s+(?:to|on|onto|at|toward|towards)\s+([a-h][1-8])\b/gi;
+const CASTLE_RE = /\bcastl\w*(?:\s+(long|queenside|short|kingside))?/gi;
+const PIECE_LETTER = { king: 'K', queen: 'Q', rook: 'R', bishop: 'B', knight: 'N' };
+
+/* Extract plan "intents" from prose in reading order: SAN tokens ("...Qc7"),
+   English phrasing ("rook to c8", "plant a knight on d5"), and castling words. */
+function planIntents(text) {
+  const out = [];
+  let m;
+  SAN_TOKEN_RE.lastIndex = 0;
+  while ((m = SAN_TOKEN_RE.exec(text))) out.push({ at: m.index, san: m[0] });
+  PIECE_WORD_RE.lastIndex = 0;
+  while ((m = PIECE_WORD_RE.exec(text))) out.push({ at: m.index, piece: PIECE_LETTER[m[1].toLowerCase()], to: m[2].toLowerCase() });
+  CASTLE_RE.lastIndex = 0;
+  while ((m = CASTLE_RE.exec(text))) out.push({ at: m.index, san: /long|queenside/i.test(m[1] || '') ? 'O-O-O' : 'O-O' });
+  return out.sort((a, b) => a.at - b.at);
+}
+
 function planArrowsFor(fen, text, primarySide, fallbackSide, color) {
   const arrows = [], seen = new Set();
-  const asSide = (side) => {
-    const p = fen.split(' ');
+  const asSide = (f, side) => {
+    const p = f.split(' ');
     p[1] = side; p[3] = '-';   // null-move flip: same board, chosen side to move
     return p.join(' ');
   };
-  const tryMove = (side, san) => {
+  const resolveOn = (game, intent) => {
     try {
-      const t = new Chess(asSide(side));
-      const mv = t.move(san);
-      return mv ? { from: mv.from, to: mv.to } : null;
+      if (intent.san) { const mv = game.move(intent.san); return mv ? { from: mv.from, to: mv.to } : null; }
+      const mv = game.moves({ verbose: true }).find((x) => x.piece === intent.piece.toLowerCase() && x.to === intent.to);
+      if (!mv) return null;
+      game.move(mv.san);
+      return { from: mv.from, to: mv.to };
     } catch (e) { return null; }
   };
-  for (const tok of text.match(SAN_TOKEN_RE) || []) {
-    const mv = tryMove(primarySide, tok) || (fallbackSide ? tryMove(fallbackSide, tok) : null);
+  // Sequential scratch board per side: plans usually list moves in playing order, so
+  // "...Bg7, ...O-O, ...Rfd8" resolves step by step; each success re-flips the turn.
+  const scratch = {};
+  const getScratch = (side) => scratch[side] || (scratch[side] = new Chess(asSide(fen, side)));
+  const trySide = (side, intent) => {
+    let mv = null;
+    try { mv = resolveOn(getScratch(side), intent); } catch (e) { /* keep going */ }
+    if (mv) {
+      try { scratch[side] = new Chess(asSide(scratch[side].fen(), side)); } catch (e) { scratch[side] = null; }
+      return mv;
+    }
+    // Fallback: fresh from the base position (an earlier plan move may have blocked it).
+    try { return resolveOn(new Chess(asSide(fen, side)), intent); } catch (e) { return null; }
+  };
+  for (const intent of planIntents(text)) {
+    if (arrows.length >= 8) break;   // more than 8 arrows is spaghetti, not teaching
+    const mv = trySide(primarySide, intent) || (fallbackSide ? trySide(fallbackSide, intent) : null);
     if (mv && !seen.has(mv.from + mv.to)) {
       seen.add(mv.from + mv.to);
       arrows.push({ from: mv.from, to: mv.to, color });
