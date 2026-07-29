@@ -668,6 +668,7 @@ function sanitizeState(obj) {
           phases: { opening: Math.max(0, Number(ph.opening) || 0), middlegame: Math.max(0, Number(ph.middlegame) || 0), endgame: Math.max(0, Number(ph.endgame) || 0) },
         };
         if (Array.isArray(rv.evals)) entry.review.evals = rv.evals.slice(0, 501).map((e) => (e === null ? null : Math.max(-9.9, Math.min(9.9, Number(e) || 0))));
+        if (rv.seen) entry.review.seen = true;
         if (Array.isArray(rv.marks)) {
           const MK = { book: 1, best: 1, excellent: 1, good: 1, inaccuracy: 1, mistake: 1, blunder: 1 };
           entry.review.marks = rv.marks.slice(0, 500).map((m) => (MK[m] ? m : null));
@@ -2356,7 +2357,7 @@ function viewLichessGame() {
       if (rv) rv.onclick = () => {
         const g = S.mygames[0];
         lg = null;
-        if (g) { gameView = { g, ply: g.sans.length, revealed: false, mi: null }; go('mygames'); gameView = { g, ply: g.sans.length, revealed: false, mi: null }; render(); }
+        if (g) { const rv0 = { g, ply: g.sans.length, revealed: !!(g.review && g.review.seen), mi: null }; gameView = rv0; go('mygames'); gameView = rv0; render(); }
       };
       const nw = el('lch-new');
       if (nw) nw.onclick = () => { if (lg && lg.streamAbort) lg.streamAbort.abort(); lg = null; render(); };
@@ -3128,7 +3129,7 @@ function viewMyGames() {
     app.querySelectorAll('[data-game]').forEach(c => c.onclick = (ev) => {
       if (ev.target.closest('[data-rename]') || ev.target.closest('[data-del]')) return;
       const g = S.mygames.find(x => x.id === c.dataset.game);
-      if (g) { gameView = { g, ply: 0 }; render(); }
+      if (g) { gameView = { g, ply: 0, revealed: !!(g.review && g.review.seen) }; render(); }
     });
     app.querySelectorAll('[data-rename]').forEach(b => b.onclick = () => {
       const g = S.mygames.find(x => x.id === b.dataset.rename);
@@ -3207,14 +3208,21 @@ function startGameReview(g, userColor) {
   render();
   // Baseline: evaluate the starting position from the user's perspective, so the FIRST
   // move's delta is measured against reality (a tabiya isn't 0.00), then sweep.
-  Engine.analyze(startFen, 260, (res) => {
+  // Wait for the engine to go idle first — the viewer's live top-5 analysis may still
+  // hold the worker, and Engine.analyze returns null instead of queueing when busy.
+  const startWhenIdle = () => {
     if (!reviewRun) return;
-    let ev = 0;
-    if (res) { if (res.mate !== null) ev = res.mate > 0 ? 99 : -99; else if (res.cp !== null) ev = res.cp / 100; }
-    if (startFen.split(' ')[1] !== userColor) ev = -ev;
-    reviewRun.startEval = ev;
-    reviewStep();
-  });
+    if (Engine.pending) { setTimeout(startWhenIdle, 120); return; }
+    Engine.analyze(startFen, 260, (res) => {
+      if (!reviewRun) return;
+      let ev = 0;
+      if (res) { if (res.mate !== null) ev = res.mate > 0 ? 99 : -99; else if (res.cp !== null) ev = res.cp / 100; }
+      if (startFen.split(' ')[1] !== userColor) ev = -ev;
+      reviewRun.startEval = ev;
+      reviewStep();
+    });
+  };
+  startWhenIdle();
 }
 
 function reviewStep() {
@@ -3226,6 +3234,12 @@ function reviewStep() {
   const fenAfter = r.fens[r.i + 1];
   Engine.analyze(fenAfter, 350, (res) => {
     if (!reviewRun || reviewRun !== r) return;
+    if (!res && Engine.status === 'ready' && (r.retries || 0) < 12) {
+      // Engine was busy (cb(null) instead of queueing) — retry this ply, don't record a hole.
+      r.retries = (r.retries || 0) + 1;
+      setTimeout(reviewStep, 200);
+      return;
+    }
     let ev = null, mv = null;
     if (res) {
       mv = res.mv || null;
@@ -3437,6 +3451,9 @@ function reviewSummaryHtml(g) {
       (negs.blunder ? '<span class="clschip cls-blun">' + negs.blunder + ' blunder' + (negs.blunder === 1 ? '' : 's') + '</span>' : '') +
       '</div>';
     h += evalChartHtml(g);
+    if (!rv.marks) {
+      h += '<p class="small muted">This review predates the on-board move badges — <button class="btn secondary" style="padding:3px 10px;font-size:12px" id="rev-rerun">re-run the review</button> to get a badge on every move.</p>';
+    }
   } else if (rv.mistakes) {
     h += '<p class="small muted">This review predates the accuracy report — re-run “Run coach review” for accuracy, the eval graph and move classes.</p>';
   }
@@ -3658,8 +3675,10 @@ function viewGameViewer() {
     el('gv-spar-b').onclick = () => startSparringFen(gv.fen, 'b', 'Play it out: ' + g.name, 'From move ' + gv.ply + ' — play it out and save to review later.', { allowSave: true, saveName: 'Play-out from ' + g.name });
     const rs = el('rev-start');
     if (rs) rs.onclick = () => startGameReview(g, el('rev-side').value);
+    const rrn = el('rev-rerun');
+    if (rrn) rrn.onclick = () => startGameReview(g, g.review.userColor);
     const rr = el('rev-reveal');
-    if (rr) rr.onclick = () => { gv.revealed = true; render(); };
+    if (rr) rr.onclick = () => { gv.revealed = true; if (g.review) { g.review.seen = true; saveState(); } render(); };
     const rj = el('rev-jump');
     if (rj) rj.onclick = () => { gv.varMoves = null; gv.ply = g.review.firstBlunder.ply; update(); };
     // Eval graph: tap anywhere to jump the board to that moment.
