@@ -159,7 +159,11 @@ button.btn + button.btn { margin-left: 8px; }
   outline: 1px solid rgba(74, 56, 38, 0.25);
   box-shadow: 0 8px 24px rgba(90, 65, 35, 0.22), 0 2px 6px rgba(90, 65, 35, 0.15);
 }
-.board { touch-action: none; user-select: none; -webkit-user-select: none; }
+.board { position: relative; touch-action: none; user-select: none; -webkit-user-select: none; }
+.arrowlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 6; }
+.tcol-hoverable { cursor: pointer; border-radius: 8px; transition: background 0.15s ease; padding: 6px 8px; margin: -6px -8px; }
+.tcol-hoverable:hover { background: var(--accent-soft); }
+.tcol-hoverable:hover h4::after { content: '  ⟶ on board'; font-weight: 400; color: var(--muted); font-size: 11px; }
 .sq { position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .sq .pc, .sq .pc svg, .drag-ghost, .drag-ghost svg { -webkit-user-drag: none; user-select: none; -webkit-user-select: none; }
 .sq.light { background: var(--sq-light); }
@@ -750,6 +754,7 @@ class Board {
     this.onUserMove = null;  // (from, to) => void
     this.lastMove = null;    // {from, to}
     this.hintSquares = null; // [from, to] rings
+    this.arrows = null;      // [{from, to, color}] — plan arrows drawn over the board
     this.selected = null;
     this.el.classList.add('board');
     this._suppressClick = false;
@@ -854,6 +859,30 @@ class Board {
       html += '<div class="' + cls.join(' ') + '" data-sq="' + sq + '">' + inner + '</div>';
     }
     this.el.innerHTML = html;
+    // Plan-arrow overlay: an SVG in 8x8 board coordinates, orientation-aware.
+    if (this.arrows && this.arrows.length) {
+      const black = this.orientation === 'black';
+      const xy = (sq) => {
+        const f = sq.charCodeAt(0) - 97, r = parseInt(sq[1], 10) - 1;
+        return black ? [7 - f + 0.5, r + 0.5] : [f + 0.5, 7 - r + 0.5];
+      };
+      let s = '<svg class="arrowlay" viewBox="0 0 8 8">';
+      // Sink hardening: every interpolated value is numeric except the colour, which
+      // must match a strict rgba()/#hex whitelist — nothing else can enter the markup.
+      const safeColor = (c) => (/^(rgba?\([0-9., ]+\)|#[0-9a-fA-F]{3,8})$/.test(c) ? c : 'rgba(0,0,0,0.6)');
+      for (let a of this.arrows) {
+        a = { from: a.from, to: a.to, color: safeColor(String(a.color)) };
+        const [x1, y1] = xy(a.from), [x2, y2] = xy(a.to);
+        const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1;
+        const ux = dx / len, uy = dy / len, px = -uy, py = ux;
+        const ex = x2 - ux * 0.38, ey = y2 - uy * 0.38;   // shaft ends where the head begins
+        const hx = x2 - ux * 0.08, hy = y2 - uy * 0.08;   // head tip, just inside the square
+        s += '<line x1="' + (x1 + ux * 0.3).toFixed(2) + '" y1="' + (y1 + uy * 0.3).toFixed(2) + '" x2="' + ex.toFixed(2) + '" y2="' + ey.toFixed(2) + '" stroke="' + a.color + '" stroke-width="0.21" stroke-linecap="round"/>';
+        s += '<polygon points="' + hx.toFixed(2) + ',' + hy.toFixed(2) + ' ' + (ex + px * 0.19).toFixed(2) + ',' + (ey + py * 0.19).toFixed(2) + ' ' + (ex - px * 0.19).toFixed(2) + ',' + (ey - py * 0.19).toFixed(2) + '" fill="' + a.color + '"/>';
+      }
+      s += '</svg>';
+      this.el.insertAdjacentHTML('beforeend', s);
+    }
   }
   handleClick(e) {
     if (this._suppressClick) { this._suppressClick = false; return; }
@@ -1398,6 +1427,7 @@ function viewStudyLine() {
         if (sb) sb.onclick = () => startSparring(ch, ln);
         const db = el('study-drill-btn');
         if (db) db.onclick = () => startPractice([ITEM_BY_KEY[key]]);
+        wireTabiyaHover(el('study-extra'), ln.tabiya, board, ch.side === 'black' ? 'b' : 'w');
       } else el('study-extra').innerHTML = '';
     };
     el('mv-start').onclick = () => { studyPly = 0; studyAlt = null; bookWalk = null; update(); };
@@ -1421,6 +1451,63 @@ function viewStudyLine() {
 function moveLabel(ply, san) {
   const n = Math.floor(ply / 2) + 1;
   return ply % 2 === 0 ? n + '.' + san : n + '...' + san;
+}
+
+/* ---- Plan arrows: parse SAN-ish tokens out of tabiya prose and resolve them as
+   legal moves from the final position, so hovering a plan box DRAWS the plan.
+   No authoring needed — the texts already contain the moves ("...Qc7", "b4-b5"). ---- */
+const SAN_TOKEN_RE = /O-O-O|O-O|[KQRBN][a-h]?[1-8]?x?[a-h][1-8]|[a-h]x[a-h][1-8]|[a-h][1-8](?:=[QRBN])?/g;
+function planArrowsFor(fen, text, primarySide, fallbackSide, color) {
+  const arrows = [], seen = new Set();
+  const asSide = (side) => {
+    const p = fen.split(' ');
+    p[1] = side; p[3] = '-';   // null-move flip: same board, chosen side to move
+    return p.join(' ');
+  };
+  const tryMove = (side, san) => {
+    try {
+      const t = new Chess(asSide(side));
+      const mv = t.move(san);
+      return mv ? { from: mv.from, to: mv.to } : null;
+    } catch (e) { return null; }
+  };
+  for (const tok of text.match(SAN_TOKEN_RE) || []) {
+    const mv = tryMove(primarySide, tok) || (fallbackSide ? tryMove(fallbackSide, tok) : null);
+    if (mv && !seen.has(mv.from + mv.to)) {
+      seen.add(mv.from + mv.to);
+      arrows.push({ from: mv.from, to: mv.to, color });
+    }
+  }
+  return arrows;
+}
+
+/* Attach hover (and tap-toggle) handlers to a rendered tabiya's three plan columns. */
+function wireTabiyaHover(scope, tab, board, userSide) {
+  if (!scope || !tab || !board || !board.game) return;
+  const fen = board.game.fen();
+  const opp = userSide === 'w' ? 'b' : 'w';
+  const cfg = [
+    { items: tab.yourPlans, primary: userSide, fallback: null, color: 'rgba(111, 132, 85, 0.92)' },
+    { items: tab.theirPlans, primary: opp, fallback: null, color: 'rgba(168, 64, 47, 0.92)' },
+    { items: tab.watchFor, primary: opp, fallback: userSide, color: 'rgba(185, 138, 60, 0.92)' },
+  ];
+  scope.querySelectorAll('.tcol').forEach((col, i) => {
+    const c = cfg[i];
+    if (!c || !c.items) return;
+    col.classList.add('tcol-hoverable');
+    let cached = null;
+    const show = () => {
+      if (!cached) cached = planArrowsFor(fen, c.items.join(' · '), c.primary, c.fallback, c.color);
+      board.arrows = cached; board.render();
+    };
+    const hide = () => { board.arrows = null; board.render(); };
+    col.addEventListener('mouseenter', show);
+    col.addEventListener('mouseleave', hide);
+    // Touch devices have no hover — tap toggles the arrows instead.
+    if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+      col.addEventListener('click', () => { board.arrows ? hide() : show(); });
+    }
+  });
 }
 
 function tabiyaHtml(ln) {
@@ -1694,6 +1781,7 @@ function drillComplete(early) {
     };
     const psp = el('spar-after');
     if (psp) psp.onclick = () => startSparring(c.item.ch, c.item.line);
+    wireTabiyaHover(endEl, c.item.line.tabiya, c.board, c.item.ch.side === 'black' ? 'b' : 'w');
     return;
   }
   endEl.innerHTML = tabiyaHtml(c.item.line) +
@@ -1714,6 +1802,7 @@ function drillComplete(early) {
   });
   const sp = el('spar-after');
   if (sp) sp.onclick = () => startSparring(c.item.ch, c.item.line);
+  wireTabiyaHover(endEl, c.item.line.tabiya, c.board, c.item.ch.side === 'black' ? 'b' : 'w');
 }
 
 function gradePreview(key, g) {
