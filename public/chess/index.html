@@ -279,6 +279,11 @@ select, input[type="number"] {
 .bookrow__bar i.b { background: #4a423a; }
 .bookrow__n { flex: none; width: 52px; text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; }
 
+/* ---------- Lichess live game ---------- */
+.lclockrow { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 8px; background: var(--panel2); }
+.lclockrow.you { border-color: var(--accent); }
+.lclockrow b { font-size: 20px; font-variant-numeric: tabular-nums; }
+
 /* ---------- Primer diagrams ---------- */
 .primer-boardwrap { max-width: 300px; margin: 4px 0 12px; }
 .primer-boardwrap .board { border-radius: 6px; }
@@ -1994,8 +1999,256 @@ function viewQuiz() {
 /* ================= Play a full game ================= */
 const SKILL_LABELS = { Beginner: 'Beginner (~800)', Casual: 'Casual (~1100)', Club: 'Club (~1400)', Strong: 'Strong (~1800)', Maximum: 'Maximum (2200+)' };
 
+/* ================= Lichess: play humans (Board API) =================
+   Pure client-side: the user's board:play token lives in ITS OWN localStorage key —
+   never in app state, never in exports/backups, never in gist sync. Casual rapid
+   seeks only (v1). Finished games auto-save to My Games for the coach review. */
+const Lichess = {
+  tokenKey: 'atelier-lichess-token',
+  username: null,
+  resume: null,
+  getToken() { try { return localStorage.getItem(this.tokenKey) || ''; } catch (e) { return ''; } },
+  setToken(v) { try { if (v) localStorage.setItem(this.tokenKey, v.trim()); else localStorage.removeItem(this.tokenKey); } catch (e) { /* blocked */ } this.username = null; this.resume = null; },
+  headers(extra) { return Object.assign({ Authorization: 'Bearer ' + this.getToken() }, extra || {}); },
+  async connect() {
+    const r = await fetch('https://lichess.org/api/account', { headers: this.headers() });
+    if (!r.ok) throw new Error(r.status === 401 ? 'Token rejected — it needs the board:play scope.' : 'Lichess error ' + r.status);
+    this.username = (await r.json()).username;
+    try {
+      const p = await fetch('https://lichess.org/api/account/playing', { headers: this.headers() });
+      this.resume = p.ok ? ((await p.json()).nowPlaying || []).filter((g) => g.gameId) : [];
+    } catch (e) { this.resume = []; }
+    return this.username;
+  },
+  async stream(url, onLine, signal) {
+    const r = await fetch(url, { headers: this.headers(), signal });
+    if (!r.ok) throw new Error('stream ' + r.status);
+    const reader = r.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let i;
+      while ((i = buf.indexOf('\n')) >= 0) {
+        const line = buf.slice(0, i).trim();
+        buf = buf.slice(i + 1);
+        if (line) { try { onLine(JSON.parse(line)); } catch (e) { /* keepalive newline */ } }
+      }
+    }
+  },
+  post(path) { return fetch('https://lichess.org/api/board/game/' + path, { method: 'POST', headers: this.headers() }); },
+};
+
+let lg = null;          // live lichess state: seeking or playing
+let lgClock = null;     // 1s ticker updating the clock display only
+
+function lichessStartSeek(min, inc) {
+  if (!Lichess.getToken()) return;
+  const eventAbort = new AbortController();
+  const seekAbort = new AbortController();
+  lg = { seeking: true, eventAbort, seekAbort, err: null };
+  render();
+  Lichess.stream('https://lichess.org/api/stream/event', (e) => {
+    if (e.type === 'gameStart' && lg && lg.seeking) {
+      seekAbort.abort();
+      lichessOpenGame(e.game.gameId, e.game.color === 'black' ? 'b' : 'w');
+    }
+  }, eventAbort.signal).catch(() => { /* aborted or dropped */ });
+  const body = 'rated=false&time=' + min + '&increment=' + inc + '&color=random';
+  // The seek request must STAY OPEN — closing it cancels the seek.
+  fetch('https://lichess.org/api/board/seek', {
+    method: 'POST', headers: Lichess.headers({ 'Content-Type': 'application/x-www-form-urlencoded' }), body, signal: seekAbort.signal,
+  }).then((r) => {
+    if (!r.ok && lg && lg.seeking) { lg.err = 'Seek failed (HTTP ' + r.status + ').'; lg.seeking = false; render(); }
+  }).catch(() => { /* aborted on match/cancel */ });
+}
+
+function lichessCancelSeek() {
+  if (lg) { if (lg.seekAbort) lg.seekAbort.abort(); if (lg.eventAbort) lg.eventAbort.abort(); }
+  lg = null;
+  render();
+}
+
+function lichessOpenGame(id, color) {
+  const eventAbort = lg && lg.eventAbort;
+  const streamAbort = new AbortController();
+  lg = { id, color, game: new Chess(), sans: [], wtime: 0, btime: 0, status: 'started', names: { white: 'White', black: 'Black' }, streamAbort, eventAbort, saved: false, err: null };
+  activeTab = 'play';
+  render();
+  Lichess.stream('https://lichess.org/api/board/game/stream/' + id, (msg) => {
+    if (!lg || lg.id !== id) return;
+    if (msg.type === 'gameFull') {
+      lg.names = { white: (msg.white && (msg.white.name || msg.white.id)) || 'White', black: (msg.black && (msg.black.name || msg.black.id)) || 'Black' };
+      lichessApplyState(msg.state);
+    } else if (msg.type === 'gameState') lichessApplyState(msg);
+  }, streamAbort.signal).catch(() => {
+    if (lg && lg.id === id && lg.status === 'started') { lg.err = 'Connection lost — Reconnect to resume.'; render(); }
+  });
+}
+
+function lichessApplyState(st) {
+  const g = new Chess();
+  const sans = [];
+  for (const u of (st.moves || '').split(' ').filter(Boolean)) {
+    try { const mv = g.move({ from: u.slice(0, 2), to: u.slice(2, 4), promotion: u.length > 4 ? u[4] : undefined }); if (mv) sans.push(mv.san); } catch (e) { break; }
+  }
+  lg.game = g; lg.sans = sans;
+  lg.wtime = st.wtime; lg.btime = st.btime;
+  lg.status = st.status || lg.status;
+  lg.winner = st.winner;
+  if (lg.status !== 'started') lichessFinishGame();
+  render();
+}
+
+function lichessFinishGame() {
+  if (!lg || lg.saved) return;
+  lg.saved = true;
+  if (lg.eventAbort) lg.eventAbort.abort();
+  lg.result = lg.winner === 'white' ? '1-0' : lg.winner === 'black' ? '0-1' : (['draw', 'stalemate'].includes(lg.status) ? '1/2-1/2' : '*');
+  if (lg.sans.length) {
+    S.mygames.unshift({
+      id: Math.random().toString(36).slice(2, 10),
+      name: 'Lichess: ' + lg.names.white + ' vs ' + lg.names.black,
+      date: todayStr(), white: lg.names.white, black: lg.names.black,
+      result: lg.result, sans: lg.sans.slice(0, 500), userColor: lg.color,
+    });
+    saveState();
+  }
+}
+
+function lichessMove(from, to) {
+  if (!lg || lg.status !== 'started') return;
+  const piece = lg.game.get(from);
+  const promo = piece && piece.type === 'p' && (to[1] === '8' || to[1] === '1') ? 'q' : '';
+  try { lg.game.move({ from, to, promotion: promo || undefined }); render(); } catch (e) { /* server will correct */ }
+  Lichess.post(lg.id + '/move/' + from + to + promo).catch(() => {});
+}
+
+function fmtClock(ms) {
+  if (typeof ms !== 'number' || !isFinite(ms)) return '–:––';
+  const s = Math.max(0, Math.round(ms / 1000));
+  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+}
+
+function viewLichessGame() {
+  const over = lg.status !== 'started';
+  const youWhite = lg.color === 'w';
+  const oppName = youWhite ? lg.names.black : lg.names.white;
+  const yourTurn = !over && lg.game.turn() === lg.color;
+  let h = '<div class="panel"><h2>♟ Lichess — vs ' + esc(oppName) + '</h2>';
+  if (lg.err) h += '<div class="banner">' + esc(lg.err) + '</div>';
+  if (over) {
+    const youWon = (lg.winner === 'white') === youWhite && lg.winner;
+    h += '<div class="banner">' + (lg.winner ? (youWon ? 'You won' : 'You lost') : 'Draw') + ' — ' + esc(lg.status) + ' (' + esc(lg.result || '*') + '). Saved to My Games.</div>';
+  }
+  h += '<div class="boardwrap"><div class="boardcol"><div id="lch-board"></div></div>' +
+    '<div class="sidecol">' +
+    '<div class="lclockrow"><span>' + esc(youWhite ? lg.names.black : lg.names.white) + '</span><b id="lch-oclk">' + fmtClock(youWhite ? lg.btime : lg.wtime) + '</b></div>' +
+    '<div class="lclockrow you"><span>' + esc(Lichess.username || 'You') + '</span><b id="lch-yclk">' + fmtClock(youWhite ? lg.wtime : lg.btime) + '</b></div>' +
+    '<div class="progressline">' + (over ? 'Game over' : (yourTurn ? 'Your move' : 'Waiting for ' + esc(oppName) + '…')) + '</div>' +
+    '<div class="movelist">' + lg.sans.map((s, i) => (i % 2 === 0 ? (i / 2 + 1) + '.' : '') + s).join(' ') + '</div>' +
+    (over
+      ? '<div class="btnrow"><button class="btn" id="lch-review"><span class="ic ic-coach"></span> Review with the coach</button><button class="btn secondary" id="lch-new">New seek</button></div>'
+      : '<div class="btnrow"><button class="btn secondary small" id="lch-draw">Offer draw</button><button class="btn secondary small" id="lch-resign">Resign</button></div>') +
+    '</div></div></div>';
+  onRendered(() => {
+    const board = new Board(el('lch-board'), youWhite ? 'white' : 'black');
+    board.game = lg.game;
+    board.interactive = !over;
+    board.moveColor = lg.color;
+    board.onUserMove = (from, to) => lichessMove(from, to);
+    const last = lg.game.history({ verbose: true }).slice(-1)[0];
+    board.lastMove = last ? { from: last.from, to: last.to } : null;
+    board.render();
+    if (!over) {
+      clearInterval(lgClock);
+      lgClock = setInterval(() => {
+        if (!lg || lg.status !== 'started') { clearInterval(lgClock); return; }
+        const turn = lg.game.turn();
+        if (turn === 'w') lg.wtime -= 1000; else lg.btime -= 1000;
+        const y = el('lch-yclk'), o = el('lch-oclk');
+        if (y) y.textContent = fmtClock(youWhite ? lg.wtime : lg.btime);
+        if (o) o.textContent = fmtClock(youWhite ? lg.btime : lg.wtime);
+      }, 1000);
+      const rs = el('lch-resign');
+      if (rs) rs.onclick = () => { if (confirm('Resign this game?')) Lichess.post(lg.id + '/resign').catch(() => {}); };
+      const dr = el('lch-draw');
+      if (dr) dr.onclick = () => Lichess.post(lg.id + '/draw/yes').catch(() => {});
+    } else {
+      clearInterval(lgClock);
+      const rv = el('lch-review');
+      if (rv) rv.onclick = () => {
+        const g = S.mygames[0];
+        lg = null;
+        if (g) { gameView = { g, ply: g.sans.length, revealed: false, mi: null }; go('mygames'); gameView = { g, ply: g.sans.length, revealed: false, mi: null }; render(); }
+      };
+      const nw = el('lch-new');
+      if (nw) nw.onclick = () => { if (lg && lg.streamAbort) lg.streamAbort.abort(); lg = null; render(); };
+    }
+  });
+  return h;
+}
+
+function lichessPanelHtml() {
+  const token = Lichess.getToken();
+  let h = '<div class="panel"><h2>♟ Play a human — Lichess</h2>';
+  if (!token) {
+    h += '<p class="small">Play real opponents through your Lichess account, right here. You need a personal API token with the <b>board:play</b> scope — create one at lichess.org → Settings → API access tokens, tick <b>Play games with the board API</b>, paste it below. It is stored only on this device and never leaves it (not even in backups).</p>' +
+      '<div class="btnrow"><input type="password" id="lch-token" placeholder="Lichess token (board:play)" style="flex:1;min-width:220px;font:inherit;padding:8px 10px;border:1px solid #d9c8a9;border-radius:6px;background:#fffdf7">' +
+      '<button class="btn" id="lch-save">Connect</button></div>';
+  } else if (!Lichess.username) {
+    h += '<p class="small">Token stored. Connect to check it and see any game in progress.</p>' +
+      '<div class="btnrow"><button class="btn" id="lch-connect">Connect to Lichess</button><button class="btn secondary" id="lch-forget">Forget token</button></div>' +
+      (lg && lg.err ? '<p class="small" style="color:var(--danger)">' + esc(lg.err) + '</p>' : '');
+  } else {
+    h += '<p class="small">Connected as <b>' + esc(Lichess.username) + '</b>. Casual rapid seeks — a random human opponent, clocks on, and the finished game lands in My Games for the coach.</p>' +
+      '<div class="btnrow">' +
+      '<button class="btn" data-seek="10,0">Seek 10+0</button>' +
+      '<button class="btn" data-seek="10,5">Seek 10+5</button>' +
+      '<button class="btn" data-seek="15,10">Seek 15+10</button>' +
+      '<button class="btn secondary" id="lch-forget">Disconnect</button></div>';
+    if (Lichess.resume && Lichess.resume.length) {
+      h += '<p class="small" style="margin-top:10px"><b>Game in progress:</b></p><div class="btnrow">' +
+        Lichess.resume.map((g) => '<button class="btn secondary" data-resume="' + esc(g.gameId) + '" data-rescolor="' + (g.color === 'black' ? 'b' : 'w') + '">Resume vs ' + esc((g.opponent && g.opponent.username) || '?') + '</button>').join('') + '</div>';
+    }
+  }
+  h += '</div>';
+  return h;
+}
+
+function wireLichessPanel() {
+  const sv = el('lch-save');
+  if (sv) sv.onclick = () => {
+    const v = el('lch-token').value.trim();
+    if (!v) return;
+    Lichess.setToken(v);
+    Lichess.connect().then(() => render()).catch((e) => { lg = { err: e.message }; render(); });
+    render();
+  };
+  const cn = el('lch-connect');
+  if (cn) cn.onclick = () => Lichess.connect().then(() => { lg = null; render(); }).catch((e) => { lg = { err: e.message }; render(); });
+  const fg = el('lch-forget');
+  if (fg) fg.onclick = () => { Lichess.setToken(''); lg = null; render(); };
+  app.querySelectorAll('[data-seek]').forEach((b) => b.onclick = () => {
+    const [m, i] = b.dataset.seek.split(',').map(Number);
+    lichessStartSeek(m, i);
+  });
+  app.querySelectorAll('[data-resume]').forEach((b) => b.onclick = () => lichessOpenGame(b.dataset.resume, b.dataset.rescolor));
+}
+
 function viewPlay() {
-  let h = '<div class="panel"><h2>Play a game</h2><p class="small">A full game against the embedded engine, from move one. With the live coach on, you get the evaluation bar and instant feedback when a move costs you material — with it off, it’s just you and the board. Finished games can be saved to My Games and run through the coach review.</p>' +
+  if (lg && lg.id) return viewLichessGame();
+  if (lg && lg.seeking) {
+    onRendered(() => { const c = el('lch-cancel'); if (c) c.onclick = lichessCancelSeek; });
+    return '<div class="panel"><h2>♟ Seeking an opponent…</h2><p class="small">Waiting for a human to accept. This usually takes under a minute at rapid time controls.</p>' +
+      (lg.err ? '<p class="small" style="color:var(--danger)">' + esc(lg.err) + '</p>' : '') +
+      '<div class="btnrow"><button class="btn secondary" id="lch-cancel">Cancel seek</button></div></div>';
+  }
+  let h = lichessPanelHtml();
+  onRendered(wireLichessPanel);
+  h += '<div class="panel"><h2>Play a game</h2><p class="small">A full game against the embedded engine, from move one. With the live coach on, you get the evaluation bar and instant feedback when a move costs you material — with it off, it’s just you and the board. Finished games can be saved to My Games and run through the coach review.</p>' +
     '<div class="btnrow" style="align-items:center">' +
     '<span class="small">I play: <select id="play-color"><option value="w">White</option><option value="b">Black</option><option value="r">Random</option></select></span>' +
     '<span class="small">Strength: <select id="play-skill">' + Object.keys(SKILLS).map(k => '<option value="' + k + '"' + (S.settings.skill === k ? ' selected' : '') + '>' + SKILL_LABELS[k] + '</option>').join('') + '</select></span>' +
