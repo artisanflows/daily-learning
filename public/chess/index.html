@@ -669,6 +669,7 @@ function sanitizeState(obj) {
         };
         if (Array.isArray(rv.evals)) entry.review.evals = rv.evals.slice(0, 501).map((e) => (e === null ? null : Math.max(-9.9, Math.min(9.9, Number(e) || 0))));
         if (rv.seen) entry.review.seen = true;
+        if (typeof rv.v === 'number') entry.review.v = rv.v;
         if (Array.isArray(rv.marks)) {
           const MK = { book: 1, best: 1, excellent: 1, good: 1, inaccuracy: 1, mistake: 1, blunder: 1 };
           entry.review.marks = rv.marks.slice(0, 500).map((m) => (MK[m] ? m : null));
@@ -3096,6 +3097,12 @@ function viewMyGames() {
     '<textarea class="save" id="fen-text" style="height:48px" placeholder="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"></textarea>' +
     '<div class="btnrow"><span class="small" style="align-self:center">Play as: <select id="fen-side"><option value="w">White</option><option value="b">Black</option></select></span>' +
     '<button class="btn" id="fen-spar">Start sparring</button></div></div></div>';
+  const stale = S.mygames.filter((g) => g.review && g.review.v !== REVIEW_V && g.sans && g.sans.length);
+  if (stale.length) {
+    h += '<div class="banner"><span class="ic ic-coach"></span> ' + stale.length + ' review' + (stale.length === 1 ? ' was' : 's were') + ' graded by an older engine pass. ' +
+      '<button class="btn" id="rev-update-all" style="margin-left:8px">Update all reviews</button>' +
+      '<span class="small muted" style="margin-left:8px">~half a minute per game — it runs through them by itself.</span></div>';
+  }
   h += coachAggregateHtml();
   if (!S.mygames.length) {
     h += '<div class="panel"><p class="muted">No games saved yet. Import your first PGN above — on chess.com: your profile → Games → Archive → select games → Download.</p></div>';
@@ -3111,6 +3118,16 @@ function viewMyGames() {
     h += '</div></div>';
   }
   onRendered(() => {
+    const rua = el('rev-update-all');
+    if (rua) rua.onclick = () => {
+      const q = S.mygames.filter((g) => g.review && g.review.v !== REVIEW_V && g.sans && g.sans.length);
+      if (!q.length) return;
+      if (Engine.status !== 'ready') { alert('The engine is still warming up — try again in a few seconds.'); return; }
+      reviewQueue = q.slice(1);
+      const g0 = q[0];
+      gameView = { g: g0, ply: 0, revealed: !!(g0.review && g0.review.seen), mi: null };
+      startGameReview(g0, (g0.review && g0.review.userColor) || detectUserColor(g0) || 'w');
+    };
     el('pgn-toggle').onclick = () => { const a = el('import-area'); a.style.display = a.style.display === 'none' ? 'block' : 'none'; el('fen-area').style.display = 'none'; };
     el('fen-toggle').onclick = () => { const a = el('fen-area'); a.style.display = a.style.display === 'none' ? 'block' : 'none'; el('import-area').style.display = 'none'; };
     el('pgn-import').onclick = () => importPgnText(el('pgn-text').value);
@@ -3160,6 +3177,8 @@ function importPgnText(text) {
 
 /* ---- Coach review: deviation detection + blunder sweep + weakness tally ---- */
 let reviewRun = null;
+let reviewQueue = [];   // games waiting in a batch "update all reviews" run
+const REVIEW_V = 2;     // bump when grading changes — stale reviews get an update offer
 
 const INITIAL_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 function isCustomStart(g) { return !!(g.startFen && g.startFen !== INITIAL_FEN); }
@@ -3227,7 +3246,7 @@ function startGameReview(g, userColor) {
 
 function reviewStep() {
   const r = reviewRun;
-  if (!r || !gameView || gameView.g !== r.g) { reviewRun = null; return; }
+  if (!r || !gameView || gameView.g !== r.g) { reviewRun = null; reviewQueue = []; return; }
   const prog = el('rev-progress');
   if (prog) prog.style.width = Math.round(100 * r.i / r.g.sans.length) + '%';
   if (r.i >= r.g.sans.length) { finishGameReview(); return; }
@@ -3388,7 +3407,7 @@ function finishGameReview() {
     return Math.round(((mean + harm) / 2) * 10) / 10;
   };
   g.review = {
-    userColor, date: todayStr(),
+    v: REVIEW_V, userColor, date: todayStr(),
     deviation: custom ? { custom: true } : findDeviation(g, userColor),
     firstBlunder, blunderCount, phases, mistakes,
     evals: evalsW.map((e) => (e === null ? null : Math.round(Math.max(-9.9, Math.min(9.9, e)) * 100) / 100)),
@@ -3398,6 +3417,12 @@ function finishGameReview() {
   bumpActivity('reviews');
   saveState();
   if (gameView && gameView.g === g) { gameView.revealed = false; gameView.mi = null; render(); }
+  // Batch "update all reviews": roll straight into the next queued game.
+  if (reviewQueue.length) {
+    const nx = reviewQueue.shift();
+    gameView = { g: nx, ply: 0, revealed: !!(nx.review && nx.review.seen), mi: null };
+    startGameReview(nx, (nx.review && nx.review.userColor) || detectUserColor(nx) || 'w');
+  }
 }
 
 /* Clickable eval graph: WHITE's winning chances over the game (the sigmoid win% scale —
@@ -3451,8 +3476,8 @@ function reviewSummaryHtml(g) {
       (negs.blunder ? '<span class="clschip cls-blun">' + negs.blunder + ' blunder' + (negs.blunder === 1 ? '' : 's') + '</span>' : '') +
       '</div>';
     h += evalChartHtml(g);
-    if (!rv.marks) {
-      h += '<p class="small muted">This review predates the on-board move badges — <button class="btn secondary" style="padding:3px 10px;font-size:12px" id="rev-rerun">re-run the review</button> to get a badge on every move.</p>';
+    if (!rv.marks || rv.v !== REVIEW_V) {
+      h += '<p class="small muted">This review was graded by an older engine pass — <button class="btn secondary" style="padding:3px 10px;font-size:12px" id="rev-rerun">re-run the review</button> for current badges and grading.</p>';
     }
   } else if (rv.mistakes) {
     h += '<p class="small muted">This review predates the accuracy report — re-run “Run coach review” for accuracy, the eval graph and move classes.</p>';
@@ -3529,7 +3554,9 @@ function viewGameViewer() {
   const g = gv.g;
   let coachPanel;
   if (reviewRun && reviewRun.g === g) {
-    coachPanel = '<div class="banner"><span class="ic ic-coach"></span> Coach is reviewing… <b>While it runs:</b> step through the game and decide which move YOU would take back first — then compare.<div class="bar" style="margin-top:8px"><div id="rev-progress" style="width:0%"></div></div></div>';
+    coachPanel = '<div class="banner"><span class="ic ic-coach"></span> Coach is reviewing…' +
+      (reviewQueue.length ? ' <b>' + reviewQueue.length + ' more game' + (reviewQueue.length === 1 ? '' : 's') + ' queued after this one.</b>' : ' <b>While it runs:</b> step through the game and decide which move YOU would take back first — then compare.') +
+      '<div class="bar" style="margin-top:8px"><div id="rev-progress" style="width:0%"></div></div></div>';
   } else if (g.review && !gv.revealed) {
     coachPanel = '<div class="banner"><span class="ic ic-coach"></span> Review ready. Made your own guess about the first move you’d take back? <button class="btn" id="rev-reveal" style="margin-left:8px">Reveal the coach’s findings</button></div>';
   } else if (g.review && gv.revealed) {
