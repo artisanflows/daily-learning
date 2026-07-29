@@ -1741,8 +1741,12 @@ function buildSession() {
    corrupt the review schedule; the daily queue stays the source of truth. */
 function chapterItems(ch) { return ITEMS.filter(i => i.ch.id === ch.id); }
 function startPractice(items, opts) {
+  const flip = !!(opts && opts.flip);
+  // Flipped practice plays the OPPONENT's side of the repertoire. Punish lines are
+  // excluded there — their whole point is the opponent's error, which you'd have to play.
+  if (flip) items = items.filter((i) => i.kind !== 'punish');
   if (!items.length) return;
-  drill = { queue: items, idx: 0, doneCount: 0, practice: true, mid: !!(opts && opts.mid) };
+  drill = { queue: items, idx: 0, doneCount: 0, practice: true, mid: !!(opts && opts.mid), flip };
   activeTab = 'drill';   // not go('drill') — that helper clears the drill state
   startDrillCard();
 }
@@ -1774,22 +1778,25 @@ function viewDrill() {
     REPERTOIRE.chapters.map(c => '<option value="' + c.id + '">' + esc(c.title) + ' (' + chapterItems(c).length + ')</option>').join('') +
     '</select><button class="btn secondary" id="prac-ch-go">Drill chapter</button>' +
     '<button class="btn secondary" id="prac-all-go">Everything — ' + ITEMS.length + ' lines</button></div>' +
-    '<label class="small" style="display:block;margin-top:10px"><input type="checkbox" id="prac-mid"> Start each line from a random midpoint — position recognition: first work out WHERE you are, then find the move</label></div>';
+    '<label class="small" style="display:block;margin-top:10px"><input type="checkbox" id="prac-mid"> Start each line from a random midpoint — position recognition: first work out WHERE you are, then find the move</label>' +
+    '<label class="small" style="display:block;margin-top:6px"><input type="checkbox" id="prac-flip"> Flip sides for fun — sit in the opponent’s chair (e.g. play White against your own Sicilian) and find THEIR theory moves. Punish lines are skipped when flipped.</label></div>';
   onRendered(() => {
     const mid = () => { const cb = el('prac-mid'); return !!(cb && cb.checked); };
+    const flip = () => { const cb = el('prac-flip'); return !!(cb && cb.checked); };
     const cg = el('prac-ch-go');
-    if (cg) cg.onclick = () => { const ch = REPERTOIRE.chapters.find(c => c.id === el('prac-ch').value); if (ch) startPractice(chapterItems(ch), { mid: mid() }); };
+    if (cg) cg.onclick = () => { const ch = REPERTOIRE.chapters.find(c => c.id === el('prac-ch').value); if (ch) startPractice(chapterItems(ch), { mid: mid(), flip: flip() }); };
     const ag = el('prac-all-go');
-    if (ag) ag.onclick = () => startPractice(shuffleItems(ITEMS), { mid: mid() });
+    if (ag) ag.onclick = () => startPractice(shuffleItems(ITEMS), { mid: mid(), flip: flip() });
   });
   return h;
 }
 
 function startDrillCard() {
   const item = drill.queue[drill.idx];
+  const mainColor = item.ch.side === 'white' ? 'w' : 'b';
   drill.cur = {
     item, game: new Chess(), ply: 0, mistakes: 0, missesHere: 0, lapsed: false, done: false,
-    userColor: item.ch.side === 'white' ? 'w' : 'b',
+    userColor: drill.flip ? (mainColor === 'w' ? 'b' : 'w') : mainColor,
   };
   // Position-recognition practice: fast-forward to a random midpoint, then the drill
   // continues normally from there — you must recognise WHERE you are before recalling.
@@ -1807,11 +1814,11 @@ function viewDrillActive() {
   const d = drill;
   if (d.idx >= d.queue.length) {
     if (d.practice) {
-      const q = d.queue;
-      return '<div class="panel"><h2><span class="ic ic-flag big" style="color:var(--accent)"></span> Practice rotation complete</h2><p>' + d.doneCount + ' line' + (d.doneCount === 1 ? '' : 's') + ' rehearsed — schedule untouched.</p>' +
+      const q = d.queue, wasFlip = d.flip, wasMid = d.mid;
+      return '<div class="panel"><h2><span class="ic ic-flag big" style="color:var(--accent)"></span> Practice rotation complete</h2><p>' + d.doneCount + ' line' + (d.doneCount === 1 ? '' : 's') + ' rehearsed' + (wasFlip ? ' from the other side' : '') + ' — schedule untouched.</p>' +
         '<div class="btnrow"><button class="btn" id="prac-again-btn">Repeat rotation</button><button class="btn secondary" id="prac-done-btn">Done</button></div></div>' +
       onRenderedReturn(() => {
-        const a = el('prac-again-btn'); if (a) a.onclick = () => startPractice(q);
+        const a = el('prac-again-btn'); if (a) a.onclick = () => startPractice(q, { flip: wasFlip, mid: wasMid });
         const h = el('prac-done-btn'); if (h) h.onclick = () => { drill = null; render(); };
       });
     }
@@ -1827,15 +1834,15 @@ function viewDrillActive() {
   const c = d.cur;
   const it = c.item;
   const isNew = !isLearned(it.key) && !(S.cards[it.key] && S.cards[it.key].lapses > 0);
-  let h = '<div class="progressline">Line ' + (d.idx + 1) + ' of ' + d.queue.length + (d.practice ? ' · <b style="color:var(--accent2)">practice</b>' : (isNew ? ' · <b style="color:var(--accent)">NEW</b>' : '')) + (c.midStart ? ' · joined at move ' + Math.ceil(c.midStart / 2) + ' — where are you?' : '') + (it.kind === 'punish' ? ' · <span class="badge punish">punish</span>' : '') + '</div>';
+  let h = '<div class="progressline">Line ' + (d.idx + 1) + ' of ' + d.queue.length + (d.practice ? ' · <b style="color:var(--accent2)">practice</b>' : (isNew ? ' · <b style="color:var(--accent)">NEW</b>' : '')) + (d.flip ? ' · <b style="color:var(--purple)">flipped — you play ' + (c.userColor === 'w' ? 'White' : 'Black') + '</b>' : '') + (c.midStart ? ' · joined at move ' + Math.ceil(c.midStart / 2) + ' — where are you?' : '') + (it.kind === 'punish' ? ' · <span class="badge punish">punish</span>' : '') + '</div>';
   h += '<div class="panel"><h2>' + esc(it.line.name) + '</h2><div class="muted small">' + esc(it.ch.title) + (it.line.vs ? ' · ' + esc(it.line.vs) : '') + '</div>';
   if (it.kind === 'punish' && c.ply <= it.line.deviationPly) h += '<div class="banner" style="margin-top:10px">Watch the moves play out — your opponent is about to go wrong…</div>';
   h += '<div class="boardwrap" style="margin-top:12px"><div class="boardcol"><div id="drill-board"></div></div>' +
-    '<div class="sidecol"><div class="notebox" id="drill-note"><span class="muted">' + (isNew && it.line.intro ? esc(it.line.intro) : 'Play your theory move when it’s your turn.') + '</span></div><div id="drill-feedback"></div><div id="drill-eval"></div><div class="movelist" id="drill-moves"></div>' +
+    '<div class="sidecol"><div class="notebox" id="drill-note"><span class="muted">' + (d.flip ? 'You’re in the opponent’s chair — find THEIR theory move each turn; the board answers with your repertoire.' : (isNew && it.line.intro ? esc(it.line.intro) : 'Play your theory move when it’s your turn.')) + '</span></div><div id="drill-feedback"></div><div id="drill-eval"></div><div class="movelist" id="drill-moves"></div>' +
     '<div class="btnrow" id="drill-early-row" style="display:none"><button class="btn secondary small" id="drill-early">I know the rest — grade now</button></div>' +
     '<div id="drill-end"></div></div></div></div>';
   onRendered(() => {
-    const board = new Board(el('drill-board'), it.ch.side);
+    const board = new Board(el('drill-board'), d.flip ? (it.ch.side === 'white' ? 'black' : 'white') : it.ch.side);
     board.game = c.game; board.moveColor = c.userColor;
     c.board = board;
     board.onUserMove = (from, to) => drillUserMove(from, to);
