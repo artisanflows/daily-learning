@@ -282,6 +282,7 @@ select, input[type="number"] {
 /* ---------- Lichess live game ---------- */
 .lclockrow { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 8px; background: var(--panel2); }
 .lclockrow.you { border-color: var(--accent); }
+.sq.pre { box-shadow: inset 0 0 0 3px rgba(125, 95, 168, 0.75); }
 .lclockrow b { font-size: 20px; font-variant-numeric: tabular-nums; }
 
 /* ---------- Primer diagrams ---------- */
@@ -300,6 +301,19 @@ select, input[type="number"] {
 .altchip:hover { background: var(--accent-soft); }
 .transpo-link { color: var(--accent); font-weight: 600; text-decoration: none; }
 .transpo-link:hover { text-decoration: underline; }
+
+/* ---------- Coach review: accuracy + eval graph ---------- */
+.accrow { display: flex; gap: 10px; margin-bottom: 10px; }
+.acccard { flex: 1; text-align: center; background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 8px; }
+.acccard.you { border-color: var(--accent); }
+.acccard b { display: block; font-size: 28px; line-height: 1.1; color: var(--accent); }
+.acccard span { font-size: 12px; color: var(--muted); }
+.clsrow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.clschip { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--panel2); border: 1px solid var(--line); }
+.cls-book { color: #7d5fa8; } .cls-best { color: #2e7d5b; } .cls-exc { color: #4e8578; } .cls-good { color: #6f8455; }
+.cls-inac { color: #9a8b77; } .cls-mist { color: #b98a3c; } .cls-blun { color: var(--danger); }
+.evchart-wrap { margin-bottom: 12px; }
+#evchart { display: block; width: 100%; height: 92px; border-radius: 8px; }
 
 /* ---------- Coach review: mistake browser ---------- */
 .mistbar { display: flex; align-items: center; gap: 8px; margin: 12px 0 8px; font-size: 14px; }
@@ -597,6 +611,19 @@ function sanitizeState(obj) {
           blunderCount: Math.max(0, Number(rv.blunderCount) || 0),
           phases: { opening: Math.max(0, Number(ph.opening) || 0), middlegame: Math.max(0, Number(ph.middlegame) || 0), endgame: Math.max(0, Number(ph.endgame) || 0) },
         };
+        if (Array.isArray(rv.evals)) entry.review.evals = rv.evals.slice(0, 501).map((e) => (e === null ? null : Math.max(-9.9, Math.min(9.9, Number(e) || 0))));
+        if (rv.acc && typeof rv.acc === 'object') {
+          entry.review.acc = {
+            user: rv.acc.user === null ? null : Math.max(0, Math.min(100, Number(rv.acc.user) || 0)),
+            opp: rv.acc.opp === null ? null : Math.max(0, Math.min(100, Number(rv.acc.opp) || 0)),
+          };
+        }
+        if (rv.classes && typeof rv.classes === 'object') {
+          entry.review.classes = {
+            book: Math.max(0, Number(rv.classes.book) || 0), best: Math.max(0, Number(rv.classes.best) || 0),
+            excellent: Math.max(0, Number(rv.classes.excellent) || 0), good: Math.max(0, Number(rv.classes.good) || 0),
+          };
+        }
         if (Array.isArray(rv.mistakes)) {
           entry.review.mistakes = rv.mistakes.slice(0, 60).filter(m => m && typeof m === 'object').map(m => ({
             ply: Math.max(0, Number(m.ply) || 0), san: String(m.san || '').slice(0, 10),
@@ -756,6 +783,9 @@ class Board {
     this.game = null;
     this.interactive = false;
     this.moveColor = null;   // 'w' | 'b' — which color the human may move
+    this.allowPremove = false;
+    this.premove = null;       // {from, to} queued while it's the opponent's turn
+    this.onPremoveChange = null;
     this.onUserMove = null;  // (from, to) => void
     this.lastMove = null;    // {from, to}
     this.hintSquares = null; // [from, to] rings
@@ -774,7 +804,7 @@ class Board {
     if (!cell) return;
     const sq = cell.dataset.sq;
     const piece = this.game.get(sq);
-    if (!piece || piece.color !== this.game.turn() || piece.color !== this.moveColor) return;
+    if (!piece || piece.color !== this.moveColor || (piece.color !== this.game.turn() && !this.allowPremove)) return;
     e.preventDefault(); // stop Safari text-selection / native image drag from stealing the gesture
     document.querySelectorAll('.drag-ghost').forEach(g => g.remove()); // sweep any orphans
     const startX = e.clientX, startY = e.clientY;
@@ -840,6 +870,14 @@ class Board {
   }
   legalTargets() {
     if (!this.selected || !this.game) return [];
+    if (this.allowPremove && this.game.turn() !== this.moveColor) {
+      // Premove targeting: pseudo-legal moves computed as if it were our turn already.
+      try {
+        const p = this.game.fen().split(' ');
+        p[1] = this.moveColor; p[3] = '-';
+        return new Chess(p.join(' ')).moves({ square: this.selected, verbose: true }).map(m => m.to);
+      } catch (e) { return []; }
+    }
     try { return this.game.moves({ square: this.selected, verbose: true }).map(m => m.to); } catch (e) { return []; }
   }
   render() {
@@ -852,6 +890,7 @@ class Board {
       const piece = g ? g.get(sq) : null;
       const cls = ['sq', dark ? 'dark' : 'light'];
       if (this.lastMove && (sq === this.lastMove.from || sq === this.lastMove.to)) cls.push('hl');
+      if (this.premove && (sq === this.premove.from || sq === this.premove.to)) cls.push('pre');
       if (this.selected === sq) cls.push('sel');
       let inner = '';
       if (piece) inner += '<span class="pc">' + PIECES[piece.color + piece.type] + '</span>';
@@ -892,6 +931,11 @@ class Board {
   handleClick(e) {
     if (this._suppressClick) { this._suppressClick = false; return; }
     if (!this.interactive || !this.game) return;
+    if (this.premove && !this.selected) {
+      this.premove = null;
+      if (this.onPremoveChange) this.onPremoveChange(null);
+      this.render();  // fall through: the same click may start a new selection
+    }
     const cell = e.target.closest('.sq');
     if (!cell) return;
     const sq = cell.dataset.sq;
@@ -903,13 +947,13 @@ class Board {
         if (this.onUserMove) this.onUserMove(from, to);
         return;
       }
-      if (piece && piece.color === this.game.turn() && piece.color === this.moveColor) {
+      if (piece && piece.color === this.moveColor && (piece.color === this.game.turn() || this.allowPremove)) {
         this.selected = (this.selected === sq) ? null : sq;
       } else this.selected = null;
       this.render();
       return;
     }
-    if (piece && piece.color === this.game.turn() && piece.color === this.moveColor) {
+    if (piece && piece.color === this.moveColor && (piece.color === this.game.turn() || this.allowPremove)) {
       this.selected = sq;
       this.render();
     }
@@ -2117,6 +2161,17 @@ function lichessApplyState(st) {
   lg.status = st.status || lg.status;
   lg.winner = st.winner;
   if (lg.status !== 'started') lichessFinishGame();
+  // Queued premove: fire it the instant it's legal, discard it silently if not.
+  if (lg.status === 'started' && lg.premove && g.turn() === lg.color) {
+    const pm = lg.premove;
+    lg.premove = null;
+    try {
+      const t = new Chess(g.fen());
+      const piece = t.get(pm.from);
+      const promo = piece && piece.type === 'p' && (pm.to[1] === '8' || pm.to[1] === '1') ? 'q' : undefined;
+      if (t.move({ from: pm.from, to: pm.to, promotion: promo })) lichessMove(pm.from, pm.to);
+    } catch (e) { /* premove no longer legal — dropped */ }
+  }
   render();
 }
 
@@ -2176,7 +2231,13 @@ function viewLichessGame() {
     board.game = lg.game;
     board.interactive = !over;
     board.moveColor = lg.color;
-    board.onUserMove = (from, to) => lichessMove(from, to);
+    board.allowPremove = true;
+    board.premove = lg.premove || null;
+    board.onPremoveChange = (p) => { lg.premove = p; };
+    board.onUserMove = (from, to) => {
+      if (lg.game.turn() === lg.color) lichessMove(from, to);
+      else { lg.premove = { from, to }; board.premove = lg.premove; board.render(); }
+    };
     const last = lg.game.history({ verbose: true }).slice(-1)[0];
     board.lastMove = last ? { from: last.from, to: last.to } : null;
     board.render();
@@ -3068,7 +3129,7 @@ function reviewStep() {
   if (prog) prog.style.width = Math.round(100 * r.i / r.g.sans.length) + '%';
   if (r.i >= r.g.sans.length) { finishGameReview(); return; }
   const fenAfter = r.fens[r.i + 1];
-  Engine.analyze(fenAfter, 260, (res) => {
+  Engine.analyze(fenAfter, 350, (res) => {
     if (!reviewRun || reviewRun !== r) return;
     let ev = null, mv = null;
     if (res) {
@@ -3122,6 +3183,14 @@ function mistakeTip(fens, sans, k, delta, betterUci, replyUci, evBefore, evAfter
   return why + frame;
 }
 
+/* Lichess's open accuracy model: centipawns → win probability → per-move accuracy.
+   (chess.com's CAPS is proprietary; this is the published equivalent.) */
+function winPct(cpWhite) { return 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * cpWhite)) - 1); }
+function moveAccuracy(winBefore, winAfter) {
+  const drop = Math.max(0, winBefore - winAfter);
+  return Math.max(0, Math.min(100, 103.1668 * Math.exp(-0.04354 * drop) - 3.1669));
+}
+
 function finishGameReview() {
   const r = reviewRun;
   reviewRun = null;
@@ -3131,14 +3200,41 @@ function finishGameReview() {
   const phases = { opening: 0, middlegame: 0, endgame: 0 };
   const mistakes = [];
   let firstBlunder = null, blunderCount = 0;
+  // White-perspective eval series for the graph + accuracy (index 0 = start position).
+  const wpov = (ev) => (ev === null ? null : (userColor === 'w' ? ev : -ev));
+  const evalsW = [wpov(r.startEval)].concat(r.evals.map((e) => wpov(e.ev)));
+  const accMoves = { w: [], b: [] };
+  const classes = { book: 0, best: 0, excellent: 0, good: 0 };
   for (let k = 0; k < g.sans.length; k++) {
     const mover = (startWhite ? (k % 2 === 0) : (k % 2 === 1)) ? 'w' : 'b';
+    // Accuracy: every move by BOTH players, from the mover's win-probability change.
+    const bw = evalsW[k], aw = evalsW[k + 1];
+    if (bw !== null && aw !== null) {
+      const sign = mover === 'w' ? 1 : -1;
+      accMoves[mover].push(moveAccuracy(winPct(sign * bw * 100), winPct(sign * aw * 100)));
+    }
     if (mover !== userColor) continue;
     const before = k === 0 ? r.startEval : (r.evals[k - 1] ? r.evals[k - 1].ev : null);
     const after = r.evals[k] ? r.evals[k].ev : null;
     if (before === null || after === null) continue;
     const delta = after - before;
-    if (delta > -0.6) continue;                               // below inaccuracy threshold
+    if (delta > -0.6) {
+      // Positive classifications for the summary chips (mirrors chess.com's ladder).
+      const dev = custom ? null : findDeviation(g, userColor);
+      if (dev && dev.depth > k) classes.book++;
+      else {
+        const bestUci = k === 0 ? null : (r.evals[k - 1] ? r.evals[k - 1].mv : null);
+        let playedUci = null;
+        try { const t = new Chess(r.fens[k]); const mv = t.move(g.sans[k]); if (mv) playedUci = mv.from + mv.to + (mv.promotion || ''); } catch (e) { /* ignore */ }
+        if (bestUci && playedUci === bestUci) classes.best++;
+        else {
+          const sign = userColor === 'w' ? 1 : -1;
+          const drop = Math.max(0, winPct(sign * (evalsW[k] ?? 0) * 100) - winPct(sign * (evalsW[k + 1] ?? 0) * 100));
+          if (drop < 2) classes.excellent++; else classes.good++;
+        }
+      }
+      continue;                               // below inaccuracy threshold
+    }
     const sev = delta <= -2.5 ? 'blunder' : (delta <= -1.2 ? 'mistake' : 'inaccuracy');
     const phase = (!custom && k < 20) ? 'opening' : (piecesOnBoard(r.fens[k]) <= 12 ? 'endgame' : 'middlegame');
     const betterUci = k === 0 ? null : (r.evals[k - 1] ? r.evals[k - 1].mv : null);
@@ -3163,19 +3259,79 @@ function finishGameReview() {
       if (!firstBlunder) firstBlunder = { ply: k, san: m.san, delta: m.delta, betterSan, phase };
     }
   }
+  // Player accuracies: blend of arithmetic and harmonic means (lichess-style; the
+  // harmonic half punishes single disasters the way intuition expects).
+  const gameAcc = (arr) => {
+    if (!arr.length) return null;
+    const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+    const harm = arr.length / arr.reduce((a, b) => a + 1 / Math.max(1, b), 0);
+    return Math.round(((mean + harm) / 2) * 10) / 10;
+  };
   g.review = {
     userColor, date: todayStr(),
     deviation: custom ? { custom: true } : findDeviation(g, userColor),
     firstBlunder, blunderCount, phases, mistakes,
+    evals: evalsW.map((e) => (e === null ? null : Math.round(Math.max(-9.9, Math.min(9.9, e)) * 100) / 100)),
+    acc: { user: gameAcc(accMoves[userColor]), opp: gameAcc(accMoves[userColor === 'w' ? 'b' : 'w']) },
+    classes,
   };
   bumpActivity('reviews');
   saveState();
   if (gameView && gameView.g === g) { gameView.revealed = false; gameView.mi = null; render(); }
 }
 
+/* Clickable eval graph: white-perspective advantage over the game, clamped ±5 pawns,
+   with the user's error plies marked. A vertical cursor tracks the viewer's ply. */
+function evalChartHtml(g) {
+  const rv = g.review;
+  if (!rv.evals || rv.evals.length < 3) return '';
+  const n = rv.evals.length - 1;
+  const X = (i) => (i / n) * 100;
+  const Y = (e) => 17 - Math.max(-5, Math.min(5, e === null ? 0 : e)) * 3;
+  let line = '', area = 'M0,17 ';
+  rv.evals.forEach((e, i) => {
+    const pt = X(i).toFixed(1) + ',' + Y(e).toFixed(1);
+    line += (i ? ' ' : '') + pt;
+    area += 'L' + pt + ' ';
+  });
+  area += 'L100,17 Z';
+  const SEVC = { blunder: '#a8402f', mistake: '#b98a3c', inaccuracy: '#9a8b77' };
+  const dots = (rv.mistakes || []).map((m) =>
+    '<circle cx="' + X(m.ply + 1).toFixed(1) + '" cy="' + Y(rv.evals[m.ply + 1]).toFixed(1) + '" r="1.6" fill="' + SEVC[m.sev] + '" stroke="#fff" stroke-width="0.5"/>').join('');
+  return '<div class="evchart-wrap"><svg id="evchart" viewBox="0 0 100 34" preserveAspectRatio="none">' +
+    '<rect x="0" y="0" width="100" height="34" fill="#3d332a"/>' +
+    '<path d="' + area + '" fill="#f0e6d6"/>' +
+    '<line x1="0" y1="17" x2="100" y2="17" stroke="#8a7864" stroke-width="0.3"/>' +
+    '<polyline points="' + line + '" fill="none" stroke="#bc5b3d" stroke-width="0.7"/>' +
+    dots +
+    '<line id="evcur" x1="0" y1="0" x2="0" y2="34" stroke="#7d5fa8" stroke-width="0.6" opacity="0.9"/>' +
+    '</svg><div class="small muted" style="margin-top:4px">Evaluation over the game (White up). Tap to jump; dots are your errors.</div></div>';
+}
+
 function reviewSummaryHtml(g) {
   const rv = g.review;
   let h = '<div class="panel" style="margin-top:0">';
+  if (rv.acc && rv.acc.user !== null) {
+    const cl = rv.classes || {};
+    const negs = { inaccuracy: 0, mistake: 0, blunder: 0 };
+    (rv.mistakes || []).forEach((m) => negs[m.sev]++);
+    h += '<div class="accrow">' +
+      '<div class="acccard you"><b>' + rv.acc.user.toFixed(1) + '</b><span>your accuracy</span></div>' +
+      '<div class="acccard"><b>' + (rv.acc.opp !== null ? rv.acc.opp.toFixed(1) : '–') + '</b><span>opponent</span></div>' +
+      '</div>';
+    h += '<div class="clsrow">' +
+      (cl.book ? '<span class="clschip cls-book">' + cl.book + ' book</span>' : '') +
+      (cl.best ? '<span class="clschip cls-best">' + cl.best + ' best</span>' : '') +
+      (cl.excellent ? '<span class="clschip cls-exc">' + cl.excellent + ' excellent</span>' : '') +
+      (cl.good ? '<span class="clschip cls-good">' + cl.good + ' good</span>' : '') +
+      (negs.inaccuracy ? '<span class="clschip cls-inac">' + negs.inaccuracy + ' inaccurac' + (negs.inaccuracy === 1 ? 'y' : 'ies') + '</span>' : '') +
+      (negs.mistake ? '<span class="clschip cls-mist">' + negs.mistake + ' mistake' + (negs.mistake === 1 ? '' : 's') + '</span>' : '') +
+      (negs.blunder ? '<span class="clschip cls-blun">' + negs.blunder + ' blunder' + (negs.blunder === 1 ? '' : 's') + '</span>' : '') +
+      '</div>';
+    h += evalChartHtml(g);
+  } else if (rv.mistakes) {
+    h += '<p class="small muted">This review predates the accuracy report — re-run “Run coach review” for accuracy, the eval graph and move classes.</p>';
+  }
   const dev = rv.deviation;
   if (dev && dev.custom) {
     h += '<p class="small"><span class="ic ic-book"></span> <b>Set-up position:</b> you started this one from a chosen position (a tabiya or mid-game spot), so there\'s no opening/repertoire check — the point here is learning to convert. The blunder scan below still applies.</p>';
@@ -3287,6 +3443,13 @@ function viewGameViewer() {
         const lbl = (isWhiteMove ? moveNum + '.' : (i === 0 ? moveNum + '…' : '')) + s;
         return '<span class="' + (i === gv.ply - 1 ? 'cur' : '') + '">' + lbl + '</span>';
       }).join(' ');
+      // Eval-graph cursor follows the viewer.
+      const evc = el('evcur');
+      if (evc && g.review && g.review.evals && g.review.evals.length > 1) {
+        const x = (gv.ply / (g.review.evals.length - 1)) * 100;
+        evc.setAttribute('x1', x.toFixed(1));
+        evc.setAttribute('x2', x.toFixed(1));
+      }
     };
     el('gv-start').onclick = () => { gv.ply = 0; update(); };
     el('gv-prev').onclick = () => { gv.ply = Math.max(0, gv.ply - 1); update(); };
@@ -3300,6 +3463,17 @@ function viewGameViewer() {
     if (rr) rr.onclick = () => { gv.revealed = true; render(); };
     const rj = el('rev-jump');
     if (rj) rj.onclick = () => { gv.ply = g.review.firstBlunder.ply; update(); };
+    // Eval graph: tap anywhere to jump the board to that moment.
+    const evc = el('evchart');
+    if (evc && g.review && g.review.evals) {
+      evc.style.cursor = 'pointer';
+      evc.addEventListener('click', (e) => {
+        const rect = evc.getBoundingClientRect();
+        const frac = (e.clientX - rect.left) / Math.max(1, rect.width);
+        gv.ply = Math.max(0, Math.min(g.sans.length, Math.round(frac * (g.review.evals.length - 1))));
+        update();
+      });
+    }
     // Mistake browser: tap a row to jump the board there and show its coaching tip;
     // ◀ ▶ walk the errors in order. Selecting re-renders (the detail box lives in the
     // summary panel), so state goes through gv.mi.
