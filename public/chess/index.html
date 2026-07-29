@@ -2044,8 +2044,7 @@ const Lichess = {
 let lg = null;          // live lichess state: seeking or playing
 let lgClock = null;     // 1s ticker updating the clock display only
 
-function lichessStartSeek(min, inc) {
-  if (!Lichess.getToken()) return;
+function lichessAwaitStart() {
   const eventAbort = new AbortController();
   const seekAbort = new AbortController();
   lg = { seeking: true, eventAbort, seekAbort, err: null };
@@ -2056,13 +2055,32 @@ function lichessStartSeek(min, inc) {
       lichessOpenGame(e.game.gameId, e.game.color === 'black' ? 'b' : 'w');
     }
   }, eventAbort.signal).catch(() => { /* aborted or dropped */ });
-  const body = 'rated=false&time=' + min + '&increment=' + inc + '&color=random';
+  return seekAbort;
+}
+
+function lichessStartSeek(min, inc, rated) {
+  if (!Lichess.getToken()) return;
+  const seekAbort = lichessAwaitStart();
+  const body = 'rated=' + (rated ? 'true' : 'false') + '&time=' + min + '&increment=' + inc + '&color=random';
   // The seek request must STAY OPEN — closing it cancels the seek.
   fetch('https://lichess.org/api/board/seek', {
     method: 'POST', headers: Lichess.headers({ 'Content-Type': 'application/x-www-form-urlencoded' }), body, signal: seekAbort.signal,
   }).then((r) => {
     if (!r.ok && lg && lg.seeking) { lg.err = 'Seek failed (HTTP ' + r.status + ').'; lg.seeking = false; render(); }
   }).catch(() => { /* aborted on match/cancel */ });
+}
+
+/* Solo test path: an instant game vs lichess's Stockfish — same Board API flow,
+   no human required. Perfect for verifying the whole pipeline end to end. */
+function lichessChallengeAi(level, min, inc) {
+  if (!Lichess.getToken()) return;
+  lichessAwaitStart();
+  const body = 'level=' + level + '&clock.limit=' + (min * 60) + '&clock.increment=' + inc + '&color=random';
+  fetch('https://lichess.org/api/challenge/ai', {
+    method: 'POST', headers: Lichess.headers({ 'Content-Type': 'application/x-www-form-urlencoded' }), body,
+  }).then((r) => {
+    if (!r.ok && lg && lg.seeking) { lg.err = 'AI challenge failed (HTTP ' + r.status + ').'; lg.seeking = false; render(); }
+  }).catch(() => { /* stream handles the rest */ });
 }
 
 function lichessCancelSeek() {
@@ -2203,12 +2221,17 @@ function lichessPanelHtml() {
       '<div class="btnrow"><button class="btn" id="lch-connect">Connect to Lichess</button><button class="btn secondary" id="lch-forget">Forget token</button></div>' +
       (lg && lg.err ? '<p class="small" style="color:var(--danger)">' + esc(lg.err) + '</p>' : '');
   } else {
-    h += '<p class="small">Connected as <b>' + esc(Lichess.username) + '</b>. Casual rapid seeks — a random human opponent, clocks on, and the finished game lands in My Games for the coach.</p>' +
-      '<div class="btnrow">' +
+    h += '<p class="small">Connected as <b>' + esc(Lichess.username) + '</b>. Rapid seeks against a random human — clocks on, and the finished game lands in My Games for the coach.</p>' +
+      '<div class="btnrow" style="align-items:center">' +
       '<button class="btn" data-seek="10,0">Seek 10+0</button>' +
       '<button class="btn" data-seek="10,5">Seek 10+5</button>' +
       '<button class="btn" data-seek="15,10">Seek 15+10</button>' +
-      '<button class="btn secondary" id="lch-forget">Disconnect</button></div>';
+      '<span class="small"><label style="cursor:pointer"><input type="checkbox" id="lch-rated"> Rated</label></span>' +
+      '</div>' +
+      '<div class="btnrow" style="margin-top:8px">' +
+      '<button class="btn secondary" data-ai="3">Test game vs lichess AI (level 3)</button>' +
+      '<button class="btn secondary" id="lch-forget">Disconnect</button></div>' +
+      '<p class="small muted" style="margin-top:8px">Rated games change your real lichess rating — tick only when you mean it. The AI game is casual and instant: the full pipeline (clocks, moves, save, coach review) without waiting for a human.</p>';
     if (Lichess.resume && Lichess.resume.length) {
       h += '<p class="small" style="margin-top:10px"><b>Game in progress:</b></p><div class="btnrow">' +
         Lichess.resume.map((g) => '<button class="btn secondary" data-resume="' + esc(g.gameId) + '" data-rescolor="' + (g.color === 'black' ? 'b' : 'w') + '">Resume vs ' + esc((g.opponent && g.opponent.username) || '?') + '</button>').join('') + '</div>';
@@ -2233,8 +2256,10 @@ function wireLichessPanel() {
   if (fg) fg.onclick = () => { Lichess.setToken(''); lg = null; render(); };
   app.querySelectorAll('[data-seek]').forEach((b) => b.onclick = () => {
     const [m, i] = b.dataset.seek.split(',').map(Number);
-    lichessStartSeek(m, i);
+    const rated = !!(el('lch-rated') && el('lch-rated').checked);
+    lichessStartSeek(m, i, rated);
   });
+  app.querySelectorAll('[data-ai]').forEach((b) => b.onclick = () => lichessChallengeAi(parseInt(b.dataset.ai, 10), 10, 5));
   app.querySelectorAll('[data-resume]').forEach((b) => b.onclick = () => lichessOpenGame(b.dataset.resume, b.dataset.rescolor));
 }
 
