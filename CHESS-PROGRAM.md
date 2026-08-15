@@ -39,10 +39,10 @@ gitignored; they must stay that way, the repo is public.
 | **Drill** | Spaced-repetition recall of lines you've studied — you play your side from memory |
 | **Punish** | Dedicated lines for opponents' common mistakes, each with the refutation |
 | **Quiz** | Master-move quiz drawn from the masters database |
-| **Tactics** | 1,680 puzzles across rating bands, plus 660 calculation exercises |
+| **Tactics** | 1,680 puzzles across rating bands, 660 calculation exercises, and the 21-motif course with per-motif accuracy |
 | **Endgames** | 123 tablebase-verified positions, from basic mates to master technique |
 | **Concepts** | 16 middlegame structures + 135 strategy exercises with a remember-loop |
-| **Map** | The repertoire as a walkable decision tree — per chapter and per colour |
+| **Map** | Your whole repertoire as one tree per colour: every fork, engine eval, and an outline of what lies below |
 | **My Games** | Import PGN, auto-review with the engine, browse mistakes, replay from any point |
 
 ---
