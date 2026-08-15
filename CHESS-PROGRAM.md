@@ -91,6 +91,7 @@ Every chapter opens with a **primer** — 6–8 illustrated sections with board 
 | Course | Size | Notes |
 |---|---|---|
 | **Tactics** | 1,680 puzzles | Banded by rating, sourced from the lichess puzzle database |
+| **Motif course** | 21 motifs | What each tactic IS, what to scan for, per-motif accuracy, drill-by-motif |
 | **Calculation** | 660 exercises | Longer forcing sequences |
 | **Endgames** | 123 positions | Every one verified against perfect-play tablebases; each carries a transferable principle and where else it applies |
 | **Strategy** | 135 exercises | Positional decisions with a spaced-repetition remember-loop |
