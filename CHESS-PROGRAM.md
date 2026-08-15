@@ -92,7 +92,7 @@ Every chapter opens with a **primer** — 6–8 illustrated sections with board 
 |---|---|---|
 | **Tactics** | 1,680 puzzles | Banded by rating, sourced from the lichess puzzle database |
 | **Calculation** | 660 exercises | Longer forcing sequences |
-| **Endgames** | 123 positions | Every one verified against perfect-play tablebases |
+| **Endgames** | 123 positions | Every one verified against perfect-play tablebases; each carries a transferable principle and where else it applies |
 | **Strategy** | 135 exercises | Positional decisions with a spaced-repetition remember-loop |
 | **Concepts** | 16 structures | Middlegame pawn structures and their plans |
 | **Pawn skeletons** | 179 measured, 12 taught | The strip test — who wins if every piece comes off |
