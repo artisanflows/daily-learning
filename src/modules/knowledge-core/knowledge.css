@@ -75,9 +75,12 @@
 .k-thumb { margin-top: auto; display: flex; flex-direction: column; gap: 10px; padding-top: 18px; }
 .k-input { font: inherit; font-size: 20px; width: 100%; min-height: 48px; padding: 12px 14px; border-radius: var(--radius); border: 1px solid var(--plat-line-strong); background: var(--plat-surface-2); color: var(--plat-text); }
 .k-input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.k-grades { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.k-grades { display: grid; grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); gap: 8px; }
 .k-g { font: inherit; font-weight: 700; border: none; border-radius: var(--radius); min-height: 52px; cursor: pointer; color: #fff; }
-.k-g-again { background: #b0503a; } .k-g-hard { background: #b98a3c; } .k-g-good { background: #4e8578; } .k-g-easy { background: #5b7ea8; }
+/* Grade colours must mean the same thing in every subject. Good was #4e8578 here
+   and #6f8455 in chess, while #4e8578 was chess's EASY — so the same swatch taught
+   two different lessons. Chess's mapping wins; it is the one used daily. */
+.k-g-again { background: #b0503a; } .k-g-hard { background: #b98a3c; } .k-g-good { background: #6f8455; } .k-g-easy { background: #4e8578; }
 .k-g:active { transform: scale(0.97); }
 
 /* ---- Study plan (goal) ---- */

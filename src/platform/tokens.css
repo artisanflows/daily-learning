@@ -43,10 +43,15 @@
   --shadow-lift: 0 4px 10px rgba(90, 70, 40, 0.10), 0 14px 34px rgba(90, 70, 40, 0.10);
   --dur: 180ms; --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
 
-  /* Every module reads --accent for its tint; defaults to the platform accent. */
+  /* Every module reads --accent for its tint; defaults to the platform accent.
+     The two variants are DERIVED from --accent rather than pointing at the
+     platform's own: modules set --accent inline (Today.tsx, KnowledgeApp.tsx) but
+     could not set the variants, so wine's burgundy and art's celadon were pairing
+     with a blue hover state and blue number chips. Deriving them means any module
+     that sets an accent gets a matching pair for free. */
   --accent: var(--plat-accent);
-  --accent-strong: var(--plat-accent-strong);
-  --accent-soft: var(--plat-accent-soft);
+  --accent-strong: color-mix(in srgb, var(--accent) 82%, #000);
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, var(--plat-bg));
   --on-accent: var(--plat-on-accent);
 }
 

@@ -71,7 +71,7 @@
 .mod-korean .diff-expected { color: var(--mineral); font-size: 24px; }
 .mod-korean .diff-given { color: var(--ochre); text-decoration: line-through; font-size: 20px; }
 .mod-korean .lesson { white-space: pre-wrap; line-height: 1.65; font-size: 17px; }
-.mod-korean .progress-line { display: flex; justify-content: space-between; color: var(--muted); font-size: 14px; }
+.mod-korean .progress-line { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 14px; }
 .mod-korean .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .mod-korean .choice-grid button { font-size: 26px; min-height: 64px; }
 .mod-korean .choice-grid button.is-correct { background: color-mix(in srgb, var(--mineral) 16%, var(--surface)); border-color: var(--mineral); font-weight: 700; }
