@@ -95,6 +95,7 @@ Every chapter opens with a **primer** — 6–8 illustrated sections with board 
 | **Endgames** | 123 positions | Every one verified against perfect-play tablebases |
 | **Strategy** | 135 exercises | Positional decisions with a spaced-repetition remember-loop |
 | **Concepts** | 16 structures | Middlegame pawn structures and their plans |
+| **Pawn skeletons** | 179 measured, 12 taught | The strip test — who wins if every piece comes off |
 | **Mate patterns** | 18 patterns + 18 puzzle sets | Named mating nets |
 | **Quiet mistakes** | 153 positions | Club-popular moves that are quietly bad, engine-triaged |
 | **Classics / Losses** | 10 + 10 | One instructive master game and one instructive loss per chapter |
@@ -122,6 +123,39 @@ what lets the app say how much a given move gives up.
 What real opponents actually played at every position where they have a choice.
 Two bands, deliberately: one band tells you how often people go wrong; only the
 *gap between bands* separates a genuinely hard position from a weak opponent.
+
+### Pawn skeletons — 179 structures
+
+Simon's question, made measurable: take the final position of every repertoire
+line, remove every piece except kings and pawns, and ask the engine who wins the
+resulting pawn ending. Both sides to move, because pawn endings are decided by
+zugzwang.
+
+Two corrections were needed before the numbers meant anything. Skeletons with
+unequal pawn counts were discarded — stripping the pieces from a position where
+Black has sacrificed for compensation measures the *material*, not the structure.
+And both kings are placed on e1/e8, because leaving them on their castling squares
+made the verdict partly about king placement.
+
+Result: **116 drawn, 51 where the winner flips with the move, 7 good for White,
+5 good for Black.** Twelve are taught in the Concepts tab, grouped by the
+*instruction* rather than by opening — "keep the pieces on", "trade everything",
+"whoever captures first wins" — each with the engine's actual winning line quoted,
+so the lesson is a mechanism rather than an assertion.
+
+The headline findings:
+- The **c/d pawn tension** (Nimzo Rubinstein, anti-Catalan, London, Closed Catalan,
+  KID Sämisch) is a *king race*, not a standoff. In every case the pure pawn ending
+  is winning for whoever is to move, by around 2.5 pawns. One tempo.
+- In the **Dragon**, do not trade into a pawn ending — the …b5-b4 storm pawns are
+  undefended weaknesses without pieces (+3.0 for White either way). Except after
+  …Bxc3 bxc3, where the doubled c-pawns flip it to −2.3 for Black and the
+  instruction reverses.
+- The **Grünfeld's** doubled c3-pawn — the target the whole opening attacks — is
+  worth exactly nothing stripped bare (+0.18). It is a target for *pieces*.
+
+Honest framing carried into the UI: these are strong signals about the structure,
+not predictions about a game. You rarely reach a pure pawn ending from the opening.
 
 ### Practical pick
 Combining the two: at every fork where **you** choose, each candidate move shows
@@ -186,10 +220,11 @@ The generators and audits behind the data:
 | `crawl-book.mjs` + friends | Masters-database crawls per chapter |
 | **`coverage-report.mjs`** | **Repertoire evaluation** — walks the tree and finds where an opponent can steer you out of book, weighted by real frequency |
 | **`find-bridges.mjs`** | Given a gap, finds moves that transpose back into something you already own |
+| **`pawn-skeletons.mjs`** | **The strip test** — strips every repertoire position to kings and pawns and evaluates both sides to move |
 | `verify-endgames.mjs` | Checks endgame positions against tablebases |
 | `audit-*.mjs` | Coverage and consistency audits |
 
-Validator status: **245 lines, 16,983 moves replayed, 0 errors, 29 transpositions verified.**
+Validator status: **315 lines, 17,246 moves replayed, 2,905 annotated, 1,192 alts, 0 errors, 29 transpositions verified.**
 
 ---
 
