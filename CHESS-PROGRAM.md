@@ -40,6 +40,7 @@ gitignored; they must stay that way, the repo is public.
 | **Punish** | Dedicated lines for opponents' common mistakes, each with the refutation |
 | **Quiz** | Master-move quiz drawn from the masters database |
 | **Tactics** | 1,680 puzzles across rating bands, 660 calculation exercises, and the 21-motif course with per-motif accuracy |
+| **Traps** | 541 across 17 chapters — the mistakes YOU would make, with a no-hints drill |
 | **Endgames** | 123 tablebase-verified positions, from basic mates to master technique |
 | **Concepts** | 16 middlegame structures + 135 strategy exercises with a remember-loop |
 | **Map** | Your whole repertoire as one tree per colour: every fork, engine eval, and an outline of what lies below |
@@ -225,7 +226,7 @@ The generators and audits behind the data:
 | `verify-endgames.mjs` | Checks endgame positions against tablebases |
 | `audit-*.mjs` | Coverage and consistency audits |
 
-Validator status: **315 lines, 17,246 moves replayed, 2,905 annotated, 1,192 alts, 0 errors, 29 transpositions verified.**
+Validator status: **320 lines, 17,246 moves replayed, 2,905 annotated, 1,192 alts, 0 errors, 29 transpositions verified.**
 
 ---
 
